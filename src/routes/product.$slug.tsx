@@ -75,7 +75,7 @@ function ProductPage() {
           <div>
             <h2 className="font-bold text-lg mb-2">مواد اولیه</h2>
             <ul className="list-disc ps-6 space-y-1">
-              {p.ingredients.map((i) => (
+              {p.ingredients.map((i: string) => (
                 <li key={i}>{i}</li>
               ))}
             </ul>

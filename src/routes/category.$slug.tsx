@@ -58,7 +58,7 @@ export const Route = createFileRoute("/category/$slug")({
 });
 
 function CategoryPage() {
-  const { slug } = Route.useLoaderData();
+  const { slug } = Route.useLoaderData() as { slug: Category };
   const meta = CATEGORY_MAP[slug];
   const products = PRODUCTS.filter((p) => p.category === slug);
   const crumbs = [
