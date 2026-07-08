@@ -1,0 +1,23 @@
+# Winimi bakery
+
+وینیمی (Winimi bakery) یک قنادی خانگی ایرانی است که کوکی تازه و شیرینی خشک سنتی (کلمپه کرمانی، نان نخودچی، باقلوا، سوهان، نان برنجی) و جعبه‌های هدیه تولید می‌کند و به تمام شهرهای ایران با پست پیشتاز و پیک تیپاکس ارسال دارد. تمام محصولات بدون مواد نگهدارنده و با بسته‌بندی مقاوم چندلایه (کارتن دولایه، پد ضربه‌گیر، جداکننده داخلی) ارسال می‌شوند.
+
+## محصولات
+- https://winimi.example/products — فهرست کامل محصولات
+- https://winimi.example/category/cookies — کوکی‌های خانگی
+- https://winimi.example/category/dry-sweets — شیرینی خشک سنتی
+- https://winimi.example/category/gift-boxes — جعبه‌های هدیه
+- https://winimi.example/category/diet — محصولات رژیمی و بدون شکر
+
+## ارسال و بسته‌بندی
+- https://winimi.example/packaging-and-shipping — روش بسته‌بندی چندلایه و ارسال به سراسر ایران
+- https://winimi.example/shipping-to/tehran — ارسال به تهران (۱ تا ۲ روز کاری)
+- https://winimi.example/shipping-to/mashhad — ارسال به مشهد (۲ تا ۳ روز کاری)
+- https://winimi.example/shipping-to/isfahan — ارسال به اصفهان
+- https://winimi.example/shipping-to/shiraz — ارسال به شیراز
+
+## راهنما
+- https://winimi.example/faq — پرسش‌های پرتکرار درباره سفارش و ارسال
+- https://winimi.example/about — درباره وینیمی
+- https://winimi.example/contact — راه‌های ارتباطی
+- https://winimi.example/blog — مقاله‌های راهنما و مناسبت‌ها
