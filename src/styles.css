@@ -70,7 +70,12 @@
 
 @layer base {
   * { border-color: var(--color-border); }
-  html { font-family: var(--font-sans); scroll-behavior: smooth; }
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -79,4 +84,21 @@
   }
   h1, h2, h3, h4 { line-height: 1.4; color: var(--accent-brown); }
   .font-display { font-family: var(--font-display); }
+  button, a, [role="button"] { cursor: pointer; }
+  button, a {
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+  ::selection {
+    background: #8DB87A;
+    color: #3D2B1F;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
+
