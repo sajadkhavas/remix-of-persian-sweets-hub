@@ -126,13 +126,21 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isHome = pathname === "/";
   return (
     <QueryClientProvider client={queryClient}>
       <OrganizationJsonLd />
       <WebsiteJsonLd />
       <Header />
       <main className="min-h-[60vh]">
-        <Outlet />
+        {isHome ? (
+          <Outlet />
+        ) : (
+          <div className="mx-auto max-w-[1200px] px-4 py-8">
+            <Outlet />
+          </div>
+        )}
       </main>
       <Footer />
     </QueryClientProvider>
