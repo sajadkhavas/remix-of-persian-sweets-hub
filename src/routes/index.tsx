@@ -1,11 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "motion/react";
 import { buildSeo } from "@/lib/seo";
 import { PRODUCTS } from "@/data/products";
 import { ProductCard } from "@/components/ProductCard";
-import { FAQSection } from "@/components/aeo/FAQSection";
 import { GENERAL_FAQ } from "@/data/faqs";
 import { SITE } from "@/lib/site";
+import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
+import {
+  StaggerContainer,
+  StaggerItem,
+} from "@/components/animations/StaggerContainer";
+import { FloatingBadge } from "@/components/animations/FloatingBadge";
+import { MagneticButton } from "@/components/animations/MagneticButton";
+import { Marquee } from "@/components/animations/Marquee";
+import { AnimatedFAQ } from "@/components/animations/AnimatedFAQ";
+import { AnimatedStep } from "@/components/animations/AnimatedStep";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -26,6 +41,8 @@ const FILTERS: { key: Filter; label: string }[] = [
   { key: "diet", label: "رژیمی و دیابتی" },
 ];
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 function Section({
   children,
   bg,
@@ -38,7 +55,11 @@ function Section({
   className?: string;
 }) {
   return (
-    <section id={id} className={`py-16 md:py-20 ${className}`} style={bg ? { background: bg } : undefined}>
+    <section
+      id={id}
+      className={`py-16 md:py-20 ${className}`}
+      style={bg ? { background: bg } : undefined}
+    >
       <div className="mx-auto max-w-[1200px] px-4">{children}</div>
     </section>
   );
@@ -46,112 +67,185 @@ function Section({
 
 function Home() {
   const [filter, setFilter] = useState<Filter>("all");
-  const filtered = PRODUCTS.filter((p) => filter === "all" || p.category === filter);
+  const filtered = PRODUCTS.filter(
+    (p) => filter === "all" || p.category === filter,
+  );
+
+  // Hero image parallax (desktop only via CSS media on wrapper is heavy;
+  // we scale the transform range small enough to feel natural everywhere).
+  const { scrollY } = useScroll();
+  const heroImageY = useTransform(scrollY, [0, 400], [0, -40]);
 
   return (
     <>
       {/* HERO */}
       <section
-        className="relative"
+        className="relative overflow-hidden"
         style={{ background: "var(--accent-cream)", minHeight: "90vh" }}
       >
         <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-24">
           <div>
-            <span
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: EASE }}
               className="inline-block rounded-full px-4 py-1.5 text-sm font-medium"
-              style={{ background: "var(--primary-light)", color: "var(--primary-dark)" }}
+              style={{
+                background: "var(--primary-light)",
+                color: "var(--primary-dark)",
+              }}
             >
               ✦ دست‌پخت تازه، ارسال سراسری
-            </span>
-            <h1
+            </motion.span>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
               className="mt-5 text-4xl font-bold leading-[1.4] md:text-5xl"
               style={{ color: "var(--accent-brown)" }}
             >
               کیک و کوکی که
               <br />
               مثل خانه مزه می‌ده
-            </h1>
-            <p className="mt-5 text-lg leading-8 text-muted-foreground max-w-xl">
-              از اندیشه تا هر گوشه‌ای از ایران — با مواد اولیه تازه،
-              بهداشت وسواسی و عشق به پخت.
-            </p>
-            <ul className="mt-6 flex flex-wrap gap-3 text-sm">
-              {[
-                "🌿 بدون نگهدارنده",
-                "🏠 دست‌پخت خانگی",
-                "🚚 ارسال سراسری",
-              ].map((t) => (
-                <li
-                  key={t}
-                  className="rounded-full border border-border bg-white px-4 py-1.5"
-                >
-                  {t}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35, ease: EASE }}
+              className="mt-5 text-lg leading-8 text-muted-foreground max-w-xl"
+            >
+              از اندیشه تا هر گوشه‌ای از ایران — با مواد اولیه تازه، بهداشت
+              وسواسی و عشق به پخت.
+            </motion.p>
+
+            <motion.ul
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: { staggerChildren: 0.08, delayChildren: 0.55 },
+                },
+              }}
+              className="mt-6 flex flex-wrap gap-3 text-sm"
+            >
+              {["🌿 بدون نگهدارنده", "🏠 دست‌پخت خانگی", "🚚 ارسال سراسری"].map(
+                (t) => (
+                  <motion.li
+                    key={t}
+                    variants={{
+                      hidden: { opacity: 0, y: 12 },
+                      visible: { opacity: 1, y: 0 },
+                    }}
+                    className="rounded-full border border-border bg-white px-4 py-1.5"
+                  >
+                    {t}
+                  </motion.li>
+                ),
+              )}
+            </motion.ul>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.85, ease: EASE }}
+              className="mt-8 flex flex-wrap gap-3"
+            >
+              <MagneticButton
                 href="#products"
-                className="inline-flex items-center rounded-full px-7 py-3.5 text-base font-bold transition-transform hover:scale-105"
-                style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
+                className="inline-flex items-center rounded-full px-7 py-3.5 text-base font-bold shadow-md"
               >
-                مشاهده محصولات
-              </a>
+                <span
+                  className="inline-block"
+                  style={{
+                    background: "var(--primary)",
+                    color: "var(--primary-dark)",
+                    padding: "0",
+                  }}
+                >
+                  مشاهده محصولات
+                </span>
+              </MagneticButton>
               <a
                 href={SITE.whatsapp}
                 target="_blank"
                 rel="noopener"
-                className="inline-flex items-center rounded-full border-2 bg-white px-7 py-3.5 text-base font-bold"
-                style={{ borderColor: "var(--primary)", color: "var(--primary-dark)" }}
+                className="inline-flex items-center rounded-full border-2 bg-white px-7 py-3.5 text-base font-bold hover:brightness-95"
+                style={{
+                  borderColor: "var(--primary)",
+                  color: "var(--primary-dark)",
+                }}
               >
                 سفارش واتساپ
               </a>
-            </div>
+            </motion.div>
           </div>
+
           <div className="relative">
-            <div
+            <motion.div
+              style={{ y: heroImageY }}
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, ease: EASE }}
               className="relative aspect-square overflow-hidden rounded-3xl"
-              style={{
-                background:
-                  "linear-gradient(135deg, var(--primary-light) 0%, #D6E9C6 100%)",
-                boxShadow: "0 20px 60px rgba(141,184,122,0.25)",
-              }}
-              role="img"
-              aria-label="کوکی تازه وینیمی با بسته‌بندی"
             >
-              <div className="absolute inset-0 flex items-center justify-center text-[160px]">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--primary-light) 0%, #D6E9C6 100%)",
+                  boxShadow: "0 20px 60px rgba(141,184,122,0.25)",
+                }}
+                role="img"
+                aria-label="کوکی تازه وینیمی با بسته‌بندی"
+              />
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center text-[160px]"
+                animate={{ y: [0, -8, 0] }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                aria-hidden="true"
+              >
                 🍪
-              </div>
-            </div>
-            <div
+              </motion.div>
+            </motion.div>
+            <FloatingBadge
               className="absolute -bottom-4 -start-4 rounded-full bg-white px-4 py-3 text-sm font-semibold shadow-lg"
-              style={{ color: "var(--primary-dark)" }}
             >
-              ⭐ ۱۰۰٪ مواد اولیه تازه
-            </div>
+              <span style={{ color: "var(--primary-dark)" }}>
+                ⭐ ۱۰۰٪ مواد اولیه تازه
+              </span>
+            </FloatingBadge>
           </div>
         </div>
       </section>
 
-      {/* TRUST BAR */}
-      <section style={{ background: "var(--primary)" }} className="py-5">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-2 gap-4 px-4 text-sm font-medium md:grid-cols-4" style={{ color: "var(--primary-dark)" }}>
-          <div className="flex items-center gap-2">🧁 پخت تازه روزانه</div>
-          <div className="flex items-center gap-2">🌿 بدون نگهدارنده مصنوعی</div>
-          <div className="flex items-center gap-2">📦 بسته‌بندی محافظ ویژه پست</div>
-          <div className="flex items-center gap-2">🚚 ارسال به سراسر ایران</div>
-        </div>
+      {/* TRUST BAR — MARQUEE */}
+      <section style={{ background: "var(--primary)" }} className="py-4">
+        <Marquee duration={30} />
       </section>
 
       {/* PRODUCTS */}
       <Section id="products" bg="var(--accent-cream)">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold" style={{ color: "var(--accent-brown)" }}>
+        <RevealOnScroll className="mb-8 text-center">
+          <h2
+            className="text-3xl font-bold"
+            style={{ color: "var(--accent-brown)" }}
+          >
             محصولات ما
           </h2>
-          <p className="mt-2 text-muted-foreground">تازه پخته، با عشق آماده شده</p>
-        </div>
-        <div className="mb-8 flex flex-wrap justify-center gap-2">
+          <p className="mt-2 text-muted-foreground">
+            تازه پخته، با عشق آماده شده
+          </p>
+        </RevealOnScroll>
+
+        {/* Filter tabs with animated underline */}
+        <div className="mb-10 flex flex-wrap justify-center gap-2">
           {FILTERS.map((f) => {
             const active = filter === f.key;
             return (
@@ -159,56 +253,97 @@ function Home() {
                 key={f.key}
                 type="button"
                 onClick={() => setFilter(f.key)}
-                className="rounded-full border px-5 py-2 text-sm font-medium transition-all"
+                className="relative rounded-full px-5 py-2 text-sm font-medium"
                 style={{
-                  background: active ? "var(--primary)" : "white",
-                  color: active ? "var(--primary-dark)" : "var(--foreground)",
-                  borderColor: active ? "var(--primary)" : "var(--border)",
+                  color: active
+                    ? "var(--primary-dark)"
+                    : "var(--muted-foreground)",
                 }}
               >
-                {f.label}
+                {active ? (
+                  <motion.span
+                    layoutId="filter-pill"
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: "var(--primary)",
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 30,
+                    }}
+                  />
+                ) : null}
+                <span className="relative z-10">{f.label}</span>
               </button>
             );
           })}
         </div>
-        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+
+        <motion.div
+          layout
+          className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4"
+        >
+          <AnimatePresence mode="popLayout">
+            {filtered.map((p) => (
+              <motion.div
+                key={p.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.35, ease: EASE }}
+              >
+                <ProductCard product={p} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </Section>
 
       {/* ABOUT TEASER */}
       <Section bg="white">
         <div className="grid items-center gap-10 md:grid-cols-2">
-          <div className="relative order-2 md:order-1">
+          <RevealOnScroll direction="right" className="relative order-2 md:order-1">
             <div
               className="absolute -top-6 -end-6 h-24 w-24 rounded-full"
               style={{ background: "var(--primary-light)" }}
               aria-hidden="true"
             />
-            <div
+            <motion.div
+              initial={{ clipPath: "inset(0 0 100% 0)" }}
+              whileInView={{ clipPath: "inset(0 0 0% 0)" }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 1, ease: EASE }}
               className="relative aspect-[4/3] overflow-hidden rounded-3xl"
               style={{ background: "var(--primary-light)" }}
               role="img"
               aria-label="بسته‌بندی وینیمی با محصول"
             >
-              <div className="flex h-full items-center justify-center text-[120px]">📦</div>
-            </div>
-          </div>
-          <div className="order-1 md:order-2">
+              <div className="flex h-full items-center justify-center text-[120px]">
+                📦
+              </div>
+            </motion.div>
+          </RevealOnScroll>
+          <RevealOnScroll direction="left" className="order-1 md:order-2">
             <span
               className="inline-block rounded-full px-4 py-1.5 text-sm font-medium"
-              style={{ background: "var(--primary-light)", color: "var(--primary-dark)" }}
+              style={{
+                background: "var(--primary-light)",
+                color: "var(--primary-dark)",
+              }}
             >
               داستان ما
             </span>
-            <h2 className="mt-4 text-3xl font-bold" style={{ color: "var(--accent-brown)" }}>
+            <h2
+              className="mt-4 text-3xl font-bold"
+              style={{ color: "var(--accent-brown)" }}
+            >
               از بوی کیک تازه تا وینیمی
             </h2>
             <p className="mt-4 leading-8 text-muted-foreground">
-              همه‌چیز از کودکی شروع شد — از عطر کیک تازه‌ای که در خانه می‌پیچید.
-              وینیمی ثمره سال‌ها عشق به پخت و وسواس در کیفیت است.
+              همه‌چیز از کودکی شروع شد — از عطر کیک تازه‌ای که در خانه
+              می‌پیچید. وینیمی ثمره سال‌ها عشق به پخت و وسواس در کیفیت است.
               چون باور داریم شیرینی خوب باید مثل خانه مزه بده.
             </p>
             <ul className="mt-5 space-y-2 text-sm">
@@ -226,167 +361,232 @@ function Home() {
             <Link
               to="/about"
               className="mt-6 inline-block border-b-2 pb-1 text-sm font-semibold"
-              style={{ borderColor: "var(--primary)", color: "var(--primary-dark)" }}
+              style={{
+                borderColor: "var(--primary)",
+                color: "var(--primary-dark)",
+              }}
             >
               بیشتر بدانید ←
             </Link>
-          </div>
+          </RevealOnScroll>
         </div>
       </Section>
 
-      {/* DIET / DIABETIC HIGHLIGHT */}
+      {/* DIET / DIABETIC */}
       <section className="py-16 md:py-20" style={{ background: "white" }}>
-        <div
-          className="mx-auto max-w-[900px] rounded-3xl px-6 py-12 text-center md:px-12"
-          style={{
-            background:
-              "linear-gradient(135deg, var(--primary-light) 0%, #E8F5E0 100%)",
-          }}
-        >
-          <div className="text-5xl">🌿</div>
-          <h2 className="mt-4 text-3xl font-bold" style={{ color: "var(--accent-brown)" }}>
-            برای کسانی که مراقب سلامتی‌شان هستند
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl leading-8 text-muted-foreground">
-            در وینیمی، از همان ابتدا برای عزیزانمان که با دیابت زندگی می‌کنند فکر کردیم.
-            کوکی‌های رژیمی و بدون قند افزوده ما همان لذت شیرینی را بدون نگرانی می‌دهند.
-          </p>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl bg-white p-5 text-start">
-              <div className="text-2xl">🍃</div>
-              <h3 className="mt-2 font-bold">کوکی رژیمی</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                بدون قند، کم‌کالری، پر از طعم
-              </p>
-            </div>
-            <div className="rounded-2xl bg-white p-5 text-start">
-              <div className="text-2xl">💚</div>
-              <h3 className="mt-2 font-bold">کوکی دیابتی</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                بدون قند افزوده، مناسب دیابتی‌ها
-              </p>
-            </div>
-          </div>
-          <Link
-            to="/category/$slug"
-            params={{ slug: "diet" }}
-            className="mt-8 inline-flex items-center rounded-full px-7 py-3 text-sm font-bold"
-            style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
+        <RevealOnScroll>
+          <div
+            className="mx-auto max-w-[900px] rounded-3xl px-6 py-12 text-center md:px-12"
+            style={{
+              background:
+                "linear-gradient(135deg, var(--primary-light) 0%, #E8F5E0 100%)",
+            }}
           >
-            مشاهده محصولات سالم
-          </Link>
-        </div>
+            <div className="text-5xl">🌿</div>
+            <h2
+              className="mt-4 text-3xl font-bold"
+              style={{ color: "var(--accent-brown)" }}
+            >
+              برای کسانی که مراقب سلامتی‌شان هستند
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl leading-8 text-muted-foreground">
+              در وینیمی، از همان ابتدا برای عزیزانمان که با دیابت زندگی می‌کنند
+              فکر کردیم. کوکی‌های رژیمی و بدون قند افزوده ما همان لذت شیرینی را
+              بدون نگرانی می‌دهند.
+            </p>
+            <StaggerContainer className="mt-8 grid gap-4 md:grid-cols-2">
+              <StaggerItem className="rounded-2xl bg-white p-5 text-start">
+                <div className="text-2xl">🍃</div>
+                <h3 className="mt-2 font-bold">کوکی رژیمی</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  بدون قند، کم‌کالری، پر از طعم
+                </p>
+              </StaggerItem>
+              <StaggerItem className="rounded-2xl bg-white p-5 text-start">
+                <div className="text-2xl">💚</div>
+                <h3 className="mt-2 font-bold">کوکی دیابتی</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  بدون قند افزوده، مناسب دیابتی‌ها
+                </p>
+              </StaggerItem>
+            </StaggerContainer>
+            <Link
+              to="/category/$slug"
+              params={{ slug: "diet" }}
+              className="mt-8 inline-flex items-center rounded-full px-7 py-3 text-sm font-bold hover:brightness-95"
+              style={{
+                background: "var(--primary)",
+                color: "var(--primary-dark)",
+              }}
+            >
+              مشاهده محصولات سالم
+            </Link>
+          </div>
+        </RevealOnScroll>
       </section>
 
       {/* HOW TO ORDER */}
       <Section bg="var(--accent-cream)">
-        <h2 className="text-center text-3xl font-bold" style={{ color: "var(--accent-brown)" }}>
-          چطور سفارش بدم؟
-        </h2>
-        <ol className="mt-10 grid gap-8 md:grid-cols-3">
+        <RevealOnScroll>
+          <h2
+            className="text-center text-3xl font-bold"
+            style={{ color: "var(--accent-brown)" }}
+          >
+            چطور سفارش بدم؟
+          </h2>
+        </RevealOnScroll>
+        <StaggerContainer as="ol" className="mt-10 grid gap-8 md:grid-cols-3">
           {[
-            { icon: "📋", title: "انتخاب کنید", text: "محصول مورد نظرتان را از منو انتخاب کنید" },
-            { icon: "💬", title: "پیام بدید", text: "از طریق دایرکت اینستاگرام یا واتساپ سفارش ثبت کنید" },
-            { icon: "📦", title: "دریافت کنید", text: "محصول تازه با بسته‌بندی محافظ به دستتان می‌رسد" },
+            {
+              icon: "📋",
+              title: "انتخاب کنید",
+              text: "محصول مورد نظرتان را از منو انتخاب کنید",
+            },
+            {
+              icon: "💬",
+              title: "پیام بدید",
+              text: "از طریق دایرکت اینستاگرام یا واتساپ سفارش ثبت کنید",
+            },
+            {
+              icon: "📦",
+              title: "دریافت کنید",
+              text: "محصول تازه با بسته‌بندی محافظ به دستتان می‌رسد",
+            },
           ].map((s, i) => (
-            <li key={i} className="text-center">
-              <div
-                className="mx-auto flex h-20 w-20 items-center justify-center rounded-full text-3xl"
-                style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
+            <StaggerItem key={i} as="li" className="text-center">
+              <motion.div
+                whileHover={{ rotate: -6, scale: 1.08 }}
+                transition={{ type: "spring", stiffness: 260, damping: 15 }}
+                className="mx-auto flex h-20 w-20 items-center justify-center rounded-full text-3xl shadow-md"
+                style={{
+                  background: "var(--primary)",
+                  color: "var(--primary-dark)",
+                }}
               >
                 {s.icon}
-              </div>
-              <h3 className="mt-4 text-xl font-bold" style={{ color: "var(--accent-brown)" }}>
-                {i + 1}. {s.title}
+              </motion.div>
+              <h3
+                className="mt-4 text-xl font-bold"
+                style={{ color: "var(--accent-brown)" }}
+              >
+                <AnimatedStep number={i + 1} />. {s.title}
               </h3>
               <p className="mt-2 text-muted-foreground">{s.text}</p>
-            </li>
+            </StaggerItem>
           ))}
-        </ol>
-        <div className="mt-10 text-center">
-          <a
+        </StaggerContainer>
+        <RevealOnScroll className="mt-10 text-center">
+          <MagneticButton
             href={SITE.whatsapp}
             target="_blank"
             rel="noopener"
-            className="inline-flex items-center rounded-full px-8 py-4 text-base font-bold transition-transform hover:scale-105"
-            style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
+            className="inline-flex items-center rounded-full px-8 py-4 text-base font-bold shadow-lg"
           >
-            💬 ثبت سفارش در واتساپ
-          </a>
-        </div>
+            <span
+              style={{
+                background: "var(--primary)",
+                color: "var(--primary-dark)",
+              }}
+              className="rounded-full"
+            >
+              💬 ثبت سفارش در واتساپ
+            </span>
+          </MagneticButton>
+        </RevealOnScroll>
       </Section>
 
       {/* SHIPPING TRUST */}
       <Section bg="white">
-        <h2 className="text-center text-3xl font-bold" style={{ color: "var(--accent-brown)" }}>
-          ارسال سراسری — از اندیشه تا همه جای ایران
-        </h2>
-        <div
-          className="mx-auto mt-8 max-w-3xl rounded-2xl p-6"
-          style={{
-            background: "var(--primary-light)",
-            borderRight: "4px solid var(--primary)",
-          }}
-        >
-          <p className="font-bold" style={{ color: "var(--accent-brown)" }}>
-            آیا کوکی توی پست خراب نمیشه؟
-          </p>
-          <p className="mt-2 text-muted-foreground leading-8">
-            ما برای این سوال از همان ابتدا برنامه داشتیم. هر محصول با بسته‌بندی چندلایه محافظ ارسال می‌شود تا سالم و تازه به دستتان برسد.
-          </p>
-        </div>
-        <div className="mx-auto mt-8 grid max-w-3xl gap-4 md:grid-cols-2">
+        <RevealOnScroll>
+          <h2
+            className="text-center text-3xl font-bold"
+            style={{ color: "var(--accent-brown)" }}
+          >
+            ارسال سراسری — از اندیشه تا همه جای ایران
+          </h2>
+        </RevealOnScroll>
+        <RevealOnScroll delay={0.15}>
+          <div
+            className="mx-auto mt-8 max-w-3xl rounded-2xl p-6"
+            style={{
+              background: "var(--primary-light)",
+              borderRight: "4px solid var(--primary)",
+            }}
+          >
+            <p className="font-bold" style={{ color: "var(--accent-brown)" }}>
+              آیا کوکی توی پست خراب نمیشه؟
+            </p>
+            <p className="mt-2 text-muted-foreground leading-8">
+              ما برای این سوال از همان ابتدا برنامه داشتیم. هر محصول با
+              بسته‌بندی چندلایه محافظ ارسال می‌شود تا سالم و تازه به دستتان
+              برسد.
+            </p>
+          </div>
+        </RevealOnScroll>
+        <StaggerContainer className="mx-auto mt-8 grid max-w-3xl gap-4 md:grid-cols-2">
           {[
             "📦 بسته‌بندی چندلایه محافظ",
             "🚚 پست پیشتاز — ۲ تا ۵ روز کاری",
             "🌡️ مناسب برای حمل و نقل",
             "✅ ضمانت سالم رسیدن",
           ].map((t) => (
-            <div key={t} className="rounded-xl border border-border bg-white p-4">
+            <StaggerItem
+              key={t}
+              className="rounded-xl border border-border bg-white p-4"
+            >
               {t}
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </Section>
 
-      {/* FAQ */}
+      {/* FAQ — animated accordion (SSR-safe) */}
       <Section bg="var(--accent-cream)">
-        <FAQSection items={GENERAL_FAQ} heading="سوالات متداول" />
+        <AnimatedFAQ items={GENERAL_FAQ} />
       </Section>
 
       {/* INSTAGRAM TEASER */}
       <Section bg="var(--secondary)">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold" style={{ color: "var(--accent-brown)" }}>
+        <RevealOnScroll className="text-center">
+          <h2
+            className="text-3xl font-bold"
+            style={{ color: "var(--accent-brown)" }}
+          >
             ما را در اینستاگرام دنبال کنید
           </h2>
           <p className="mt-2 text-muted-foreground" dir="ltr">
             @{SITE.instagramHandle}
           </p>
-        </div>
-        <div className="mt-8 grid grid-cols-3 gap-3 md:gap-4">
+        </RevealOnScroll>
+        <StaggerContainer className="mt-8 grid grid-cols-3 gap-3 md:gap-4">
           {["🧁", "🍰", "🍪", "🥐", "☕", "🎂"].map((e, i) => (
-            <div
-              key={i}
-              className="flex aspect-square items-center justify-center rounded-2xl text-5xl transition-transform hover:scale-105"
-              style={{ background: "var(--primary-light)" }}
-              aria-hidden="true"
-            >
-              {e}
-            </div>
+            <StaggerItem key={i}>
+              <motion.div
+                whileHover={{ scale: 1.05, rotate: -2 }}
+                transition={{ type: "spring", stiffness: 220, damping: 15 }}
+                className="flex aspect-square items-center justify-center rounded-2xl text-5xl"
+                style={{ background: "var(--primary-light)" }}
+                aria-hidden="true"
+              >
+                {e}
+              </motion.div>
+            </StaggerItem>
           ))}
-        </div>
-        <div className="mt-8 text-center">
+        </StaggerContainer>
+        <RevealOnScroll className="mt-8 text-center">
           <a
             href={SITE.instagram}
             target="_blank"
             rel="noopener"
-            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold"
-            style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
+            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold hover:brightness-95"
+            style={{
+              background: "var(--primary)",
+              color: "var(--primary-dark)",
+            }}
           >
             📷 دنبال کردن در اینستاگرام
           </a>
-        </div>
+        </RevealOnScroll>
       </Section>
     </>
   );
