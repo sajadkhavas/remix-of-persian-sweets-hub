@@ -6,21 +6,27 @@ export function OrganizationJsonLd() {
     <JsonLd
       data={{
         "@context": "https://schema.org",
-        "@type": "OnlineStore",
-        name: SITE.brand,
-        alternateName: SITE.brandFa,
+        "@type": "Bakery",
+        name: SITE.brandFa,
+        alternateName: SITE.brand,
         url: SITE.origin,
         logo: `${SITE.origin}/favicon.ico`,
+        image: `${SITE.origin}/og-home.jpg`,
+        description:
+          "کوکی و کیک خانگی با مواد اولیه تازه، ارسال سراسری از اندیشه تهران",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: SITE.city,
+          addressRegion: SITE.region,
+          addressCountry: "IR",
+        },
+        telephone: SITE.phoneIntl,
+        servesCuisine: "Bakery",
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "منوی وینیمی بیکری",
+        },
         sameAs: [SITE.instagram],
-        contactPoint: [
-          {
-            "@type": "ContactPoint",
-            contactType: "customer support",
-            email: SITE.email,
-            areaServed: "IR",
-            availableLanguage: ["fa", "Persian"],
-          },
-        ],
       }}
     />
   );
