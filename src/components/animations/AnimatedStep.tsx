@@ -11,7 +11,7 @@ export function AnimatedStep({ number }: { number: number }) {
     if (!inView || reduce) return;
     const controls = animate(0, number, {
       duration: 1.2,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [0.22, 1, 0.36, 1] as const,
       onUpdate: (v) => setValue(Math.round(v)),
     });
     return () => controls.stop();

@@ -32,7 +32,7 @@ export function RevealOnScroll({
       ref={ref}
       initial={from}
       animate={isInView ? to : from}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] as const }}
       className={className}
     >
       {children}
