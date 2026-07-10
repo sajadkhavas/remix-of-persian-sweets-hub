@@ -155,15 +155,14 @@ function Home() {
             >
               <MagneticButton
                 href="#products"
-                className="inline-flex items-center rounded-full px-7 py-3.5 text-base font-bold shadow-md"
+                className="inline-flex items-center rounded-full px-7 py-3.5 text-base font-bold shadow-md hover:brightness-95"
               >
                 <span
-                  className="inline-block"
                   style={{
                     background: "var(--primary)",
                     color: "var(--primary-dark)",
-                    padding: "0",
                   }}
+                  className="-mx-7 -my-3.5 rounded-full px-7 py-3.5"
                 >
                   مشاهده محصولات
                 </span>
@@ -480,14 +479,14 @@ function Home() {
             href={SITE.whatsapp}
             target="_blank"
             rel="noopener"
-            className="inline-flex items-center rounded-full px-8 py-4 text-base font-bold shadow-lg"
+            className="inline-flex items-center rounded-full text-base font-bold shadow-lg"
           >
             <span
               style={{
                 background: "var(--primary)",
                 color: "var(--primary-dark)",
               }}
-              className="rounded-full"
+              className="rounded-full px-8 py-4"
             >
               💬 ثبت سفارش در واتساپ
             </span>
