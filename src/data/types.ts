@@ -1,17 +1,20 @@
-export type Category = "cookies" | "dry-sweets" | "gift-boxes" | "diet";
+export type Category = "cookies" | "cakes" | "diet" | "dry-sweets" | "gift-boxes";
+export type ProductBadge = "bestseller" | "diet" | "diabetic" | "special";
 
 export interface Product {
   id: string;
   slug: string;
   name: string;
   description: string;
-  ingredients: string[];
-  weightGrams: number;
+  ingredients?: string[];
+  weightGrams?: number;
   priceToman: number;
   images: string[];
   category: Category;
-  shelfLifeDays: number;
-  tags: string[];
+  shelfLifeDays?: number;
+  tags?: string[];
+  badge?: ProductBadge;
+  emoji?: string;
 }
 
 export interface Review {
