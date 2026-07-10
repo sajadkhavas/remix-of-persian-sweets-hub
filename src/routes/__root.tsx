@@ -130,7 +130,7 @@ function RootComponent() {
       <OrganizationJsonLd />
       <WebsiteJsonLd />
       <Header />
-      <main className="max-w-6xl mx-auto px-4 py-8 min-h-[60vh]">
+      <main className="min-h-[60vh]">
         <Outlet />
       </main>
       <Footer />
