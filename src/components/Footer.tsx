@@ -1,61 +1,80 @@
 import { Link } from "@tanstack/react-router";
 import { SITE } from "@/lib/site";
-import { CITIES } from "@/data/cities";
-import { OCCASIONS } from "@/data/occasions";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-background mt-16">
-      <div className="max-w-6xl mx-auto px-4 py-10 grid gap-8 md:grid-cols-4 text-sm">
+    <footer style={{ background: "var(--accent-brown)", color: "white" }}>
+      <div className="mx-auto grid max-w-[1200px] gap-8 px-4 py-12 md:grid-cols-4">
         <div>
-          <h2 className="font-bold text-base mb-3">{SITE.brand}</h2>
-          <p className="text-muted-foreground leading-7">
-            کوکی و شیرینی خشک تازه، ارسال به تمام شهرهای ایران با بسته‌بندی مقاوم.
-          </p>
-          <a
-            href={SITE.instagram}
-            rel="noopener"
-            className="inline-block mt-3 text-foreground"
-          >
-            اینستاگرام
-          </a>
+          <div className="flex items-center gap-2 mb-3">
+            <span
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full"
+              style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
+            >
+              🧁
+            </span>
+            <span className="font-display text-lg">winimi Bakery</span>
+          </div>
+          <p className="text-sm opacity-80 leading-7">{SITE.tagline}</p>
+          <p className="text-sm opacity-70 mt-2">{SITE.city}، {SITE.region}</p>
         </div>
         <div>
-          <h2 className="font-bold text-base mb-3">راهنما</h2>
-          <ul className="space-y-2">
-            <li><Link to="/packaging-and-shipping">بسته‌بندی و ارسال</Link></li>
-            <li><Link to="/faq">پرسش‌های پرتکرار</Link></li>
+          <h2 className="font-bold text-base mb-3">دسترسی سریع</h2>
+          <ul className="space-y-2 text-sm opacity-80">
+            <li><Link to="/products">محصولات</Link></li>
             <li><Link to="/about">درباره ما</Link></li>
-            <li><Link to="/contact">تماس با ما</Link></li>
+            <li><Link to="/packaging-and-shipping">ارسال و بسته‌بندی</Link></li>
+            <li><Link to="/faq">سوالات متداول</Link></li>
           </ul>
         </div>
         <div>
-          <h2 className="font-bold text-base mb-3">ارسال به شهر</h2>
-          <ul className="space-y-2">
-            {CITIES.slice(0, 8).map((c) => (
-              <li key={c.slug}>
-                <Link to="/shipping-to/$city" params={{ city: c.slug }}>
-                  ارسال به {c.nameFa}
-                </Link>
-              </li>
-            ))}
+          <h2 className="font-bold text-base mb-3">محصولات</h2>
+          <ul className="space-y-2 text-sm opacity-80">
+            <li><Link to="/category/$slug" params={{ slug: "cookies" }}>کوکی‌ها</Link></li>
+            <li><Link to="/category/$slug" params={{ slug: "cakes" }}>کیک و دسر</Link></li>
+            <li><Link to="/category/$slug" params={{ slug: "diet" }}>رژیمی و دیابتی</Link></li>
+            <li><Link to="/contact">سفارش ویژه</Link></li>
           </ul>
         </div>
         <div>
-          <h2 className="font-bold text-base mb-3">مناسبت‌ها</h2>
-          <ul className="space-y-2">
-            {OCCASIONS.map((o) => (
-              <li key={o.slug}>
-                <Link to="/occasion/$slug" params={{ slug: o.slug }}>
-                  {o.nameFa}
-                </Link>
-              </li>
-            ))}
+          <h2 className="font-bold text-base mb-3">تماس با ما</h2>
+          <ul className="space-y-2 text-sm opacity-80">
+            <li>📞 <span dir="ltr">{SITE.phone}</span></li>
+            <li>
+              <a href={SITE.instagram} rel="noopener" target="_blank">
+                📩 دایرکت اینستاگرام
+              </a>
+            </li>
           </ul>
+          <div className="mt-3 flex gap-3">
+            <a
+              href={SITE.instagram}
+              rel="noopener"
+              target="_blank"
+              aria-label="اینستاگرام"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full"
+              style={{ background: "rgba(255,255,255,0.1)" }}
+            >
+              📷
+            </a>
+            <a
+              href={SITE.whatsapp}
+              rel="noopener"
+              target="_blank"
+              aria-label="واتساپ"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full"
+              style={{ background: "rgba(255,255,255,0.1)" }}
+            >
+              💬
+            </a>
+          </div>
         </div>
       </div>
-      <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} {SITE.brand}
+      <div
+        className="border-t py-4 text-center text-xs"
+        style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}
+      >
+        © ۱۴۰۴ {SITE.brandFa} — تمام حقوق محفوظ است
       </div>
     </footer>
   );
