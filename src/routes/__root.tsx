@@ -17,6 +17,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { OrganizationJsonLd } from "@/components/jsonld/OrganizationJsonLd";
 import { WebsiteJsonLd } from "@/components/jsonld/WebsiteJsonLd";
+import { ScrollProgressBar } from "@/components/animations/ScrollProgressBar";
 
 function NotFoundComponent() {
   return (
@@ -132,6 +133,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <OrganizationJsonLd />
       <WebsiteJsonLd />
+      <ScrollProgressBar />
       <Header />
       <main className="min-h-[60vh]">
         {isHome ? (
