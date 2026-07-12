@@ -1,50 +1,46 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SITE } from "@/lib/site";
 import { PRODUCTS } from "@/data/products";
 import { CITIES } from "@/data/cities";
 import { OCCASIONS } from "@/data/occasions";
 import { POSTS } from "@/data/blog";
-
-const STATIC_PATHS = [
-  "/",
-  "/products",
-  "/blog",
-  "/packaging-and-shipping",
-  "/faq",
-  "/about",
-  "/contact",
-  "/terms",
-  "/privacy-policy",
-  "/returns",
-];
-const CATEGORY_SLUGS = ["cookies", "cakes", "diet"];
+import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const today = new Date().toISOString().slice(0, 10);
-        const paths: string[] = [
-          ...STATIC_PATHS,
-          ...CATEGORY_SLUGS.map((s) => `/category/${s}`),
-          ...PRODUCTS.map((p) => `/product/${p.slug}`),
-          ...CITIES.map((c) => `/shipping-to/${c.slug}`),
-          ...OCCASIONS.map((o) => `/occasion/${o.slug}`),
-          ...POSTS.map((p) => `/blog/${p.slug}`),
+        const now = new Date().toISOString().split("T")[0];
+        const url = (loc: string, priority: string, changefreq: string) =>
+          `  <url>\n    <loc>${SITE.origin}${loc}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+        const urls = [
+          url("/", "1.0", "weekly"),
+          url("/products", "0.9", "daily"),
+          url("/about", "0.7", "monthly"),
+          url("/contact", "0.6", "monthly"),
+          url("/faq", "0.7", "monthly"),
+          url("/blog", "0.8", "weekly"),
+          url("/packaging-and-shipping", "0.8", "monthly"),
+          url("/terms", "0.3", "yearly"),
+          url("/privacy-policy", "0.3", "yearly"),
+          url("/returns", "0.4", "yearly"),
+          url("/category/cookies", "0.8", "weekly"),
+          url("/category/cakes", "0.8", "weekly"),
+          url("/category/diet", "0.8", "weekly"),
+          url("/category/gift-boxes", "0.7", "monthly"),
+          ...PRODUCTS.map((p) => url(`/product/${p.slug}`, "0.9", "weekly")),
+          ...CITIES.map((c) => url(`/shipping-to/${c.slug}`, "0.7", "monthly")),
+          ...OCCASIONS.map((o) => url(`/occasion/${o.slug}`, "0.8", "monthly")),
+          ...POSTS.map((p) => url(`/blog/${p.slug}`, "0.7", "weekly")),
         ];
-        const urls = paths
-          .map(
-            (p) =>
-              `  <url>\n    <loc>${SITE.origin}${p}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`
-          )
-          .join("\n");
-        const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`;
-        return new Response(xml, {
-          headers: {
-            "Content-Type": "application/xml",
-            "Cache-Control": "public, max-age=3600",
+        return new Response(
+          `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`,
+          {
+            headers: {
+              "Content-Type": "application/xml; charset=utf-8",
+              "Cache-Control": "public, max-age=3600",
+            },
           },
-        });
+        );
       },
     },
   },
