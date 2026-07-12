@@ -18,6 +18,7 @@ import { Footer } from "@/components/Footer";
 import { OrganizationJsonLd } from "@/components/jsonld/OrganizationJsonLd";
 import { WebsiteJsonLd } from "@/components/jsonld/WebsiteJsonLd";
 import { ScrollProgressBar } from "@/components/animations/ScrollProgressBar";
+import { BottomNav } from "@/components/BottomNav";
 
 function NotFoundComponent() {
   return (
@@ -135,7 +136,7 @@ function RootComponent() {
       <WebsiteJsonLd />
       <ScrollProgressBar />
       <Header />
-      <main className="min-h-[60vh]">
+      <main className="min-h-[60vh] pb-20 md:pb-0">
         {isHome ? (
           <Outlet />
         ) : (
@@ -145,6 +146,7 @@ function RootComponent() {
         )}
       </main>
       <Footer />
+      <BottomNav />
     </QueryClientProvider>
   );
 }

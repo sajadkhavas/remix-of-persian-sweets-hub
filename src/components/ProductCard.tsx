@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import type { Product, ProductBadge } from "@/data/types";
 import { formatToman } from "@/lib/format";
+import { useCartStore } from "@/lib/cart";
 
 const BADGE_STYLE: Record<ProductBadge, { bg: string; color: string; label: string }> = {
   bestseller: { bg: "var(--accent-gold)", color: "white", label: "⭐ پرفروش" },
@@ -12,6 +13,9 @@ const BADGE_STYLE: Record<ProductBadge, { bg: string; color: string; label: stri
 
 export function ProductCard({ product }: { product: Product }) {
   const badge = product.badge ? BADGE_STYLE[product.badge] : null;
+  const addItem = useCartStore((s) => s.addItem);
+  const inCart = useCartStore((s) => s.items.some((i) => i.id === product.id));
+
   return (
     <motion.article
       layout
@@ -19,11 +23,7 @@ export function ProductCard({ product }: { product: Product }) {
       transition={{ type: "spring", stiffness: 300, damping: 24 }}
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-sm hover:shadow-xl"
     >
-      <Link
-        to="/product/$slug"
-        params={{ slug: product.slug }}
-        className="block"
-      >
+      <Link to="/product/$slug" params={{ slug: product.slug }} className="block">
         <div
           className="relative flex aspect-square items-center justify-center overflow-hidden"
           style={{ background: "var(--primary-light)" }}
@@ -47,7 +47,6 @@ export function ProductCard({ product }: { product: Product }) {
               {badge.label}
             </motion.span>
           ) : null}
-          {/* Hover overlay */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
         <div className="p-4">
@@ -57,24 +56,31 @@ export function ProductCard({ product }: { product: Product }) {
           <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
             {product.description}
           </p>
-          <p
-            className="mt-3 text-lg font-bold"
-            style={{ color: "var(--primary-dark)" }}
-          >
+          <p className="mt-3 text-lg font-bold" style={{ color: "var(--primary-dark)" }}>
             {formatToman(product.priceToman)}
           </p>
         </div>
       </Link>
       <div className="mt-auto px-4 pb-4">
-        <a
-          href="https://wa.me/989212508746"
-          target="_blank"
-          rel="noopener"
-          className="block w-full rounded-lg py-2 text-center text-sm font-semibold transition-colors hover:brightness-95"
-          style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
+        <button
+          type="button"
+          onClick={() =>
+            addItem({
+              id: product.id,
+              slug: product.slug,
+              name: product.name,
+              priceToman: product.priceToman,
+              emoji: product.emoji ?? "🍪",
+            })
+          }
+          className="block w-full rounded-lg py-2 text-center text-sm font-semibold transition-all hover:brightness-95"
+          style={{
+            background: inCart ? "var(--primary-dark)" : "var(--primary)",
+            color: inCart ? "white" : "var(--primary-dark)",
+          }}
         >
-          افزودن به سبد
-        </a>
+          {inCart ? "✓ در سبد" : "افزودن به سبد"}
+        </button>
       </div>
     </motion.article>
   );

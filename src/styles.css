@@ -102,3 +102,28 @@
   }
 }
 
+/* ─── Legal content prose styles ─────────────────────────── */
+.legal-content { line-height: 1.9; color: var(--foreground); }
+.legal-content h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-brown);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-light);
+}
+.legal-content p { color: var(--muted-foreground); margin-bottom: 0.75rem; }
+.legal-content ul {
+  list-style: disc;
+  padding-right: 1.5rem;
+  color: var(--muted-foreground);
+  margin-bottom: 0.75rem;
+}
+.legal-content li { margin-bottom: 0.4rem; }
+.legal-content a {
+  color: var(--primary-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+

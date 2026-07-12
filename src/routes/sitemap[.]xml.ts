@@ -13,8 +13,11 @@ const STATIC_PATHS = [
   "/faq",
   "/about",
   "/contact",
+  "/terms",
+  "/privacy-policy",
+  "/returns",
 ];
-const CATEGORY_SLUGS = ["cookies", "dry-sweets", "gift-boxes", "diet"];
+const CATEGORY_SLUGS = ["cookies", "cakes", "diet"];
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
