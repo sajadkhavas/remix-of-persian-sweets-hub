@@ -16,6 +16,10 @@ export function ProductCard({ product }: { product: Product }) {
   const badge = product.badge ? BADGE_STYLE[product.badge] : null;
   const addItem = useCartStore((s) => s.addItem);
   const inCart = useCartStore((s) => s.items.some((i) => i.id === product.id));
+  const addButtonText = inCart ? "افزودن یکی دیگر" : "افزودن به سبد";
+  const addButtonAriaLabel = inCart
+    ? `افزودن یک عدد دیگر از ${product.name} به سبد خرید`
+    : `افزودن ${product.name} به سبد خرید`;
 
   return (
     <motion.article
@@ -74,13 +78,14 @@ export function ProductCard({ product }: { product: Product }) {
               emoji: product.emoji ?? "🍪",
             })
           }
+          aria-label={addButtonAriaLabel}
           className="block w-full rounded-lg py-2 text-center text-sm font-semibold transition-all hover:brightness-95"
           style={{
             background: inCart ? "var(--primary-dark)" : "var(--primary)",
             color: inCart ? "white" : "var(--primary-dark)",
           }}
         >
-          {inCart ? "✓ در سبد" : "افزودن به سبد"}
+          {addButtonText}
         </button>
       </div>
     </motion.article>
