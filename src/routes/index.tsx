@@ -1,592 +1,538 @@
+import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "motion/react";
-import { buildSeo } from "@/lib/seo";
-import { PRODUCTS } from "@/data/products";
-import { ProductCard } from "@/components/ProductCard";
-import { GENERAL_FAQ } from "@/data/faqs";
-import { SITE } from "@/lib/site";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Instagram } from "lucide-react";
 import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
-import {
-  StaggerContainer,
-  StaggerItem,
-} from "@/components/animations/StaggerContainer";
+import { StaggerContainer, StaggerItem } from "@/components/animations/StaggerContainer";
 import { FloatingBadge } from "@/components/animations/FloatingBadge";
 import { MagneticButton } from "@/components/animations/MagneticButton";
 import { Marquee } from "@/components/animations/Marquee";
 import { AnimatedFAQ } from "@/components/animations/AnimatedFAQ";
-import { AnimatedStep } from "@/components/animations/AnimatedStep";
+import { ProductCard } from "@/components/ProductCard";
+import { PRODUCTS } from "@/data/products";
+import { GENERAL_FAQ } from "@/data/faqs";
+import { SITE } from "@/lib/site";
+import { buildSeo } from "@/lib/seo";
+import { formatToman } from "@/lib/format";
 
 export const Route = createFileRoute("/")({
   head: () =>
     buildSeo({
-      title: "کوکی و کیک خانگی تازه با ارسال سراسری",
+      title: "کیک و کوکی دست‌پخت، ارسال به سراسر ایران",
       description:
-        "وینیمی بیکری: کوکی و کیک دست‌پخت با مواد اولیه تازه، بدون نگهدارنده، شامل گزینه‌های رژیمی و دیابتی. ارسال از اندیشه تهران به سراسر ایران.",
+        "کوکی و شیرینی دست‌پخت با مواد اولیه تازه، بدون نگهدارنده، با گزینه‌های رژیمی و دیابتی. ارسال با بسته‌بندی محافظ به سراسر ایران.",
       path: "/",
     }),
-  component: Home,
+  component: HomePage,
 });
 
-type Filter = "all" | "cookies" | "cakes" | "diet";
-const FILTERS: { key: Filter; label: string }[] = [
+const HERO_EMOJIS = ["🍪", "🧁", "🎂", "🍫", "🥐", "🌿"];
+const HERO_WORDS = ["کیک", "و", "کوکی", "که", "مثل", "خانه", "مزه", "می‌ده"];
+const TRUST_PILLS = [
+  "🌿 بدون نگهدارنده",
+  "🏠 دست‌پخت خانگی",
+  "🚚 ارسال سراسری",
+  "💚 گزینه رژیمی",
+];
+const MARQUEE_ITEMS = [
+  "🧁 پخت تازه روزانه",
+  "🌿 بدون نگهدارنده مصنوعی",
+  "📦 بسته‌بندی محافظ ویژه پست",
+  "🚚 ارسال به سراسر ایران",
+  "💚 گزینه رژیمی و دیابتی",
+  "🏠 دست‌پخت خانگی",
+];
+const CATEGORY_TABS = [
   { key: "all", label: "همه" },
   { key: "cookies", label: "کوکی‌ها" },
   { key: "cakes", label: "کیک و دسر" },
   { key: "diet", label: "رژیمی و دیابتی" },
+] as const;
+type TabKey = (typeof CATEGORY_TABS)[number]["key"];
+
+const ORDER_STEPS = [
+  { icon: "📋", title: "انتخاب کنید", description: "محصول مورد نظرتان را از منو انتخاب کنید" },
+  { icon: "💬", title: "پیام بدید", description: "از طریق واتساپ یا دایرکت سفارش دهید" },
+  { icon: "📦", title: "دریافت کنید", description: "با بسته‌بندی محافظ به دستتان می‌رسد" },
 ];
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const SHIPPING_BADGES = [
+  { icon: "📦", label: "بسته‌بندی چندلایه" },
+  { icon: "🚚", label: "پست پیشتاز" },
+  { icon: "🌡️", label: "مقاوم در حمل" },
+  { icon: "✅", label: "ضمانت سالم رسیدن" },
+];
 
-function Section({
-  children,
-  bg,
-  id,
-  className = "",
-}: {
-  children: React.ReactNode;
-  bg?: string;
-  id?: string;
-  className?: string;
-}) {
+const INSTAGRAM_EMOJIS = ["🍪", "🧁", "🎂", "🍫", "🥐", "❤️"];
+
+function HomePage() {
+  const shouldReduceMotion = useReducedMotion();
+  return (
+    <div className="overflow-hidden">
+      <HeroSection reduceMotion={!!shouldReduceMotion} />
+      <MarqueeSection />
+      <ProductsSection />
+      <DietHighlightSection />
+      <AboutTeaserSection />
+      <HowToOrderSection />
+      <ShippingTrustSection />
+      <FaqSection />
+      <InstagramSection />
+    </div>
+  );
+}
+
+function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
+  const bestSeller = PRODUCTS.find((p) => p.badge === "bestseller") ?? PRODUCTS[0];
   return (
     <section
-      id={id}
-      className={`py-16 md:py-20 ${className}`}
-      style={bg ? { background: bg } : undefined}
+      className="relative overflow-hidden px-4 pb-16 pt-10 md:pt-16"
+      style={{ background: "var(--primary-light)" }}
     >
-      <div className="mx-auto max-w-[1200px] px-4">{children}</div>
+      {!reduceMotion &&
+        HERO_EMOJIS.map((emoji, i) => (
+          <motion.span
+            key={emoji}
+            className="pointer-events-none absolute select-none text-3xl opacity-20 md:text-5xl"
+            style={{
+              top: `${10 + (i % 3) * 25}%`,
+              left: `${(i * 17) % 90}%`,
+            }}
+            animate={{ y: [0, -14, 0], rotate: [0, 6, 0] }}
+            transition={{
+              duration: 5 + i,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.3,
+            }}
+            aria-hidden="true"
+          >
+            {emoji}
+          </motion.span>
+        ))}
+
+      <div className="relative mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
+        <div>
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-4 inline-block rounded-full px-4 py-1.5 text-sm font-semibold"
+            style={{ background: "white", color: "var(--primary-dark)" }}
+          >
+            ✦ دست‌پخت تازه، ارسال سراسری
+          </motion.p>
+
+          <h1
+            className="mb-5 text-4xl font-black leading-[1.25] md:text-6xl"
+            style={{ color: "var(--accent-brown)" }}
+          >
+            {HERO_WORDS.map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 + i * 0.06 }}
+                className="me-2 inline-block"
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.5 }}
+            className="mb-6 text-lg leading-8 text-muted-foreground md:text-xl"
+          >
+            از اندیشه تا هر گوشه‌ای از ایران — مواد اولیه تازه، بهداشت وسواسی، عشق به پخت.
+          </motion.p>
+
+          <div className="mb-8 flex flex-wrap gap-2">
+            {TRUST_PILLS.map((pill, i) => (
+              <motion.span
+                key={pill}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 + i * 0.08 }}
+                className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold shadow-sm"
+                style={{ color: "var(--accent-brown)" }}
+              >
+                {pill}
+              </motion.span>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <MagneticButton
+              href="#products"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-bold shadow-lg"
+            >
+              <span
+                className="inline-block rounded-full px-6 py-3"
+                style={{ background: "var(--primary-dark)", color: "white" }}
+              >
+                مشاهده محصولات
+              </span>
+            </MagneticButton>
+            <a
+              href={SITE.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full border-2 bg-white px-6 py-3 text-sm font-bold shadow-sm"
+              style={{ borderColor: "var(--primary-dark)", color: "var(--primary-dark)" }}
+            >
+              سفارش واتساپ
+            </a>
+          </div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
+          className="relative mx-auto w-full max-w-md"
+        >
+          <div
+            className="absolute inset-0 -z-10 rounded-[2rem] blur-3xl"
+            style={{ background: "var(--primary)", opacity: 0.35 }}
+          />
+          <div className="relative rounded-[2rem] bg-white p-8 shadow-2xl">
+            <div className="mb-4 flex aspect-square items-center justify-center rounded-2xl text-8xl"
+              style={{ background: "var(--primary-light)" }}
+            >
+              {bestSeller?.emoji ?? "🍪"}
+            </div>
+            <h3 className="text-lg font-bold" style={{ color: "var(--accent-brown)" }}>
+              {bestSeller?.name ?? "کوکی شکلاتی وینیمی"}
+            </h3>
+            <p className="mt-1 text-xl font-black" style={{ color: "var(--primary-dark)" }}>
+              {formatToman(bestSeller?.priceToman ?? 120000)}
+            </p>
+            <FloatingBadge className="absolute -top-4 -start-4 rounded-full px-4 py-2 text-sm font-bold shadow-lg"
+            >
+              <span
+                className="inline-block rounded-full px-4 py-2"
+                style={{ background: "var(--accent-gold)", color: "white" }}
+              >
+                ⭐ ۱۰۰٪ تازه
+              </span>
+            </FloatingBadge>
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 }
 
-function Home() {
-  const [filter, setFilter] = useState<Filter>("all");
-  const filtered = PRODUCTS.filter(
-    (p) => filter === "all" || p.category === filter,
+function MarqueeSection() {
+  return (
+    <section
+      className="border-y py-4"
+      style={{ background: "white", borderColor: "var(--border)" }}
+      aria-label="مزیت‌های وینیمی"
+    >
+      <Marquee items={MARQUEE_ITEMS} />
+    </section>
+  );
+}
+
+function ProductsSection() {
+  const [active, setActive] = useState<TabKey>("all");
+  const filtered = useMemo(
+    () => (active === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === active)),
+    [active],
   );
 
-  // Hero image parallax (desktop only via CSS media on wrapper is heavy;
-  // we scale the transform range small enough to feel natural everywhere).
-  const { scrollY } = useScroll();
-  const heroImageY = useTransform(scrollY, [0, 400], [0, -40]);
-
   return (
-    <>
-      {/* HERO */}
-      <section
-        className="relative overflow-hidden"
-        style={{ background: "var(--accent-cream)", minHeight: "90vh" }}
-      >
-        <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-24">
-          <div>
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: EASE }}
-              className="inline-block rounded-full px-4 py-1.5 text-sm font-medium"
-              style={{
-                background: "var(--primary-light)",
-                color: "var(--primary-dark)",
-              }}
-            >
-              ✦ دست‌پخت تازه، ارسال سراسری
-            </motion.span>
+    <section id="products" className="px-4 py-16 md:py-24">
+      <RevealOnScroll className="mx-auto max-w-6xl text-center">
+        <h2 className="mb-3 text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+          محصولات ما
+        </h2>
+        <p className="mb-8 text-muted-foreground">تازه پخته، با عشق آماده شده</p>
+      </RevealOnScroll>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
-              className="mt-5 text-4xl font-bold leading-[1.4] md:text-5xl"
-              style={{ color: "var(--accent-brown)" }}
-            >
-              کیک و کوکی که
-              <br />
-              مثل خانه مزه می‌ده
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.35, ease: EASE }}
-              className="mt-5 text-lg leading-8 text-muted-foreground max-w-xl"
-            >
-              از اندیشه تا هر گوشه‌ای از ایران — با مواد اولیه تازه، بهداشت
-              وسواسی و عشق به پخت.
-            </motion.p>
-
-            <motion.ul
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: {},
-                visible: {
-                  transition: { staggerChildren: 0.08, delayChildren: 0.55 },
-                },
-              }}
-              className="mt-6 flex flex-wrap gap-3 text-sm"
-            >
-              {["🌿 بدون نگهدارنده", "🏠 دست‌پخت خانگی", "🚚 ارسال سراسری"].map(
-                (t) => (
-                  <motion.li
-                    key={t}
-                    variants={{
-                      hidden: { opacity: 0, y: 12 },
-                      visible: { opacity: 1, y: 0 },
-                    }}
-                    className="rounded-full border border-border bg-white px-4 py-1.5"
-                  >
-                    {t}
-                  </motion.li>
-                ),
-              )}
-            </motion.ul>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.85, ease: EASE }}
-              className="mt-8 flex flex-wrap gap-3"
-            >
-              <MagneticButton
-                href="#products"
-                className="inline-flex items-center rounded-full px-7 py-3.5 text-base font-bold shadow-md hover:brightness-95"
-              >
-                <span
-                  style={{
-                    background: "var(--primary)",
-                    color: "var(--primary-dark)",
-                  }}
-                  className="-mx-7 -my-3.5 rounded-full px-7 py-3.5"
-                >
-                  مشاهده محصولات
-                </span>
-              </MagneticButton>
-              <a
-                href={SITE.whatsapp}
-                target="_blank"
-                rel="noopener"
-                className="inline-flex items-center rounded-full border-2 bg-white px-7 py-3.5 text-base font-bold hover:brightness-95"
-                style={{
-                  borderColor: "var(--primary)",
-                  color: "var(--primary-dark)",
-                }}
-              >
-                سفارش واتساپ
-              </a>
-            </motion.div>
-          </div>
-
-          <div className="relative">
-            <motion.div
-              style={{ y: heroImageY }}
-              initial={{ opacity: 0, scale: 0.94 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="relative aspect-square overflow-hidden rounded-3xl"
-            >
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(135deg, var(--primary-light) 0%, #D6E9C6 100%)",
-                  boxShadow: "0 20px 60px rgba(141,184,122,0.25)",
-                }}
-                role="img"
-                aria-label="کوکی تازه وینیمی با بسته‌بندی"
-              />
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center text-[160px]"
-                animate={{ y: [0, -8, 0] }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                aria-hidden="true"
-              >
-                🍪
-              </motion.div>
-            </motion.div>
-            <FloatingBadge
-              className="absolute -bottom-4 -start-4 rounded-full bg-white px-4 py-3 text-sm font-semibold shadow-lg"
-            >
-              <span style={{ color: "var(--primary-dark)" }}>
-                ⭐ ۱۰۰٪ مواد اولیه تازه
-              </span>
-            </FloatingBadge>
-          </div>
-        </div>
-      </section>
-
-      {/* TRUST BAR — MARQUEE */}
-      <section style={{ background: "var(--primary)" }} className="py-4">
-        <Marquee duration={30} />
-      </section>
-
-      {/* PRODUCTS */}
-      <Section id="products" bg="var(--accent-cream)">
-        <RevealOnScroll className="mb-8 text-center">
-          <h2
-            className="text-3xl font-bold"
-            style={{ color: "var(--accent-brown)" }}
-          >
-            محصولات ما
-          </h2>
-          <p className="mt-2 text-muted-foreground">
-            تازه پخته، با عشق آماده شده
-          </p>
-        </RevealOnScroll>
-
-        {/* Filter tabs with animated underline */}
-        <div className="mb-10 flex flex-wrap justify-center gap-2">
-          {FILTERS.map((f) => {
-            const active = filter === f.key;
-            return (
-              <button
-                key={f.key}
-                type="button"
-                onClick={() => setFilter(f.key)}
-                className="relative rounded-full px-5 py-2 text-sm font-medium"
-                style={{
-                  color: active
-                    ? "var(--primary-dark)"
-                    : "var(--muted-foreground)",
-                }}
-              >
-                {active ? (
-                  <motion.span
-                    layoutId="filter-pill"
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: "var(--primary)",
-                    }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 30,
-                    }}
-                  />
-                ) : null}
-                <span className="relative z-10">{f.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <motion.div
-          layout
-          className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4"
-        >
-          <AnimatePresence mode="popLayout">
-            {filtered.map((p) => (
-              <motion.div
-                key={p.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.35, ease: EASE }}
-              >
-                <ProductCard product={p} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      </Section>
-
-      {/* ABOUT TEASER */}
-      <Section bg="white">
-        <div className="grid items-center gap-10 md:grid-cols-2">
-          <RevealOnScroll direction="right" className="relative order-2 md:order-1">
-            <div
-              className="absolute -top-6 -end-6 h-24 w-24 rounded-full"
-              style={{ background: "var(--primary-light)" }}
-              aria-hidden="true"
-            />
-            <motion.div
-              initial={{ clipPath: "inset(0 0 100% 0)" }}
-              whileInView={{ clipPath: "inset(0 0 0% 0)" }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 1, ease: EASE }}
-              className="relative aspect-[4/3] overflow-hidden rounded-3xl"
-              style={{ background: "var(--primary-light)" }}
-              role="img"
-              aria-label="بسته‌بندی وینیمی با محصول"
-            >
-              <div className="flex h-full items-center justify-center text-[120px]">
-                📦
-              </div>
-            </motion.div>
-          </RevealOnScroll>
-          <RevealOnScroll direction="left" className="order-1 md:order-2">
-            <span
-              className="inline-block rounded-full px-4 py-1.5 text-sm font-medium"
-              style={{
-                background: "var(--primary-light)",
-                color: "var(--primary-dark)",
-              }}
-            >
-              داستان ما
-            </span>
-            <h2
-              className="mt-4 text-3xl font-bold"
-              style={{ color: "var(--accent-brown)" }}
-            >
-              از بوی کیک تازه تا وینیمی
-            </h2>
-            <p className="mt-4 leading-8 text-muted-foreground">
-              همه‌چیز از کودکی شروع شد — از عطر کیک تازه‌ای که در خانه
-              می‌پیچید. وینیمی ثمره سال‌ها عشق به پخت و وسواس در کیفیت است.
-              چون باور داریم شیرینی خوب باید مثل خانه مزه بده.
-            </p>
-            <ul className="mt-5 space-y-2 text-sm">
-              {[
-                "مواد اولیه تازه، بدون نگهدارنده",
-                "گزینه‌های رژیمی و بدون قند",
-                "بسته‌بندی بهداشتی ویژه ارسال پستی",
-                "پخت تازه با هر سفارش",
-              ].map((t) => (
-                <li key={t} className="flex items-center gap-2">
-                  <span style={{ color: "var(--primary-dark)" }}>✓</span> {t}
-                </li>
-              ))}
-            </ul>
-            <Link
-              to="/about"
-              className="mt-6 inline-block border-b-2 pb-1 text-sm font-semibold"
-              style={{
-                borderColor: "var(--primary)",
-                color: "var(--primary-dark)",
-              }}
-            >
-              بیشتر بدانید ←
-            </Link>
-          </RevealOnScroll>
-        </div>
-      </Section>
-
-      {/* DIET / DIABETIC */}
-      <section className="py-16 md:py-20" style={{ background: "white" }}>
-        <RevealOnScroll>
-          <div
-            className="mx-auto max-w-[900px] rounded-3xl px-6 py-12 text-center md:px-12"
+      <div className="mx-auto mb-10 flex max-w-3xl flex-wrap justify-center gap-2">
+        {CATEGORY_TABS.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => setActive(tab.key)}
+            className="relative rounded-full px-5 py-2.5 text-sm font-semibold transition-colors"
             style={{
-              background:
-                "linear-gradient(135deg, var(--primary-light) 0%, #E8F5E0 100%)",
+              color: active === tab.key ? "var(--primary-dark)" : "var(--gray-text, #6b7280)",
             }}
           >
-            <div className="text-5xl">🌿</div>
-            <h2
-              className="mt-4 text-3xl font-bold"
-              style={{ color: "var(--accent-brown)" }}
-            >
-              برای کسانی که مراقب سلامتی‌شان هستند
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl leading-8 text-muted-foreground">
-              در وینیمی، از همان ابتدا برای عزیزانمان که با دیابت زندگی می‌کنند
-              فکر کردیم. کوکی‌های رژیمی و بدون قند افزوده ما همان لذت شیرینی را
-              بدون نگرانی می‌دهند.
-            </p>
-            <StaggerContainer className="mt-8 grid gap-4 md:grid-cols-2">
-              <StaggerItem className="rounded-2xl bg-white p-5 text-start">
-                <div className="text-2xl">🍃</div>
-                <h3 className="mt-2 font-bold">کوکی رژیمی</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  بدون قند، کم‌کالری، پر از طعم
-                </p>
-              </StaggerItem>
-              <StaggerItem className="rounded-2xl bg-white p-5 text-start">
-                <div className="text-2xl">💚</div>
-                <h3 className="mt-2 font-bold">کوکی دیابتی</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  بدون قند افزوده، مناسب دیابتی‌ها
-                </p>
-              </StaggerItem>
-            </StaggerContainer>
-            <Link
-              to="/category/$slug"
-              params={{ slug: "diet" }}
-              className="mt-8 inline-flex items-center rounded-full px-7 py-3 text-sm font-bold hover:brightness-95"
-              style={{
-                background: "var(--primary)",
-                color: "var(--primary-dark)",
-              }}
-            >
-              مشاهده محصولات سالم
-            </Link>
-          </div>
-        </RevealOnScroll>
-      </section>
-
-      {/* HOW TO ORDER */}
-      <Section bg="var(--accent-cream)">
-        <RevealOnScroll>
-          <h2
-            className="text-center text-3xl font-bold"
-            style={{ color: "var(--accent-brown)" }}
-          >
-            چطور سفارش بدم؟
-          </h2>
-        </RevealOnScroll>
-        <StaggerContainer as="ol" className="mt-10 grid gap-8 md:grid-cols-3">
-          {[
-            {
-              icon: "📋",
-              title: "انتخاب کنید",
-              text: "محصول مورد نظرتان را از منو انتخاب کنید",
-            },
-            {
-              icon: "💬",
-              title: "پیام بدید",
-              text: "از طریق دایرکت اینستاگرام یا واتساپ سفارش ثبت کنید",
-            },
-            {
-              icon: "📦",
-              title: "دریافت کنید",
-              text: "محصول تازه با بسته‌بندی محافظ به دستتان می‌رسد",
-            },
-          ].map((s, i) => (
-            <StaggerItem key={i} as="li" className="text-center">
-              <motion.div
-                whileHover={{ rotate: -6, scale: 1.08 }}
-                transition={{ type: "spring", stiffness: 260, damping: 15 }}
-                className="mx-auto flex h-20 w-20 items-center justify-center rounded-full text-3xl shadow-md"
-                style={{
-                  background: "var(--primary)",
-                  color: "var(--primary-dark)",
-                }}
-              >
-                {s.icon}
-              </motion.div>
-              <h3
-                className="mt-4 text-xl font-bold"
-                style={{ color: "var(--accent-brown)" }}
-              >
-                <AnimatedStep number={i + 1} />. {s.title}
-              </h3>
-              <p className="mt-2 text-muted-foreground">{s.text}</p>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-        <RevealOnScroll className="mt-10 text-center">
-          <MagneticButton
-            href={SITE.whatsapp}
-            target="_blank"
-            rel="noopener"
-            className="inline-flex items-center rounded-full text-base font-bold shadow-lg"
-          >
-            <span
-              style={{
-                background: "var(--primary)",
-                color: "var(--primary-dark)",
-              }}
-              className="rounded-full px-8 py-4"
-            >
-              💬 ثبت سفارش در واتساپ
-            </span>
-          </MagneticButton>
-        </RevealOnScroll>
-      </Section>
-
-      {/* SHIPPING TRUST */}
-      <Section bg="white">
-        <RevealOnScroll>
-          <h2
-            className="text-center text-3xl font-bold"
-            style={{ color: "var(--accent-brown)" }}
-          >
-            ارسال سراسری — از اندیشه تا همه جای ایران
-          </h2>
-        </RevealOnScroll>
-        <RevealOnScroll delay={0.15}>
-          <div
-            className="mx-auto mt-8 max-w-3xl rounded-2xl p-6"
-            style={{
-              background: "var(--primary-light)",
-              borderRight: "4px solid var(--primary)",
-            }}
-          >
-            <p className="font-bold" style={{ color: "var(--accent-brown)" }}>
-              آیا کوکی توی پست خراب نمیشه؟
-            </p>
-            <p className="mt-2 text-muted-foreground leading-8">
-              ما برای این سوال از همان ابتدا برنامه داشتیم. هر محصول با
-              بسته‌بندی چندلایه محافظ ارسال می‌شود تا سالم و تازه به دستتان
-              برسد.
-            </p>
-          </div>
-        </RevealOnScroll>
-        <StaggerContainer className="mx-auto mt-8 grid max-w-3xl gap-4 md:grid-cols-2">
-          {[
-            "📦 بسته‌بندی چندلایه محافظ",
-            "🚚 پست پیشتاز — ۲ تا ۵ روز کاری",
-            "🌡️ مناسب برای حمل و نقل",
-            "✅ ضمانت سالم رسیدن",
-          ].map((t) => (
-            <StaggerItem
-              key={t}
-              className="rounded-xl border border-border bg-white p-4"
-            >
-              {t}
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-      </Section>
-
-      {/* FAQ — animated accordion (SSR-safe) */}
-      <Section bg="var(--accent-cream)">
-        <AnimatedFAQ items={GENERAL_FAQ} />
-      </Section>
-
-      {/* INSTAGRAM TEASER */}
-      <Section bg="var(--secondary)">
-        <RevealOnScroll className="text-center">
-          <h2
-            className="text-3xl font-bold"
-            style={{ color: "var(--accent-brown)" }}
-          >
-            ما را در اینستاگرام دنبال کنید
-          </h2>
-          <p className="mt-2 text-muted-foreground" dir="ltr">
-            @{SITE.instagramHandle}
-          </p>
-        </RevealOnScroll>
-        <StaggerContainer className="mt-8 grid grid-cols-3 gap-3 md:gap-4">
-          {["🧁", "🍰", "🍪", "🥐", "☕", "🎂"].map((e, i) => (
-            <StaggerItem key={i}>
-              <motion.div
-                whileHover={{ scale: 1.05, rotate: -2 }}
-                transition={{ type: "spring", stiffness: 220, damping: 15 }}
-                className="flex aspect-square items-center justify-center rounded-2xl text-5xl"
+            {active === tab.key && (
+              <motion.span
+                layoutId="active-tab"
+                className="absolute inset-0 rounded-full"
                 style={{ background: "var(--primary-light)" }}
-                aria-hidden="true"
-              >
-                {e}
-              </motion.div>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-        <RevealOnScroll className="mt-8 text-center">
-          <a
-            href={SITE.instagram}
-            target="_blank"
-            rel="noopener"
-            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold hover:brightness-95"
-            style={{
-              background: "var(--primary)",
-              color: "var(--primary-dark)",
-            }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+            )}
+            <span className="relative">{tab.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="mx-auto max-w-6xl">
+        <AnimatePresence mode="wait">
+          <StaggerContainer
+            key={active}
+            className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"
           >
-            📷 دنبال کردن در اینستاگرام
-          </a>
+            {filtered.map((product) => (
+              <StaggerItem key={product.id}>
+                <ProductCard product={product} />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+}
+
+function DietHighlightSection() {
+  return (
+    <section className="px-4 py-16 md:py-24" style={{ background: "var(--primary-light)" }}>
+      <RevealOnScroll className="mx-auto max-w-4xl text-center">
+        <div className="mb-4 text-6xl">🌿</div>
+        <h2 className="mb-4 text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+          برای کسانی که مراقب سلامتی‌شان هستند
+        </h2>
+        <p className="mb-10 text-lg leading-8 text-muted-foreground">
+          در وینیمی، از همان ابتدا برای عزیزانمان که با دیابت زندگی می‌کنند فکر کردیم.
+        </p>
+
+        <div className="mb-8 grid gap-4 sm:grid-cols-2">
+          {[
+            { icon: "🍃", title: "کوکی رژیمی", sub: "بدون قند افزوده، کم‌کالری" },
+            { icon: "💚", title: "کوکی دیابتی", sub: "مخصوص دیابتی‌ها" },
+          ].map((card) => (
+            <motion.div
+              key={card.title}
+              whileHover={{ y: -4 }}
+              className="rounded-2xl bg-white p-6 text-start shadow-md"
+            >
+              <div className="mb-2 text-4xl">{card.icon}</div>
+              <h3 className="text-lg font-bold" style={{ color: "var(--accent-brown)" }}>
+                {card.title}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">{card.sub}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <Link
+          to="/category/$slug"
+          params={{ slug: "diet" }}
+          className="inline-block rounded-full px-6 py-3 text-sm font-bold shadow-md"
+          style={{ background: "var(--primary-dark)", color: "white" }}
+        >
+          مشاهده محصولات سالم
+        </Link>
+      </RevealOnScroll>
+    </section>
+  );
+}
+
+function AboutTeaserSection() {
+  return (
+    <section className="px-4 py-16 md:py-24">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
+        <RevealOnScroll direction="right">
+          <div
+            className="flex aspect-square items-center justify-center rounded-[2rem] text-9xl shadow-lg"
+            style={{ background: "var(--primary-light)" }}
+          >
+            🧁
+          </div>
         </RevealOnScroll>
-      </Section>
-    </>
+        <RevealOnScroll direction="left">
+          <p className="mb-2 text-sm font-bold" style={{ color: "var(--primary-dark)" }}>
+            داستان ما
+          </p>
+          <h2 className="mb-4 text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+            از بوی کیک تازه تا وینیمی
+          </h2>
+          <p className="mb-6 leading-8 text-muted-foreground">
+            همه‌چیز از کودکی شروع شد — از عطر کیک تازه‌ای که در خانه می‌پیچید. وینیمی ثمره
+            سال‌ها عشق به پخت و وسواس در کیفیت است.
+          </p>
+          <ul className="mb-6 space-y-2">
+            {[
+              "مواد اولیه تازه، بدون نگهدارنده",
+              "گزینه‌های رژیمی و بدون قند",
+              "بسته‌بندی ویژه ارسال پستی",
+              "پخت تازه با هر سفارش",
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2 text-sm">
+                <span
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold"
+                  style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
+                >
+                  ✓
+                </span>
+                <span style={{ color: "var(--accent-brown)" }}>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <Link
+            to="/about"
+            className="inline-block rounded-full border-2 px-6 py-3 text-sm font-bold"
+            style={{ borderColor: "var(--primary-dark)", color: "var(--primary-dark)" }}
+          >
+            بیشتر بدانید
+          </Link>
+        </RevealOnScroll>
+      </div>
+    </section>
+  );
+}
+
+function HowToOrderSection() {
+  return (
+    <section className="px-4 py-16 md:py-24" style={{ background: "var(--primary-light)" }}>
+      <RevealOnScroll className="mx-auto mb-12 max-w-4xl text-center">
+        <h2 className="text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+          چطور سفارش بدم؟
+        </h2>
+      </RevealOnScroll>
+
+      <StaggerContainer className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+        {ORDER_STEPS.map((step, i) => (
+          <StaggerItem key={step.title}>
+            <motion.div
+              whileHover={{ y: -6 }}
+              className="relative rounded-2xl bg-white p-6 text-center shadow-md"
+            >
+              <div className="mb-4 text-5xl">{step.icon}</div>
+              <div
+                className="absolute -top-4 start-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full text-lg font-black shadow-md"
+                style={{ background: "var(--primary-dark)", color: "white" }}
+              >
+                {i + 1}
+              </div>
+              <h3 className="mb-2 text-lg font-bold" style={{ color: "var(--accent-brown)" }}>
+                {step.title}
+              </h3>
+              <p className="text-sm leading-7 text-muted-foreground">{step.description}</p>
+            </motion.div>
+          </StaggerItem>
+        ))}
+      </StaggerContainer>
+
+      <div className="mt-10 text-center">
+        <a
+          href={SITE.whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block rounded-full px-8 py-4 text-base font-bold shadow-lg"
+          style={{ background: "var(--primary-dark)", color: "white" }}
+        >
+          ثبت سفارش در واتساپ
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function ShippingTrustSection() {
+  return (
+    <section className="px-4 py-16 md:py-24">
+      <RevealOnScroll className="mx-auto mb-8 max-w-4xl text-center">
+        <h2 className="text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+          ارسال سراسری — از اندیشه تا همه جای ایران
+        </h2>
+      </RevealOnScroll>
+
+      <RevealOnScroll className="mx-auto mb-10 max-w-3xl rounded-2xl border p-6"
+        style={{ background: "var(--primary-light)", borderColor: "var(--border)" }}
+      >
+        <h3 className="mb-2 text-lg font-bold" style={{ color: "var(--accent-brown)" }}>
+          آیا کوکی توی پست خراب نمیشه؟
+        </h3>
+        <p className="leading-8 text-muted-foreground">
+          برای این سوال از همان ابتدا برنامه داشتیم. هر محصول با بسته‌بندی چندلایه محافظ ارسال
+          می‌شود.
+        </p>
+      </RevealOnScroll>
+
+      <StaggerContainer className="mx-auto grid max-w-5xl grid-cols-2 gap-4 md:grid-cols-4">
+        {SHIPPING_BADGES.map((badge) => (
+          <StaggerItem key={badge.label}>
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="flex flex-col items-center rounded-2xl bg-white p-6 text-center shadow-sm"
+            >
+              <span className="mb-2 text-4xl">{badge.icon}</span>
+              <span className="text-sm font-semibold" style={{ color: "var(--accent-brown)" }}>
+                {badge.label}
+              </span>
+            </motion.div>
+          </StaggerItem>
+        ))}
+      </StaggerContainer>
+    </section>
+  );
+}
+
+function FaqSection() {
+  return (
+    <section className="px-4 py-16 md:py-24" style={{ background: "var(--primary-light)" }}>
+      <div className="mx-auto max-w-4xl">
+        <AnimatedFAQ items={GENERAL_FAQ} />
+      </div>
+    </section>
+  );
+}
+
+function InstagramSection() {
+  return (
+    <section className="px-4 py-16 md:py-24">
+      <RevealOnScroll className="mx-auto mb-8 max-w-4xl text-center">
+        <h2 className="mb-2 text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+          ما را در اینستاگرام دنبال کنید
+        </h2>
+        <p className="text-muted-foreground">@{SITE.instagramHandle}</p>
+      </RevealOnScroll>
+
+      <StaggerContainer className="mx-auto mb-8 grid max-w-4xl grid-cols-3 gap-2 md:grid-cols-6">
+        {INSTAGRAM_EMOJIS.map((emoji, i) => (
+          <StaggerItem key={i}>
+            <motion.a
+              href={SITE.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05 }}
+              className="group relative flex aspect-square items-center justify-center overflow-hidden rounded-xl text-5xl"
+              style={{ background: "var(--primary-light)" }}
+            >
+              <span>{emoji}</span>
+              <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <Instagram className="h-8 w-8 text-white" />
+              </span>
+            </motion.a>
+          </StaggerItem>
+        ))}
+      </StaggerContainer>
+
+      <div className="text-center">
+        <a
+          href={SITE.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold shadow-md"
+          style={{ background: "var(--primary-dark)", color: "white" }}
+        >
+          <Instagram className="h-4 w-4" />
+          دنبال کردن در اینستاگرام
+        </a>
+      </div>
+    </section>
   );
 }
