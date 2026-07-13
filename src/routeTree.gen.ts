@@ -135,7 +135,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/packaging-and-shipping': typeof PackagingAndShippingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/products': typeof ProductsRouteWithChildren
+  '/products': typeof ProductsRoute
   '/returns': typeof ReturnsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -156,7 +156,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/packaging-and-shipping': typeof PackagingAndShippingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/products': typeof ProductsRouteWithChildren
+  '/products': typeof ProductsRoute
   '/returns': typeof ReturnsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -178,7 +178,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/packaging-and-shipping': typeof PackagingAndShippingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/products': typeof ProductsRouteWithChildren
+  '/products': typeof ProductsRoute
   '/returns': typeof ReturnsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -265,7 +265,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   PackagingAndShippingRoute: typeof PackagingAndShippingRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
-  ProductsRoute: typeof ProductsRouteWithChildren
+  ProductsRoute: typeof ProductsRoute
   ReturnsRoute: typeof ReturnsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
@@ -425,7 +425,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   PackagingAndShippingRoute: PackagingAndShippingRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
-  ProductsRoute: ProductsRouteWithChildren,
+  ProductsRoute: ProductsRoute,
   ReturnsRoute: ReturnsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
