@@ -8,6 +8,7 @@ export interface SeoInput {
   image?: string; // absolute or root-relative; default og image otherwise
   type?: "website" | "article" | "product";
   noindex?: boolean;
+  robots?: "noindex,nofollow" | "noindex,follow";
 }
 
 export interface HeadEntry {
@@ -33,7 +34,7 @@ export function buildSeo(input: SeoInput): HeadEntry {
     { name: "twitter:description", content: input.description },
     { name: "twitter:image", content: image },
   ];
-  if (input.noindex) meta.push({ name: "robots", content: "noindex,nofollow" });
+  if (input.noindex) meta.push({ name: "robots", content: input.robots ?? "noindex,nofollow" });
   return {
     meta,
     links: [{ rel: "canonical", href: url }],
