@@ -450,16 +450,19 @@ function ShippingTrustSection() {
         </h2>
       </RevealOnScroll>
 
-      <RevealOnScroll className="mx-auto mb-10 max-w-3xl rounded-2xl border p-6"
-        style={{ background: "var(--primary-light)", borderColor: "var(--border)" }}
-      >
-        <h3 className="mb-2 text-lg font-bold" style={{ color: "var(--accent-brown)" }}>
-          آیا کوکی توی پست خراب نمیشه؟
-        </h3>
-        <p className="leading-8 text-muted-foreground">
-          برای این سوال از همان ابتدا برنامه داشتیم. هر محصول با بسته‌بندی چندلایه محافظ ارسال
-          می‌شود.
-        </p>
+      <RevealOnScroll className="mx-auto mb-10 max-w-3xl">
+        <div
+          className="rounded-2xl border p-6"
+          style={{ background: "var(--primary-light)", borderColor: "var(--border)" }}
+        >
+          <h3 className="mb-2 text-lg font-bold" style={{ color: "var(--accent-brown)" }}>
+            آیا کوکی توی پست خراب نمیشه؟
+          </h3>
+          <p className="leading-8 text-muted-foreground">
+            برای این سوال از همان ابتدا برنامه داشتیم. هر محصول با بسته‌بندی چندلایه محافظ ارسال
+            می‌شود.
+          </p>
+        </div>
       </RevealOnScroll>
 
       <StaggerContainer className="mx-auto grid max-w-5xl grid-cols-2 gap-4 md:grid-cols-4">
