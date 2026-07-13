@@ -101,7 +101,7 @@ function ProductPage() {
   const crumbs = [
     { name: "خانه", path: "/" },
     { name: "محصولات", path: "/products" },
-    { name: categoryName, path: `/category/${p.category}` },
+    { name: categoryName, path: "/products" },
     { name: p.name, path: `/product/${p.slug}` },
   ];
   const validComparePrice = Boolean(p.compareAtPriceToman && p.compareAtPriceToman > p.priceToman);
