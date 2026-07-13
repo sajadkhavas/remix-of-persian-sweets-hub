@@ -2,12 +2,13 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { buildSeo } from "@/lib/seo";
-import { findProduct } from "@/data/products";
+import { PRODUCTS, findProduct } from "@/data/products";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BreadcrumbJsonLd } from "@/components/jsonld/BreadcrumbJsonLd";
 import { ProductJsonLd } from "@/components/jsonld/ProductJsonLd";
 import { FAQSection } from "@/components/aeo/FAQSection";
 import { Img } from "@/components/Img";
+import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { useCartStore } from "@/lib/cart";
 import { formatToman, toPersianDigits } from "@/lib/format";
 import type { Product, ProductBadge, ProductCategory } from "@/data/types";
@@ -306,6 +307,8 @@ function ProductPage() {
           </p>
         </DetailCard>
       </section>
+
+      <RelatedProducts product={p} products={PRODUCTS} />
 
       {faqs.length > 0 && <FAQSection items={faqs} />}
     </div>
