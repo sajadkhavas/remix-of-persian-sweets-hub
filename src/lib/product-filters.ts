@@ -1,3 +1,4 @@
+import { PRODUCT_CATEGORIES } from "@/data/categories";
 import type { Product } from "@/data/types";
 
 export type ProductSort = "newest" | "price-asc" | "price-desc" | "popular";
@@ -60,13 +61,34 @@ export function parseProductSearch(search: Record<string, unknown>): ProductFilt
 }
 
 export function hasActiveProductFilters(search: ProductFilterSearch): boolean {
-  return Boolean(
-    search.q ||
-    search.minPrice !== undefined ||
-    search.maxPrice !== undefined ||
-    (search.flavor?.length ?? 0) > 0 ||
-    (search.tag?.length ?? 0) > 0 ||
-    search.sort,
+  return getActiveProductFilterCount(search) > 0;
+}
+
+export function removeProductFilterArrayValue(
+  values: string[] | undefined,
+  value: string,
+): string[] | undefined {
+  const nextValues = (values ?? []).filter((item) => item !== value);
+  return nextValues.length > 0 ? nextValues : undefined;
+}
+
+export function toggleProductFilterArrayValue(
+  values: string[] | undefined,
+  value: string,
+): string[] | undefined {
+  const current = values ?? [];
+  if (current.includes(value)) return removeProductFilterArrayValue(current, value);
+  return [...current, value];
+}
+
+export function getActiveProductFilterCount(filters: ProductFilterSearch): number {
+  return (
+    (filters.q ? 1 : 0) +
+    (filters.minPrice !== undefined ? 1 : 0) +
+    (filters.maxPrice !== undefined ? 1 : 0) +
+    (filters.flavor?.length ?? 0) +
+    (filters.tag?.length ?? 0) +
+    (filters.sort ? 1 : 0)
   );
 }
 
@@ -101,9 +123,20 @@ function normalizeText(value: string): string {
   return value.trim().toLocaleLowerCase("fa-IR");
 }
 
+const CATEGORY_SEARCH_LABELS = new Map(
+  PRODUCT_CATEGORIES.map((category) => [category.slug, category.name] as const),
+);
+
 function productMatchesSearch(product: Product, query: string): boolean {
+  const categoryName = CATEGORY_SEARCH_LABELS.get(product.category);
   const haystack = normalizeText(
-    [product.name, product.shortDescription, ...product.flavors, ...product.tags].join(" "),
+    [
+      product.name,
+      product.shortDescription,
+      ...product.flavors,
+      ...product.tags,
+      categoryName ?? "",
+    ].join(" "),
   );
   return haystack.includes(normalizeText(query));
 }
