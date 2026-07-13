@@ -60,8 +60,8 @@ function BlogPostPage() {
     <main dir="rtl" className="min-h-screen bg-[#FEFCF9]">
       <BreadcrumbJsonLd items={crumbs} />
       <ArticleJsonLd
-        title={post.title}
-        description={post.excerpt}
+        headline={post.title}
+        author={post.author}
         datePublished={post.datePublished}
         path={`/blog/${post.slug}`}
       />
