@@ -1,89 +1,116 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { POSTS, formatPersianDate } from "@/data/blog";
+import { createFileRoute } from "@tanstack/react-router";
+import { BLOG_CATEGORIES, getFeaturedPosts, getLatestPosts, getPostsByCategory } from "@/data/blog";
 import { buildSeo } from "@/lib/seo";
 import { BreadcrumbJsonLd } from "@/components/jsonld/BreadcrumbJsonLd";
+import { CollectionPageJsonLd } from "@/components/jsonld/CollectionPageJsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { BlogArticleCard } from "@/components/blog/BlogArticleCard";
+import { BlogCategoryCard } from "@/components/blog/BlogCategoryCard";
 
 export const Route = createFileRoute("/blog")({
   head: () =>
     buildSeo({
-      title: "بلاگ وینیمی | مقالات شیرینی‌پزی و هدیه",
+      title: "بلاگ وینیمی | راهنمای کوکی، هدیه و شیرینی خانگی",
       description:
-        "مقالات آموزشی درباره کوکی، شیرینی‌پزی، هدیه دادن و نگهداری محصولات وینیمی بیکری",
+        "بلاگ وینیمی با راهنمای نگهداری کوکی، ایده هدیه شیرینی، ارسال، محصولات رژیمی و نکات شیرینی‌پزی خانگی.",
       path: "/blog",
     }),
   component: BlogPage,
 });
 
-const topics = ["همه", "نگهداری", "هدیه", "یلدا", "کوکی رژیمی", "شیرینی ارسالی"];
 const crumbs = [
   { name: "خانه", path: "/" },
   { name: "بلاگ", path: "/blog" },
 ];
 
 function BlogPage() {
-  const [activeTopic, setActiveTopic] = useState("همه");
-  const filtered = activeTopic === "همه" ? POSTS : POSTS.filter((p) => p.topic === activeTopic);
+  const featuredPosts = getFeaturedPosts();
+  const latestPosts = getLatestPosts();
+
   return (
-    <main dir="rtl" className="min-h-screen bg-[#FEFCF9]">
+    <div dir="rtl" className="space-y-12">
       <BreadcrumbJsonLd items={crumbs} />
-      <section className="bg-accent px-6 py-20 text-center">
-        <p className="mb-4 text-sm font-semibold text-primary">وینیمی بیکری</p>
-        <h1 className="mb-4 text-4xl font-extrabold text-accent-foreground">بلاگ وینیمی بیکری</h1>
-        <p className="mx-auto max-w-xl leading-8 text-muted-foreground">
-          آموزش، الهام و داستان‌های شیرینی‌پزی خانگی
+      <CollectionPageJsonLd
+        name="بلاگ وینیمی بیکری"
+        description="مقالات آموزشی درباره کوکی، شیرینی خانگی، هدیه، ارسال و نگهداری محصولات وینیمی."
+        path="/blog"
+        items={latestPosts.map((post) => ({ name: post.title, path: `/blog/${post.slug}` }))}
+      />
+      <Breadcrumbs items={crumbs} />
+
+      <section className="overflow-hidden rounded-[2rem] bg-accent px-6 py-16 text-center shadow-sm">
+        <p className="mb-4 text-sm font-semibold text-primary">مجله آموزشی وینیمی</p>
+        <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-[1.5] text-accent-foreground md:text-5xl">
+          بلاگ وینیمی بیکری
+        </h1>
+        <p className="mx-auto mt-5 max-w-2xl leading-8 text-muted-foreground">
+          راهنمای فارسی و کاربردی برای نگهداری کوکی، انتخاب شیرینی هدیه، ارسال محصولات خانگی و خرید
+          آگاهانه شیرینی رژیمی.
         </p>
       </section>
-      <div className="mx-auto max-w-6xl px-6">
-        <Breadcrumbs items={crumbs} />
-      </div>
-      <section className="mx-auto max-w-6xl px-6 py-8">
-        <div className="mb-10 flex flex-wrap justify-center gap-2">
-          {topics.map((topic) => (
-            <button
-              key={topic}
-              onClick={() => setActiveTopic(topic)}
-              className={
-                activeTopic === topic
-                  ? "rounded-full bg-primary px-5 py-2 text-sm font-bold text-white"
-                  : "rounded-full border px-5 py-2 text-sm font-bold text-muted-foreground"
-              }
+
+      <section aria-labelledby="blog-category-heading" className="space-y-5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-bold text-primary">مسیرهای مطالعه</p>
+            <h2
+              id="blog-category-heading"
+              className="mt-1 text-2xl font-extrabold text-accent-foreground"
             >
-              {topic}
-            </button>
-          ))}
+              دسته‌بندی مقالات
+            </h2>
+          </div>
+          <p className="max-w-xl text-sm leading-7 text-muted-foreground">
+            هر دسته یک صفحه SEO مستقل دارد و مقاله‌ها را بر اساس نیاز کاربر، از نگهداری تا هدیه و
+            رژیمی، مرتب می‌کند.
+          </p>
         </div>
-        <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((post) => (
-            <article
-              key={post.slug}
-              className="flex flex-col rounded-2xl border bg-accent p-7 shadow-sm"
-            >
-              <div className="mb-4 text-4xl">{post.emoji}</div>
-              {post.topic && (
-                <span className="mb-3 w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                  {post.topic}
-                </span>
-              )}
-              <h2 className="mb-3 text-lg font-bold leading-8 text-accent-foreground">
-                {post.title}
-              </h2>
-              <p className="mb-6 grow text-sm leading-8 text-muted-foreground">{post.excerpt}</p>
-              <div className="flex items-center justify-between border-t pt-4 text-xs text-muted-foreground">
-                <time dateTime={post.datePublished}>{formatPersianDate(post.datePublished)}</time>
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: post.slug }}
-                  className="font-bold text-primary"
-                >
-                  بیشتر بخوانید ←
-                </Link>
-              </div>
-            </article>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {BLOG_CATEGORIES.map((category) => (
+            <BlogCategoryCard
+              key={category.slug}
+              category={category}
+              articleCount={getPostsByCategory(category.slug).length}
+            />
           ))}
         </div>
       </section>
-    </main>
+
+      {featuredPosts.length > 0 ? (
+        <section aria-labelledby="featured-articles-heading" className="space-y-5">
+          <div>
+            <p className="text-sm font-bold text-primary">پیشنهاد سردبیر</p>
+            <h2
+              id="featured-articles-heading"
+              className="mt-1 text-2xl font-extrabold text-accent-foreground"
+            >
+              مقالات ویژه
+            </h2>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {featuredPosts.map((post) => (
+              <BlogArticleCard key={post.id} post={post} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section aria-labelledby="latest-articles-heading" className="space-y-5">
+        <div>
+          <p className="text-sm font-bold text-primary">تازه‌ترین نوشته‌ها</p>
+          <h2
+            id="latest-articles-heading"
+            className="mt-1 text-2xl font-extrabold text-accent-foreground"
+          >
+            آخرین مقالات بلاگ
+          </h2>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {latestPosts.map((post) => (
+            <BlogArticleCard key={post.id} post={post} />
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

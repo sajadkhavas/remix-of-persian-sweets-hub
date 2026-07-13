@@ -28,6 +28,7 @@ import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 import { Route as OccasionSlugRouteImport } from './routes/occasion.$slug'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
+import { Route as BlogCategoryCategorySlugRouteImport } from './routes/blog_.category.$categorySlug'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -124,6 +125,12 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogCategoryCategorySlugRoute =
+  BlogCategoryCategorySlugRouteImport.update({
+    id: '/blog_/category/$categorySlug',
+    path: '/blog/category/$categorySlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/product/$slug': typeof ProductSlugRoute
   '/products/$categorySlug': typeof ProductsCategorySlugRoute
   '/shipping-to/$city': typeof ShippingToCityRoute
+  '/blog/category/$categorySlug': typeof BlogCategoryCategorySlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -166,6 +174,7 @@ export interface FileRoutesByTo {
   '/product/$slug': typeof ProductSlugRoute
   '/products/$categorySlug': typeof ProductsCategorySlugRoute
   '/shipping-to/$city': typeof ShippingToCityRoute
+  '/blog/category/$categorySlug': typeof BlogCategoryCategorySlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -188,6 +197,7 @@ export interface FileRoutesById {
   '/product/$slug': typeof ProductSlugRoute
   '/products_/$categorySlug': typeof ProductsCategorySlugRoute
   '/shipping-to/$city': typeof ShippingToCityRoute
+  '/blog_/category/$categorySlug': typeof BlogCategoryCategorySlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -211,6 +221,7 @@ export interface FileRouteTypes {
     | '/product/$slug'
     | '/products/$categorySlug'
     | '/shipping-to/$city'
+    | '/blog/category/$categorySlug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/product/$slug'
     | '/products/$categorySlug'
     | '/shipping-to/$city'
+    | '/blog/category/$categorySlug'
   id:
     | '__root__'
     | '/'
@@ -253,6 +265,7 @@ export interface FileRouteTypes {
     | '/product/$slug'
     | '/products_/$categorySlug'
     | '/shipping-to/$city'
+    | '/blog_/category/$categorySlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -275,6 +288,7 @@ export interface RootRouteChildren {
   ProductSlugRoute: typeof ProductSlugRoute
   ProductsCategorySlugRoute: typeof ProductsCategorySlugRoute
   ShippingToCityRoute: typeof ShippingToCityRoute
+  BlogCategoryCategorySlugRoute: typeof BlogCategoryCategorySlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -412,6 +426,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog_/category/$categorySlug': {
+      id: '/blog_/category/$categorySlug'
+      path: '/blog/category/$categorySlug'
+      fullPath: '/blog/category/$categorySlug'
+      preLoaderRoute: typeof BlogCategoryCategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -435,6 +456,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductSlugRoute: ProductSlugRoute,
   ProductsCategorySlugRoute: ProductsCategorySlugRoute,
   ShippingToCityRoute: ShippingToCityRoute,
+  BlogCategoryCategorySlugRoute: BlogCategoryCategorySlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

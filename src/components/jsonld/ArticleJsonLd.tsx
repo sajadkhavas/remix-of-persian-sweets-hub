@@ -6,6 +6,7 @@ export function ArticleJsonLd({
   datePublished,
   dateModified,
   author,
+  description,
   image,
   path,
 }: {
@@ -13,6 +14,7 @@ export function ArticleJsonLd({
   datePublished: string;
   dateModified?: string;
   author: string;
+  description?: string;
   image?: string;
   path: string;
 }) {
@@ -22,6 +24,7 @@ export function ArticleJsonLd({
         "@context": "https://schema.org",
         "@type": "Article",
         headline,
+        ...(description ? { description } : {}),
         datePublished,
         dateModified: dateModified ?? datePublished,
         author: { "@type": "Person", name: author },
@@ -31,6 +34,7 @@ export function ArticleJsonLd({
           logo: { "@type": "ImageObject", url: `${SITE.origin}/favicon.ico` },
         },
         mainEntityOfPage: `${SITE.origin}${path}`,
+        inLanguage: "fa-IR",
         ...(image ? { image: [image] } : {}),
       }}
     />
