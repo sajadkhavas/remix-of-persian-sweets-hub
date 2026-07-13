@@ -16,9 +16,9 @@ import type { FaqItem } from "@/components/jsonld/FAQJsonLd";
 const CATEGORY_LABELS: Record<ProductCategory, string> = {
   cookies: "کوکی‌ها",
   cakes: "کیک‌ها",
-  diet: "محصولات رژیمی",
+  diet: "رژیمی",
   "dry-sweets": "شیرینی خشک",
-  "gift-boxes": "باکس هدیه",
+  "gift-boxes": "جعبه هدیه",
 };
 
 const BADGE_LABELS: Record<ProductBadge, string> = {
@@ -99,7 +99,7 @@ function ProductPage() {
   const crumbs = [
     { name: "خانه", path: "/" },
     { name: "محصولات", path: "/products" },
-    { name: categoryName, path: `/products?category=${p.category}` },
+    { name: categoryName, path: `/category/${p.category}` },
     { name: p.name, path: `/product/${p.slug}` },
   ];
   const validComparePrice = Boolean(p.compareAtPriceToman && p.compareAtPriceToman > p.priceToman);
