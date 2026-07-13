@@ -25,16 +25,17 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       addItem: (item, quantity = 1) => {
-        const safeQuantity = Math.max(1, Math.floor(quantity));
+        const normalizedQuantity =
+          Number.isFinite(quantity) && quantity >= 1 ? Math.floor(quantity) : 1;
         const existing = get().items.find((i) => i.id === item.id);
         if (existing) {
           set((s) => ({
             items: s.items.map((i) =>
-              i.id === item.id ? { ...i, quantity: i.quantity + safeQuantity } : i,
+              i.id === item.id ? { ...i, quantity: i.quantity + normalizedQuantity } : i,
             ),
           }));
         } else {
-          set((s) => ({ items: [...s.items, { ...item, quantity: safeQuantity }] }));
+          set((s) => ({ items: [...s.items, { ...item, quantity: normalizedQuantity }] }));
         }
       },
       removeItem: (id) => set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
