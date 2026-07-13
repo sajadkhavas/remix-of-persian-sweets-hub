@@ -123,9 +123,18 @@ export function Header() {
               className="flex h-10 w-10 items-center justify-center rounded-full border border-border"
             >
               <span className="flex flex-col gap-1" aria-hidden="true">
-                <span className="block h-0.5 w-5 rounded-full" style={{ background: "var(--accent-brown)" }} />
-                <span className="block h-0.5 w-5 rounded-full" style={{ background: "var(--accent-brown)" }} />
-                <span className="block h-0.5 w-5 rounded-full" style={{ background: "var(--accent-brown)" }} />
+                <span
+                  className="block h-0.5 w-5 rounded-full"
+                  style={{ background: "var(--accent-brown)" }}
+                />
+                <span
+                  className="block h-0.5 w-5 rounded-full"
+                  style={{ background: "var(--accent-brown)" }}
+                />
+                <span
+                  className="block h-0.5 w-5 rounded-full"
+                  style={{ background: "var(--accent-brown)" }}
+                />
               </span>
             </button>
           </div>

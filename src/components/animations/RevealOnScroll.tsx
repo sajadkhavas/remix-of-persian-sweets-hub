@@ -15,12 +15,7 @@ const map = {
   right: { x: -60, y: 0 },
 };
 
-export function RevealOnScroll({
-  children,
-  direction = "up",
-  delay = 0,
-  className,
-}: RevealProps) {
+export function RevealOnScroll({ children, direction = "up", delay = 0, className }: RevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const reduce = useReducedMotion();

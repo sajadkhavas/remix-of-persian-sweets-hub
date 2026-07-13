@@ -23,6 +23,7 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShippingToCityRouteImport } from './routes/shipping-to.$city'
+import { Route as ProductsCategorySlugRouteImport } from './routes/products.$categorySlug'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 import { Route as OccasionSlugRouteImport } from './routes/occasion.$slug'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
@@ -98,6 +99,11 @@ const ShippingToCityRoute = ShippingToCityRouteImport.update({
   path: '/shipping-to/$city',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsCategorySlugRoute = ProductsCategorySlugRouteImport.update({
+  id: '/$categorySlug',
+  path: '/$categorySlug',
+  getParentRoute: () => ProductsRoute,
+} as any)
 const ProductSlugRoute = ProductSlugRouteImport.update({
   id: '/product/$slug',
   path: '/product/$slug',
@@ -129,7 +135,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/packaging-and-shipping': typeof PackagingAndShippingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/products': typeof ProductsRoute
+  '/products': typeof ProductsRouteWithChildren
   '/returns': typeof ReturnsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/category/$slug': typeof CategorySlugRoute
   '/occasion/$slug': typeof OccasionSlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/products/$categorySlug': typeof ProductsCategorySlugRoute
   '/shipping-to/$city': typeof ShippingToCityRoute
 }
 export interface FileRoutesByTo {
@@ -149,7 +156,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/packaging-and-shipping': typeof PackagingAndShippingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/products': typeof ProductsRoute
+  '/products': typeof ProductsRouteWithChildren
   '/returns': typeof ReturnsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/category/$slug': typeof CategorySlugRoute
   '/occasion/$slug': typeof OccasionSlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/products/$categorySlug': typeof ProductsCategorySlugRoute
   '/shipping-to/$city': typeof ShippingToCityRoute
 }
 export interface FileRoutesById {
@@ -170,7 +178,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/packaging-and-shipping': typeof PackagingAndShippingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/products': typeof ProductsRoute
+  '/products': typeof ProductsRouteWithChildren
   '/returns': typeof ReturnsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/category/$slug': typeof CategorySlugRoute
   '/occasion/$slug': typeof OccasionSlugRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/products/$categorySlug': typeof ProductsCategorySlugRoute
   '/shipping-to/$city': typeof ShippingToCityRoute
 }
 export interface FileRouteTypes {
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/occasion/$slug'
     | '/product/$slug'
+    | '/products/$categorySlug'
     | '/shipping-to/$city'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/occasion/$slug'
     | '/product/$slug'
+    | '/products/$categorySlug'
     | '/shipping-to/$city'
   id:
     | '__root__'
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/occasion/$slug'
     | '/product/$slug'
+    | '/products/$categorySlug'
     | '/shipping-to/$city'
   fileRoutesById: FileRoutesById
 }
@@ -253,7 +265,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   PackagingAndShippingRoute: typeof PackagingAndShippingRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
-  ProductsRoute: typeof ProductsRoute
+  ProductsRoute: typeof ProductsRouteWithChildren
   ReturnsRoute: typeof ReturnsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
@@ -363,6 +375,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShippingToCityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products/$categorySlug': {
+      id: '/products/$categorySlug'
+      path: '/$categorySlug'
+      fullPath: '/products/$categorySlug'
+      preLoaderRoute: typeof ProductsCategorySlugRouteImport
+      parentRoute: typeof ProductsRoute
+    }
     '/product/$slug': {
       id: '/product/$slug'
       path: '/product/$slug'
@@ -404,6 +423,18 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface ProductsRouteChildren {
+  ProductsCategorySlugRoute: typeof ProductsCategorySlugRoute
+}
+
+const ProductsRouteChildren: ProductsRouteChildren = {
+  ProductsCategorySlugRoute: ProductsCategorySlugRoute,
+}
+
+const ProductsRouteWithChildren = ProductsRoute._addFileChildren(
+  ProductsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -414,7 +445,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   PackagingAndShippingRoute: PackagingAndShippingRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
-  ProductsRoute: ProductsRoute,
+  ProductsRoute: ProductsRouteWithChildren,
   ReturnsRoute: ReturnsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
@@ -426,3 +457,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

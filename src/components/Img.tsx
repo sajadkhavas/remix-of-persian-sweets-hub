@@ -1,8 +1,7 @@
 import type { ImgHTMLAttributes } from "react";
 
 // Enforces Persian alt + explicit dimensions on every image (zero CLS).
-export interface ImgProps
-  extends Omit<ImgHTMLAttributes<HTMLImageElement>, "loading"> {
+export interface ImgProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, "loading"> {
   alt: string; // required
   width: number; // required
   height: number; // required
