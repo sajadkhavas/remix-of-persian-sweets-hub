@@ -23,11 +23,11 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShippingToCityRouteImport } from './routes/shipping-to.$city'
-import { Route as ProductsCategorySlugRouteImport } from './routes/products.$categorySlug'
+import { Route as ProductsCategorySlugRouteImport } from './routes/products_.$categorySlug'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
 import { Route as OccasionSlugRouteImport } from './routes/occasion.$slug'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -100,9 +100,9 @@ const ShippingToCityRoute = ShippingToCityRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsCategorySlugRoute = ProductsCategorySlugRouteImport.update({
-  id: '/$categorySlug',
-  path: '/$categorySlug',
-  getParentRoute: () => ProductsRoute,
+  id: '/products_/$categorySlug',
+  path: '/products/$categorySlug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProductSlugRoute = ProductSlugRouteImport.update({
   id: '/product/$slug',
@@ -120,15 +120,15 @@ const CategorySlugRoute = CategorySlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog_/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
+  '/blog': typeof BlogRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
@@ -149,7 +149,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
+  '/blog': typeof BlogRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
@@ -171,7 +171,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRouteWithChildren
+  '/blog': typeof BlogRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
@@ -182,11 +182,11 @@ export interface FileRoutesById {
   '/returns': typeof ReturnsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
-  '/blog/$slug': typeof BlogSlugRoute
+  '/blog_/$slug': typeof BlogSlugRoute
   '/category/$slug': typeof CategorySlugRoute
   '/occasion/$slug': typeof OccasionSlugRoute
   '/product/$slug': typeof ProductSlugRoute
-  '/products/$categorySlug': typeof ProductsCategorySlugRoute
+  '/products_/$categorySlug': typeof ProductsCategorySlugRoute
   '/shipping-to/$city': typeof ShippingToCityRoute
 }
 export interface FileRouteTypes {
@@ -247,18 +247,18 @@ export interface FileRouteTypes {
     | '/returns'
     | '/sitemap.xml'
     | '/terms'
-    | '/blog/$slug'
+    | '/blog_/$slug'
     | '/category/$slug'
     | '/occasion/$slug'
     | '/product/$slug'
-    | '/products/$categorySlug'
+    | '/products_/$categorySlug'
     | '/shipping-to/$city'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BlogRoute: typeof BlogRouteWithChildren
+  BlogRoute: typeof BlogRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
@@ -269,9 +269,11 @@ export interface RootRouteChildren {
   ReturnsRoute: typeof ReturnsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CategorySlugRoute: typeof CategorySlugRoute
   OccasionSlugRoute: typeof OccasionSlugRoute
   ProductSlugRoute: typeof ProductSlugRoute
+  ProductsCategorySlugRoute: typeof ProductsCategorySlugRoute
   ShippingToCityRoute: typeof ShippingToCityRoute
 }
 
@@ -375,12 +377,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShippingToCityRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/products/$categorySlug': {
-      id: '/products/$categorySlug'
-      path: '/$categorySlug'
+    '/products_/$categorySlug': {
+      id: '/products_/$categorySlug'
+      path: '/products/$categorySlug'
       fullPath: '/products/$categorySlug'
       preLoaderRoute: typeof ProductsCategorySlugRouteImport
-      parentRoute: typeof ProductsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/product/$slug': {
       id: '/product/$slug'
@@ -403,42 +405,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/$slug'
+    '/blog_/$slug': {
+      id: '/blog_/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
-interface ProductsRouteChildren {
-  ProductsCategorySlugRoute: typeof ProductsCategorySlugRoute
-}
-
-const ProductsRouteChildren: ProductsRouteChildren = {
-  ProductsCategorySlugRoute: ProductsCategorySlugRoute,
-}
-
-const ProductsRouteWithChildren = ProductsRoute._addFileChildren(
-  ProductsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BlogRoute: BlogRouteWithChildren,
+  BlogRoute: BlogRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
@@ -449,9 +429,11 @@ const rootRouteChildren: RootRouteChildren = {
   ReturnsRoute: ReturnsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CategorySlugRoute: CategorySlugRoute,
   OccasionSlugRoute: OccasionSlugRoute,
   ProductSlugRoute: ProductSlugRoute,
+  ProductsCategorySlugRoute: ProductsCategorySlugRoute,
   ShippingToCityRoute: ShippingToCityRoute,
 }
 export const routeTree = rootRouteImport
