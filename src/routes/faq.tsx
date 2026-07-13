@@ -9,8 +9,7 @@ export const Route = createFileRoute("/faq")({
   head: () =>
     buildSeo({
       title: "پرسش‌های پرتکرار درباره سفارش و ارسال",
-      description:
-        "پاسخ سؤالات پرتکرار درباره سفارش، ارسال، بسته‌بندی و ماندگاری محصولات وینیمی.",
+      description: "پاسخ سؤالات پرتکرار درباره سفارش، ارسال، بسته‌بندی و ماندگاری محصولات وینیمی.",
       path: "/faq",
     }),
   component: FaqPage,

@@ -1,9 +1,4 @@
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useReducedMotion,
-} from "motion/react";
+import { motion, useMotionValue, useSpring, useReducedMotion } from "motion/react";
 import { useRef, type ReactNode, type MouseEvent } from "react";
 
 export function MagneticButton({

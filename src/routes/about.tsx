@@ -35,8 +35,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
     }, 16);
     return () => clearInterval(t);
   }, [inView, target]);
-  const pd = (n: number) =>
-    n.toString().replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[parseInt(d)]);
+  const pd = (n: number) => n.toString().replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[parseInt(d)]);
   return (
     <span ref={ref}>
       {pd(count)}
@@ -45,13 +44,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
   );
 }
 
-const Reveal = ({
-  children,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-}) => (
+const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
   <motion.div
     initial={{ opacity: 0, y: 28 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -95,8 +88,7 @@ function AboutPage() {
       <section
         className="py-20 text-center"
         style={{
-          background:
-            "linear-gradient(160deg, rgba(141,184,122,0.1) 0%, var(--accent-cream) 100%)",
+          background: "linear-gradient(160deg, rgba(141,184,122,0.1) 0%, var(--accent-cream) 100%)",
         }}
       >
         <motion.div
@@ -132,9 +124,7 @@ function AboutPage() {
       <section className="mx-auto max-w-4xl px-6 py-16">
         <Breadcrumbs items={crumbs} />
         <Reveal>
-          <h2
-            className="mb-7 border-r-4 border-[var(--primary)] pr-5 text-2xl font-bold text-[var(--accent-brown)]"
-          >
+          <h2 className="mb-7 border-r-4 border-[var(--primary)] pr-5 text-2xl font-bold text-[var(--accent-brown)]">
             همه‌چیز از بوی کیک تازه شروع شد
           </h2>
           <div className="space-y-5">
@@ -203,8 +193,8 @@ function AboutPage() {
               چرا گزینه‌های دیابتی ساختیم
             </h2>
             <p className="mb-3 text-[#4a3a32]">
-              بعضی از عزیزانم با دیابت زندگی می‌کنند و همیشه دلم می‌خواست آن‌ها هم بدون
-              نگرانی از طعم شیرینی لذت ببرند.
+              بعضی از عزیزانم با دیابت زندگی می‌کنند و همیشه دلم می‌خواست آن‌ها هم بدون نگرانی از
+              طعم شیرینی لذت ببرند.
             </p>
             <p className="text-[#4a3a32]">
               همین باعث شد روی شیرینی‌هایی با گزینه‌های بدون قند افزوده هم کار کنیم.
@@ -235,9 +225,7 @@ function AboutPage() {
       {/* CTA */}
       <section className="px-6 py-16 text-center">
         <Reveal>
-          <h2 className="mb-3 text-2xl font-bold text-[var(--accent-brown)]">
-            آماده سفارش هستید؟
-          </h2>
+          <h2 className="mb-3 text-2xl font-bold text-[var(--accent-brown)]">آماده سفارش هستید؟</h2>
           <p className="mb-8 text-[var(--gray-text)]">محصولات تازه وینیمی بیکری را ببینید</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link

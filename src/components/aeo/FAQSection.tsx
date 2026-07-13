@@ -20,12 +20,7 @@ export function FAQSection({
       <FAQJsonLd items={items} />
       <div>
         {items.map((it, i) => (
-          <AnswerBlock
-            key={i}
-            question={it.question}
-            answer={it.answer}
-            level={3}
-          />
+          <AnswerBlock key={i} question={it.question} answer={it.answer} level={3} />
         ))}
       </div>
     </section>

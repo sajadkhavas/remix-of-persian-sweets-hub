@@ -12,8 +12,7 @@ export function OrganizationJsonLd() {
         url: SITE.origin,
         logo: `${SITE.origin}/favicon.ico`,
         image: `${SITE.origin}/og-home.jpg`,
-        description:
-          "کوکی و کیک خانگی با مواد اولیه تازه، ارسال سراسری از اندیشه تهران",
+        description: "کوکی و کیک خانگی با مواد اولیه تازه، ارسال سراسری از اندیشه تهران",
         address: {
           "@type": "PostalAddress",
           addressLocality: SITE.city,

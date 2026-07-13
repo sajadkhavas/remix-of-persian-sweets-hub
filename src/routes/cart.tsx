@@ -120,9 +120,7 @@ function CartPage() {
             </ul>
           </section>
 
-          <aside
-            className="h-fit rounded-2xl border border-border bg-white p-6 lg:sticky lg:top-24"
-          >
+          <aside className="h-fit rounded-2xl border border-border bg-white p-6 lg:sticky lg:top-24">
             <h2 className="mb-4 text-xl font-bold" style={{ color: "var(--accent-brown)" }}>
               خلاصه سفارش
             </h2>

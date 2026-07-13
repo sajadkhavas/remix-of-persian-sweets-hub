@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { ShoppingCart } from "lucide-react";
 import { buildSeo } from "@/lib/seo";
 import { PRODUCTS, findProduct } from "@/data/products";
+import { getProductCategory } from "@/data/categories";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BreadcrumbJsonLd } from "@/components/jsonld/BreadcrumbJsonLd";
 import { ProductJsonLd } from "@/components/jsonld/ProductJsonLd";
@@ -12,16 +13,8 @@ import { Img } from "@/components/Img";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { useCartStore } from "@/lib/cart";
 import { formatToman, toPersianDigits } from "@/lib/format";
-import type { Product, ProductBadge, ProductCategory } from "@/data/types";
+import type { Product, ProductBadge } from "@/data/types";
 import type { FaqItem } from "@/components/jsonld/FAQJsonLd";
-
-const CATEGORY_LABELS: Record<ProductCategory, string> = {
-  cookies: "کوکی‌ها",
-  cakes: "کیک‌ها",
-  diet: "رژیمی",
-  "dry-sweets": "شیرینی خشک",
-  "gift-boxes": "جعبه هدیه",
-};
 
 const BADGE_LABELS: Record<ProductBadge, string> = {
   bestseller: "⭐ پرفروش",
@@ -97,11 +90,15 @@ function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((s) => s.addItem);
   const faqs = buildProductFaqs(p);
-  const categoryName = CATEGORY_LABELS[p.category];
+  const category = getProductCategory(p.category);
+  const categoryName = category.name;
   const crumbs = [
     { name: "خانه", path: "/" },
     { name: "محصولات", path: "/products" },
-    { name: categoryName, path: "/products" },
+    {
+      name: categoryName,
+      path: category.isPublicLanding ? `/products/${category.slug}` : "/products",
+    },
     { name: p.name, path: `/product/${p.slug}` },
   ];
   const validComparePrice = Boolean(p.compareAtPriceToman && p.compareAtPriceToman > p.priceToman);
