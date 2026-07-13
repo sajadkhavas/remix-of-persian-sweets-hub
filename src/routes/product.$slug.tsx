@@ -26,7 +26,7 @@ export const Route = createFileRoute("/product/$slug")({
     const p = loaderData.product;
     return buildSeo({
       title: `${p.name} — خرید با ارسال به سراسر ایران`,
-      description: p.description.slice(0, 150),
+      description: p.seo.description.slice(0, 150),
       path: `/product/${p.slug}`,
       type: "product",
     });
@@ -69,13 +69,13 @@ function ProductPage() {
       <article>
         <h1 className="text-3xl font-bold mb-3">{p.name}</h1>
         <p className="text-lg leading-8 text-muted-foreground max-w-3xl mb-6">
-          {p.description}
+          {p.longDescription}
         </p>
         <div className="grid gap-6 md:grid-cols-2 mb-8">
           <div>
             <h2 className="font-bold text-lg mb-2">مواد اولیه</h2>
             <ul className="list-disc ps-6 space-y-1">
-              {p.ingredients.map((i: string) => (
+              {p.ingredients.map((i) => (
                 <li key={i}>{i}</li>
               ))}
             </ul>
