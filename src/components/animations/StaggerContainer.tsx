@@ -28,8 +28,7 @@ export function StaggerContainer({
   as?: "div" | "ul" | "ol";
 }) {
   const reduce = useReducedMotion();
-  const MotionTag =
-    Tag === "ul" ? motion.ul : Tag === "ol" ? motion.ol : motion.div;
+  const MotionTag = Tag === "ul" ? motion.ul : Tag === "ol" ? motion.ol : motion.div;
   return (
     <MotionTag
       className={className}

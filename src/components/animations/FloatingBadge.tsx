@@ -21,9 +21,7 @@ export function FloatingBadge({
       transition={{
         opacity: { duration: 0.5, delay: 0.6 },
         scale: { duration: 0.5, delay: 0.6, type: "spring", stiffness: 200 },
-        y: reduce
-          ? undefined
-          : { duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 1.2 },
+        y: reduce ? undefined : { duration: 3.4, repeat: Infinity, ease: "easeInOut", delay: 1.2 },
       }}
     >
       {children}

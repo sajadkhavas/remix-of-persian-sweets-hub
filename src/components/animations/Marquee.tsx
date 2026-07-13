@@ -5,17 +5,11 @@ const ITEMS = [
   "🌿 بدون نگهدارنده مصنوعی",
   "📦 بسته‌بندی محافظ ویژه پست",
   "🚚 ارسال به سراسر ایران",
-  "💚 گزینه رژیمی و دیابتی",
+  "💚 گزینه رژیمی و بدون قند افزوده",
   "🏠 دست‌پخت خانگی",
 ];
 
-export function Marquee({
-  items = ITEMS,
-  duration = 28,
-}: {
-  items?: string[];
-  duration?: number;
-}) {
+export function Marquee({ items = ITEMS, duration = 28 }: { items?: string[]; duration?: number }) {
   const reduce = useReducedMotion();
   const doubled = [...items, ...items];
 
@@ -45,7 +39,9 @@ export function Marquee({
             style={{ color: "var(--primary-dark)" }}
           >
             {t}
-            <span className="opacity-40" aria-hidden="true">•</span>
+            <span className="opacity-40" aria-hidden="true">
+              •
+            </span>
           </span>
         ))}
       </motion.div>

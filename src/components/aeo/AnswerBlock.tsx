@@ -19,9 +19,7 @@ export function AnswerBlock({
       <H className="text-xl font-semibold text-foreground mb-2">{question}</H>
       <p className="text-base leading-8 text-foreground">{answer}</p>
       {detail ? (
-        <div className="mt-3 text-base leading-8 text-muted-foreground">
-          {detail}
-        </div>
+        <div className="mt-3 text-base leading-8 text-muted-foreground">{detail}</div>
       ) : null}
     </section>
   );

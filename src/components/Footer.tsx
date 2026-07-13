@@ -16,30 +16,56 @@ export function Footer() {
             <span className="font-display text-lg">winimi Bakery</span>
           </div>
           <p className="text-sm opacity-80 leading-7">{SITE.tagline}</p>
-          <p className="text-sm opacity-70 mt-2">{SITE.city}، {SITE.region}</p>
+          <p className="text-sm opacity-70 mt-2">
+            {SITE.city}، {SITE.region}
+          </p>
         </div>
         <div>
           <h2 className="font-bold text-base mb-3">دسترسی سریع</h2>
           <ul className="space-y-2 text-sm opacity-80">
-            <li><Link to="/products">محصولات</Link></li>
-            <li><Link to="/about">درباره ما</Link></li>
-            <li><Link to="/packaging-and-shipping">ارسال و بسته‌بندی</Link></li>
-            <li><Link to="/faq">سوالات متداول</Link></li>
+            <li>
+              <Link to="/products">محصولات</Link>
+            </li>
+            <li>
+              <Link to="/about">درباره ما</Link>
+            </li>
+            <li>
+              <Link to="/packaging-and-shipping">ارسال و بسته‌بندی</Link>
+            </li>
+            <li>
+              <Link to="/faq">سوالات متداول</Link>
+            </li>
           </ul>
         </div>
         <div>
           <h2 className="font-bold text-base mb-3">محصولات</h2>
           <ul className="space-y-2 text-sm opacity-80">
-            <li><Link to="/category/$slug" params={{ slug: "cookies" }}>کوکی‌ها</Link></li>
-            <li><Link to="/category/$slug" params={{ slug: "cakes" }}>کیک و دسر</Link></li>
-            <li><Link to="/category/$slug" params={{ slug: "diet" }}>رژیمی و دیابتی</Link></li>
-            <li><Link to="/contact">سفارش ویژه</Link></li>
+            <li>
+              <Link to="/products/$categorySlug" params={{ categorySlug: "cookies" }}>
+                کوکی‌ها
+              </Link>
+            </li>
+            <li>
+              <Link to="/products/$categorySlug" params={{ categorySlug: "cakes" }}>
+                کیک و دسر
+              </Link>
+            </li>
+            <li>
+              <Link to="/products/$categorySlug" params={{ categorySlug: "diet" }}>
+                رژیمی و بدون قند افزوده
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact">سفارش ویژه</Link>
+            </li>
           </ul>
         </div>
         <div>
           <h2 className="font-bold text-base mb-3">تماس با ما</h2>
           <ul className="space-y-2 text-sm opacity-80">
-            <li>📞 <span dir="ltr">{SITE.phone}</span></li>
+            <li>
+              📞 <span dir="ltr">{SITE.phone}</span>
+            </li>
             <li>
               <a href={SITE.instagram} rel="noopener" target="_blank">
                 📩 دایرکت اینستاگرام

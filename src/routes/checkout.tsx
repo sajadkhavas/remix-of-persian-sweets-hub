@@ -20,12 +20,37 @@ export const Route = createFileRoute("/checkout")({
 });
 
 const PROVINCES = [
-  "آذربایجان شرقی", "آذربایجان غربی", "اردبیل", "اصفهان", "البرز",
-  "ایلام", "بوشهر", "تهران", "چهارمحال و بختیاری", "خراسان جنوبی",
-  "خراسان رضوی", "خراسان شمالی", "خوزستان", "زنجان", "سمنان",
-  "سیستان و بلوچستان", "فارس", "قزوین", "قم", "کردستان", "کرمان",
-  "کرمانشاه", "کهگیلویه و بویراحمد", "گلستان", "گیلان", "لرستان",
-  "مازندران", "مرکزی", "هرمزگان", "همدان", "یزد",
+  "آذربایجان شرقی",
+  "آذربایجان غربی",
+  "اردبیل",
+  "اصفهان",
+  "البرز",
+  "ایلام",
+  "بوشهر",
+  "تهران",
+  "چهارمحال و بختیاری",
+  "خراسان جنوبی",
+  "خراسان رضوی",
+  "خراسان شمالی",
+  "خوزستان",
+  "زنجان",
+  "سمنان",
+  "سیستان و بلوچستان",
+  "فارس",
+  "قزوین",
+  "قم",
+  "کردستان",
+  "کرمان",
+  "کرمانشاه",
+  "کهگیلویه و بویراحمد",
+  "گلستان",
+  "گیلان",
+  "لرستان",
+  "مازندران",
+  "مرکزی",
+  "هرمزگان",
+  "همدان",
+  "یزد",
 ];
 
 const checkoutSchema = z.object({
@@ -42,8 +67,13 @@ type CheckoutForm = z.infer<typeof checkoutSchema>;
 type FormErrors = Partial<Record<keyof CheckoutForm, string>>;
 
 const EMPTY: CheckoutForm = {
-  fullName: "", mobile: "", province: "",
-  city: "", address: "", postalCode: "", notes: "",
+  fullName: "",
+  mobile: "",
+  province: "",
+  city: "",
+  address: "",
+  postalCode: "",
+  notes: "",
 };
 
 const INPUT_CLS =
@@ -132,7 +162,9 @@ function CheckoutPage() {
             >
               <option value="">انتخاب کنید</option>
               {PROVINCES.map((p) => (
-                <option key={p} value={p}>{p}</option>
+                <option key={p} value={p}>
+                  {p}
+                </option>
               ))}
             </select>
           </Field>
@@ -161,9 +193,7 @@ function CheckoutPage() {
               dir="ltr"
               maxLength={10}
               value={form.postalCode}
-              onChange={(e) =>
-                setField("postalCode", e.target.value.replace(/\D/g, ""))
-              }
+              onChange={(e) => setField("postalCode", e.target.value.replace(/\D/g, ""))}
               className={INPUT_CLS}
             />
           </Field>

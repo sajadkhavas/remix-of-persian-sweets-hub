@@ -65,9 +65,7 @@ export function AnimatedFAQ({
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
                     className="overflow-hidden"
                   >
-                    <p className="pb-5 leading-8 text-muted-foreground">
-                      {it.answer}
-                    </p>
+                    <p className="pb-5 leading-8 text-muted-foreground">{it.answer}</p>
                   </motion.div>
                 ) : null}
               </AnimatePresence>
