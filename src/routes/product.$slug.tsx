@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { ShoppingCart } from "lucide-react";
 import { buildSeo } from "@/lib/seo";
 import { PRODUCTS, findProduct } from "@/data/products";
@@ -237,7 +238,7 @@ function ProductPage() {
             <button
               type="button"
               disabled={p.stock <= 0}
-              onClick={() =>
+              onClick={() => {
                 addItem(
                   {
                     id: p.id,
@@ -247,8 +248,9 @@ function ProductPage() {
                     emoji: p.emoji ?? "🍪",
                   },
                   quantity,
-                )
-              }
+                );
+                toast.success(`${toPersianDigits(quantity)} عدد ${p.name} به سبد خرید اضافه شد.`);
+              }}
               className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 font-bold disabled:cursor-not-allowed disabled:opacity-50"
               style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
             >
