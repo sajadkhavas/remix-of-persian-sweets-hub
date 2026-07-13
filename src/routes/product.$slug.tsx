@@ -46,8 +46,8 @@ export const Route = createFileRoute("/product/$slug")({
     }
     const p = loaderData.product;
     return buildSeo({
-      title: `${p.name} — خرید با ارسال به سراسر ایران`,
-      description: p.seo.description.slice(0, 150),
+      title: p.seo.title,
+      description: p.seo.description.slice(0, 155),
       path: `/product/${p.slug}`,
       type: "product",
     });

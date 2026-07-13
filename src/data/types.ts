@@ -13,7 +13,6 @@ export interface ProductImage {
 export interface ProductSeo {
   title: string;
   description: string;
-  keywords: string[];
 }
 
 export interface Product {
