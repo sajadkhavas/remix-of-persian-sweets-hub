@@ -1,18 +1,29 @@
 import { SITE } from "@/lib/site";
 import { JsonLd } from "./JsonLd";
-import type { Product, Review } from "@/data/types";
+import type { Product } from "@/data/types";
 
-export function ProductJsonLd({ product, reviews = [] }: { product: Product; reviews?: Review[] }) {
+function isRealImageUrl(url: string) {
+  const normalizedUrl = url.trim().toLowerCase();
+
+  return normalizedUrl.length > 0 && !normalizedUrl.includes("placeholder");
+}
+
+export function ProductJsonLd({ product }: { product: Product }) {
+  const imageUrls = product.images.map((image) => image.url).filter(isRealImageUrl);
+  const hasValidWeight = typeof product.weightGrams === "number" && product.weightGrams > 0;
+
   const data: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    description: product.seo.description,
+    description: product.longDescription || product.seo.description,
     sku: product.sku,
-    image: product.images.map((image) => image.url),
+    ...(imageUrls.length > 0 ? { image: imageUrls } : {}),
     brand: { "@type": "Brand", name: SITE.brand },
     category: product.category,
-    weight: { "@type": "QuantitativeValue", value: product.weightGrams, unitCode: "GRM" },
+    ...(hasValidWeight
+      ? { weight: { "@type": "QuantitativeValue", value: product.weightGrams, unitCode: "GRM" } }
+      : {}),
     offers: {
       "@type": "Offer",
       priceCurrency: SITE.currency,
@@ -24,13 +35,6 @@ export function ProductJsonLd({ product, reviews = [] }: { product: Product; rev
       url: `${SITE.origin}/product/${product.slug}`,
     },
   };
-  if (reviews.length > 0) {
-    const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
-    data.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue: avg.toFixed(1),
-      reviewCount: reviews.length,
-    };
-  }
+
   return <JsonLd data={data} />;
 }
