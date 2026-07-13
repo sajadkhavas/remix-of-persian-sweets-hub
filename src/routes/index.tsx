@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
     buildSeo({
       title: "کیک و کوکی دست‌پخت، ارسال به سراسر ایران",
       description:
-        "کوکی و شیرینی دست‌پخت با مواد اولیه تازه، بدون نگهدارنده، با گزینه‌های رژیمی و دیابتی. ارسال با بسته‌بندی محافظ به سراسر ایران.",
+        "کوکی و شیرینی دست‌پخت با مواد اولیه تازه، بدون نگهدارنده، با گزینه‌های رژیمی و بدون قند افزوده. ارسال با بسته‌بندی محافظ به سراسر ایران.",
       path: "/",
     }),
   component: HomePage,
@@ -28,25 +28,20 @@ export const Route = createFileRoute("/")({
 
 const HERO_EMOJIS = ["🍪", "🧁", "🎂", "🍫", "🥐", "🌿"];
 const HERO_WORDS = ["کیک", "و", "کوکی", "که", "مثل", "خانه", "مزه", "می‌ده"];
-const TRUST_PILLS = [
-  "🌿 بدون نگهدارنده",
-  "🏠 دست‌پخت خانگی",
-  "🚚 ارسال سراسری",
-  "💚 گزینه رژیمی",
-];
+const TRUST_PILLS = ["🌿 بدون نگهدارنده", "🏠 دست‌پخت خانگی", "🚚 ارسال سراسری", "💚 گزینه رژیمی"];
 const MARQUEE_ITEMS = [
   "🧁 پخت تازه روزانه",
   "🌿 بدون نگهدارنده مصنوعی",
   "📦 بسته‌بندی محافظ ویژه پست",
   "🚚 ارسال به سراسر ایران",
-  "💚 گزینه رژیمی و دیابتی",
+  "💚 گزینه رژیمی و بدون قند افزوده",
   "🏠 دست‌پخت خانگی",
 ];
 const CATEGORY_TABS = [
   { key: "all", label: "همه" },
   { key: "cookies", label: "کوکی‌ها" },
   { key: "cakes", label: "کیک و دسر" },
-  { key: "diet", label: "رژیمی و دیابتی" },
+  { key: "diet", label: "رژیمی" },
 ] as const;
 type TabKey = (typeof CATEGORY_TABS)[number]["key"];
 
@@ -199,7 +194,8 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
             style={{ background: "var(--primary)", opacity: 0.35 }}
           />
           <div className="relative rounded-[2rem] bg-white p-8 shadow-2xl">
-            <div className="mb-4 flex aspect-square items-center justify-center rounded-2xl text-8xl"
+            <div
+              className="mb-4 flex aspect-square items-center justify-center rounded-2xl text-8xl"
               style={{ background: "var(--primary-light)" }}
             >
               {bestSeller?.emoji ?? "🍪"}
@@ -210,8 +206,7 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
             <p className="mt-1 text-xl font-black" style={{ color: "var(--primary-dark)" }}>
               {formatToman(bestSeller?.priceToman ?? 120000)}
             </p>
-            <FloatingBadge className="absolute -top-4 -start-4 rounded-full px-4 py-2 text-sm font-bold shadow-lg"
-            >
+            <FloatingBadge className="absolute -top-4 -start-4 rounded-full px-4 py-2 text-sm font-bold shadow-lg">
               <span
                 className="inline-block rounded-full px-4 py-2"
                 style={{ background: "var(--accent-gold)", color: "white" }}
@@ -248,7 +243,10 @@ function ProductsSection() {
   return (
     <section id="products" className="px-4 py-16 md:py-24">
       <RevealOnScroll className="mx-auto max-w-6xl text-center">
-        <h2 className="mb-3 text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+        <h2
+          className="mb-3 text-3xl font-black md:text-4xl"
+          style={{ color: "var(--accent-brown)" }}
+        >
           محصولات ما
         </h2>
         <p className="mb-8 text-muted-foreground">تازه پخته، با عشق آماده شده</p>
@@ -301,7 +299,10 @@ function DietHighlightSection() {
     <section className="px-4 py-16 md:py-24" style={{ background: "var(--primary-light)" }}>
       <RevealOnScroll className="mx-auto max-w-4xl text-center">
         <div className="mb-4 text-6xl">🌿</div>
-        <h2 className="mb-4 text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+        <h2
+          className="mb-4 text-3xl font-black md:text-4xl"
+          style={{ color: "var(--accent-brown)" }}
+        >
           برای کسانی که مراقب سلامتی‌شان هستند
         </h2>
         <p className="mb-10 text-lg leading-8 text-muted-foreground">
@@ -311,7 +312,7 @@ function DietHighlightSection() {
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           {[
             { icon: "🍃", title: "کوکی رژیمی", sub: "بدون قند افزوده، کم‌کالری" },
-            { icon: "💚", title: "کوکی دیابتی", sub: "مخصوص دیابتی‌ها" },
+            { icon: "💚", title: "کوکی بدون قند افزوده", sub: "با اطلاعات شفاف مواد اولیه" },
           ].map((card) => (
             <motion.div
               key={card.title}
@@ -328,8 +329,8 @@ function DietHighlightSection() {
         </div>
 
         <Link
-          to="/category/$slug"
-          params={{ slug: "diet" }}
+          to="/products/$categorySlug"
+          params={{ categorySlug: "diet" }}
           className="inline-block rounded-full px-6 py-3 text-sm font-bold shadow-md"
           style={{ background: "var(--primary-dark)", color: "white" }}
         >
@@ -356,12 +357,15 @@ function AboutTeaserSection() {
           <p className="mb-2 text-sm font-bold" style={{ color: "var(--primary-dark)" }}>
             داستان ما
           </p>
-          <h2 className="mb-4 text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+          <h2
+            className="mb-4 text-3xl font-black md:text-4xl"
+            style={{ color: "var(--accent-brown)" }}
+          >
             از بوی کیک تازه تا وینیمی
           </h2>
           <p className="mb-6 leading-8 text-muted-foreground">
-            همه‌چیز از کودکی شروع شد — از عطر کیک تازه‌ای که در خانه می‌پیچید. وینیمی ثمره
-            سال‌ها عشق به پخت و وسواس در کیفیت است.
+            همه‌چیز از کودکی شروع شد — از عطر کیک تازه‌ای که در خانه می‌پیچید. وینیمی ثمره سال‌ها
+            عشق به پخت و وسواس در کیفیت است.
           </p>
           <ul className="mb-6 space-y-2">
             {[
@@ -498,7 +502,10 @@ function InstagramSection() {
   return (
     <section className="px-4 py-16 md:py-24">
       <RevealOnScroll className="mx-auto mb-8 max-w-4xl text-center">
-        <h2 className="mb-2 text-3xl font-black md:text-4xl" style={{ color: "var(--accent-brown)" }}>
+        <h2
+          className="mb-2 text-3xl font-black md:text-4xl"
+          style={{ color: "var(--accent-brown)" }}
+        >
           ما را در اینستاگرام دنبال کنید
         </h2>
         <p className="text-muted-foreground">@{SITE.instagramHandle}</p>

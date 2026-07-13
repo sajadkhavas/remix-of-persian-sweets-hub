@@ -54,8 +54,7 @@ const OCCASION_EXTRA: Record<string, string> = {
   "mothers-day":
     "بهترین هدیه برای مادر، نشان دادن عشق با دست‌پختی که با عشق آماده شده. باکس ویژه روز مادر.",
   "fathers-day": "پدر عزیزت را با یک باکس شیرینی خانگی غافلگیر کن.",
-  "teachers-day":
-    "قدردانی از معلم با جعبه‌های شیرینی خانگی — هدیه‌ای متفاوت و ماندگار.",
+  "teachers-day": "قدردانی از معلم با جعبه‌های شیرینی خانگی — هدیه‌ای متفاوت و ماندگار.",
 };
 
 const GIFT_IDEAS = [
@@ -64,13 +63,7 @@ const GIFT_IDEAS = [
   { emoji: "🎁", title: "پک ترکیبی", desc: "کوکی + کیک + کارت هدیه دست‌نویس" },
 ];
 
-const Reveal = ({
-  children,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-}) => (
+const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -110,8 +103,7 @@ function OccasionPage() {
     },
     {
       question: "آیا امکان درج پیام شخصی روی کارت هدیه هست؟",
-      answer:
-        "بله. در مرحله ثبت سفارش می‌توانید متن کارت تبریک دست‌نویس را وارد کنید.",
+      answer: "بله. در مرحله ثبت سفارش می‌توانید متن کارت تبریک دست‌نویس را وارد کنید.",
     },
     {
       question: "آیا امکان ارسال هدیه به آدرس گیرنده وجود دارد؟",
@@ -128,8 +120,7 @@ function OccasionPage() {
       <section
         className="border-b py-20 text-center"
         style={{
-          background:
-            "linear-gradient(160deg, rgba(141,184,122,0.1) 0%, var(--accent-cream) 100%)",
+          background: "linear-gradient(160deg, rgba(141,184,122,0.1) 0%, var(--accent-cream) 100%)",
           borderColor: "rgba(141,184,122,0.15)",
         }}
       >
@@ -151,9 +142,7 @@ function OccasionPage() {
           >
             هدیه {occasion.nameFa}
           </h1>
-          <p className="mx-auto max-w-xl leading-8 text-[var(--gray-text)]">
-            {occasion.heroCopy}
-          </p>
+          <p className="mx-auto max-w-xl leading-8 text-[var(--gray-text)]">{occasion.heroCopy}</p>
           {extraText && (
             <p className="mx-auto mt-3 max-w-xl leading-8 text-[var(--gray-text)] opacity-80">
               {extraText}
@@ -222,10 +211,7 @@ function OccasionPage() {
         </section>
 
         {/* FAQ */}
-        <FAQSection
-          items={faqs}
-          heading={`سؤالات متداول درباره هدیه ${occasion.nameFa}`}
-        />
+        <FAQSection items={faqs} heading={`سؤالات متداول درباره هدیه ${occasion.nameFa}`} />
       </div>
     </div>
   );

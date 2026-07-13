@@ -181,10 +181,10 @@ export const PRODUCTS: Product[] = [
   product({
     id: "c8",
     slug: "cookie-diabetic",
-    name: "کوکی مختص دیابتی",
+    name: "کوکی بدون قند افزوده",
     shortDescription: "بدون قند افزوده، با همان طعم شیرین",
     seo: {
-      title: "کوکی مختص دیابتی | خرید آنلاین از وینیمی",
+      title: "کوکی بدون قند افزوده | خرید آنلاین از وینیمی",
       description: "بدون قند افزوده، با همان طعم شیرین",
     },
     priceToman: 115000,

@@ -8,7 +8,7 @@ import { useCartStore } from "@/lib/cart";
 const BADGE_STYLE: Record<ProductBadge, { bg: string; color: string; label: string }> = {
   bestseller: { bg: "var(--accent-gold)", color: "white", label: "⭐ پرفروش" },
   diet: { bg: "#E8F5E0", color: "#5C7A4A", label: "🌿 رژیمی" },
-  diabetic: { bg: "#FFF3E0", color: "#E65100", label: "💚 دیابتی" },
+  diabetic: { bg: "#FFF3E0", color: "#E65100", label: "💚 بدون قند افزوده" },
   special: { bg: "var(--primary-dark)", color: "white", label: "✨ ویژه" },
   new: { bg: "#E0F2FE", color: "#075985", label: "🆕 جدید" },
 };
