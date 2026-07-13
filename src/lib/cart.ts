@@ -12,7 +12,7 @@ export interface CartItem {
 
 interface CartStore {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">) => void;
+  addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
   removeItem: (id: string) => void;
   updateQty: (id: string, qty: number) => void;
   clearCart: () => void;
@@ -24,35 +24,32 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: (item) => {
+      addItem: (item, quantity = 1) => {
+        const safeQuantity = Math.max(1, Math.floor(quantity));
         const existing = get().items.find((i) => i.id === item.id);
         if (existing) {
           set((s) => ({
             items: s.items.map((i) =>
-              i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i,
+              i.id === item.id ? { ...i, quantity: i.quantity + safeQuantity } : i,
             ),
           }));
         } else {
-          set((s) => ({ items: [...s.items, { ...item, quantity: 1 }] }));
+          set((s) => ({ items: [...s.items, { ...item, quantity: safeQuantity }] }));
         }
       },
-      removeItem: (id) =>
-        set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
+      removeItem: (id) => set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
       updateQty: (id, qty) => {
         if (qty <= 0) {
           get().removeItem(id);
           return;
         }
         set((s) => ({
-          items: s.items.map((i) =>
-            i.id === id ? { ...i, quantity: qty } : i,
-          ),
+          items: s.items.map((i) => (i.id === id ? { ...i, quantity: qty } : i)),
         }));
       },
       clearCart: () => set({ items: [] }),
       totalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
-      totalPrice: () =>
-        get().items.reduce((sum, i) => sum + i.priceToman * i.quantity, 0),
+      totalPrice: () => get().items.reduce((sum, i) => sum + i.priceToman * i.quantity, 0),
     }),
     { name: "winimi-cart" },
   ),
