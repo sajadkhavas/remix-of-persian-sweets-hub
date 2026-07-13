@@ -78,17 +78,20 @@ function countedOptions(values: string[]): ProductFacetOption[] {
     .sort((a, b) => a.value.localeCompare(b.value, "fa"));
 }
 
+function productVisibleTagValues(product: Product): string[] {
+  const flavorValues = new Set(product.flavors);
+  return [
+    ...product.tags.filter((tag) => tag !== product.category && !flavorValues.has(tag)),
+    ...(product.badge ? [product.badge] : []),
+    ...(product.featured ? ["featured"] : []),
+  ];
+}
+
 export function getProductFacets(products: Product[]): ProductFacets {
   const prices = products.map((product) => product.priceToman);
   return {
     flavors: countedOptions(products.flatMap((product) => product.flavors)),
-    tags: countedOptions(
-      products.flatMap((product) => [
-        ...product.tags,
-        ...(product.badge ? [product.badge] : []),
-        ...(product.featured ? ["featured"] : []),
-      ]),
-    ),
+    tags: countedOptions(products.flatMap((product) => productVisibleTagValues(product))),
     minPrice: prices.length > 0 ? Math.min(...prices) : 0,
     maxPrice: prices.length > 0 ? Math.max(...prices) : 0,
   };
@@ -157,14 +160,19 @@ export function filterProducts(products: Product[], filters: ProductFilterSearch
   return sortProducts(filtered, filters.sort);
 }
 
+const TAG_UI_LABELS: Record<string, string> = {
+  bestseller: "پرفروش",
+  special: "ویژه",
+  new: "جدید",
+  diet: "رژیمی",
+  diabetic: "بدون قند افزوده",
+  featured: "پیشنهادی",
+  cookies: "کوکی‌ها",
+  cakes: "کیک‌ها",
+  "dry-sweets": "شیرینی خشک",
+  "gift-boxes": "باکس هدیه",
+};
+
 export function tagLabel(value: string): string {
-  const labels: Record<string, string> = {
-    bestseller: "پرفروش",
-    diet: "رژیمی",
-    diabetic: "بدون قند افزوده",
-    special: "ویژه",
-    new: "جدید",
-    featured: "پیشنهادی",
-  };
-  return labels[value] ?? value;
+  return TAG_UI_LABELS[value] ?? value;
 }
