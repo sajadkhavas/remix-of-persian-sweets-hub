@@ -1,10 +1,19 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { findPost, getRelatedPosts, formatPersianDate, estimateReadingTime } from "@/data/blog";
+import {
+  findPost,
+  getBlogCategory,
+  getRelatedPosts,
+  getRelatedProductsForPost,
+  formatPersianDate,
+} from "@/data/blog";
 import { buildSeo } from "@/lib/seo";
 import { BreadcrumbJsonLd } from "@/components/jsonld/BreadcrumbJsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ArticleJsonLd } from "@/components/jsonld/ArticleJsonLd";
+import { BlogArticleCard } from "@/components/blog/BlogArticleCard";
+import { BlogRelatedProducts } from "@/components/blog/BlogRelatedProducts";
 import { SITE } from "@/lib/site";
+import ogDefault from "@/assets/og-default.jpg";
 
 export const Route = createFileRoute("/blog_/$slug")({
   loader: ({ params }) => {
@@ -14,9 +23,10 @@ export const Route = createFileRoute("/blog_/$slug")({
   },
   head: ({ loaderData }) =>
     buildSeo({
-      title: loaderData?.post.title ?? "مقاله پیدا نشد",
-      description: loaderData?.post.excerpt ?? "",
+      title: loaderData?.post.seo.title ?? "مقاله پیدا نشد",
+      description: loaderData?.post.seo.description ?? "",
       path: loaderData ? `/blog/${loaderData.post.slug}` : "/blog",
+      image: ogDefault,
       type: "article",
       noindex: !loaderData,
     }),
@@ -24,83 +34,143 @@ export const Route = createFileRoute("/blog_/$slug")({
 });
 
 function renderContent(content: string) {
-  return content.split("\n").map((line, i) => {
-    if (line.startsWith("## "))
+  const blocks: Array<{ type: "heading" | "paragraph" | "list"; content: string | string[] }> = [];
+  const lines = content.split("\n");
+  let listItems: string[] = [];
+
+  const flushList = () => {
+    if (listItems.length > 0) {
+      blocks.push({ type: "list", content: listItems });
+      listItems = [];
+    }
+  };
+
+  for (const line of lines) {
+    if (line.startsWith("- ")) {
+      listItems.push(line.slice(2));
+      continue;
+    }
+
+    flushList();
+    if (line.startsWith("## ")) blocks.push({ type: "heading", content: line.slice(3) });
+    else if (line.trim()) blocks.push({ type: "paragraph", content: line });
+  }
+  flushList();
+
+  return blocks.map((block, index) => {
+    if (block.type === "heading") {
       return (
-        <h2 key={i} className="mb-3 mt-8 text-2xl font-bold text-accent-foreground">
-          {line.slice(3)}
+        <h2 key={index} className="mb-3 mt-8 text-2xl font-bold text-accent-foreground">
+          {block.content}
         </h2>
       );
-    if (line.startsWith("- "))
+    }
+
+    if (block.type === "list") {
       return (
-        <li key={i} className="mr-6 leading-9 text-[#4a3a32]">
-          {line.slice(2)}
-        </li>
+        <ul key={index} className="mb-6 list-disc space-y-2 pr-6 text-[#4a3a32]">
+          {(block.content as string[]).map((item) => (
+            <li key={item} className="leading-9">
+              {item}
+            </li>
+          ))}
+        </ul>
       );
-    if (line.trim())
-      return (
-        <p key={i} className="mb-4 leading-9 text-[#4a3a32]">
-          {line}
-        </p>
-      );
-    return null;
+    }
+
+    return (
+      <p key={index} className="mb-4 leading-9 text-[#4a3a32]">
+        {block.content}
+      </p>
+    );
   });
 }
 
 function BlogPostPage() {
   const { post } = Route.useLoaderData();
+  const category = getBlogCategory(post.category);
   const related = getRelatedPosts(post.slug, 2);
+  const relatedProducts = getRelatedProductsForPost(post);
   const postUrl = `${SITE.origin}/blog/${post.slug}`;
   const crumbs = [
     { name: "خانه", path: "/" },
     { name: "بلاگ", path: "/blog" },
+    ...(category ? [{ name: category.name, path: `/blog/category/${category.slug}` }] : []),
     { name: post.title, path: `/blog/${post.slug}` },
   ];
+
   return (
-    <main dir="rtl" className="min-h-screen bg-[#FEFCF9]">
+    <div dir="rtl" className="space-y-10">
       <BreadcrumbJsonLd items={crumbs} />
       <ArticleJsonLd
         headline={post.title}
+        description={post.seo.description}
         author={post.author}
-        datePublished={post.datePublished}
+        datePublished={post.publishedAt}
+        dateModified={post.updatedAt}
+        image={`${SITE.origin}${ogDefault}`}
         path={`/blog/${post.slug}`}
       />
-      <article className="mx-auto max-w-4xl px-6 py-10">
+      <article className="mx-auto max-w-4xl">
         <Breadcrumbs items={crumbs} />
-        <header className="mb-12 mt-6">
-          <span className="mb-5 inline-block rounded-full bg-primary/10 px-4 py-1 text-sm font-bold text-primary">
-            مقاله
-          </span>
-          <h1 className="mb-6 text-4xl font-extrabold leading-[1.6] text-accent-foreground">
+        <header className="mb-10 mt-6 rounded-[2rem] bg-accent p-6 shadow-sm md:p-10">
+          {category ? (
+            <Link
+              to="/blog/category/$categorySlug"
+              params={{ categorySlug: category.slug }}
+              className="mb-5 inline-flex rounded-full bg-primary/10 px-4 py-1 text-sm font-bold text-primary"
+            >
+              {category.icon} {category.name}
+            </Link>
+          ) : null}
+          <h1 className="text-4xl font-extrabold leading-[1.6] text-accent-foreground md:text-5xl">
             {post.title}
           </h1>
-          <div className="mb-5 flex flex-wrap gap-4 rounded-xl bg-accent p-5 text-sm text-muted-foreground">
+          <p className="mt-5 leading-8 text-muted-foreground">{post.excerpt}</p>
+          <div className="mt-6 flex flex-wrap gap-4 rounded-xl bg-white/70 p-5 text-sm text-muted-foreground">
             <span>✍️ {post.author}</span>
-            <time dateTime={post.datePublished}>📅 {formatPersianDate(post.datePublished)}</time>
-            <span>⏱ {estimateReadingTime(post.content)} مطالعه</span>
+            <time dateTime={post.publishedAt}>📅 {formatPersianDate(post.publishedAt)}</time>
+            {post.updatedAt !== post.publishedAt ? (
+              <time dateTime={post.updatedAt}>
+                به‌روزرسانی: {formatPersianDate(post.updatedAt)}
+              </time>
+            ) : null}
+            <span>⏱ {post.readingTime} مطالعه</span>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(post.title + " " + postUrl)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-white"
-            >
-              💬 واتساپ
-            </a>
-            <a
-              href={`https://t.me/share/url?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(post.title)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-[#229ED9] px-4 py-2 text-sm font-bold text-white"
-            >
-              ✈️ تلگرام
-            </a>
+          <div
+            className="mt-6 flex aspect-[16/9] items-center justify-center rounded-3xl bg-white text-7xl"
+            role="img"
+            aria-label={post.coverImage.alt}
+          >
+            {post.emoji ?? category?.icon ?? "📝"}
           </div>
+          {post.tags.length > 0 ? (
+            <div className="mt-5 flex flex-wrap gap-2" aria-label="برچسب‌های مقاله">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-border bg-white px-3 py-1 text-xs font-bold text-muted-foreground"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
         </header>
-        <div className="mb-14 border-r-4 border-primary/30 pr-6">{renderContent(post.content)}</div>
-        <section className="mb-14 rounded-3xl border bg-accent p-10 text-center">
-          <p className="mb-6 text-2xl font-bold text-accent-foreground">دوست داری سفارش بدی؟</p>
+
+        <section
+          aria-label="متن مقاله"
+          className="mb-10 rounded-3xl border border-border bg-white p-6 shadow-sm md:p-10"
+        >
+          {renderContent(post.content)}
+        </section>
+
+        <section className="mb-10 rounded-3xl border bg-accent p-8 text-center">
+          <h2 className="mb-4 text-2xl font-bold text-accent-foreground">دوست داری سفارش بدی؟</h2>
+          <p className="mx-auto mb-6 max-w-xl text-sm leading-7 text-muted-foreground">
+            لینک محصولات مرتبط پایین همین مقاله آمده و برای سفارش سریع هم می‌توانید از واتساپ
+            استفاده کنید.
+          </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link to="/products" className="rounded-full bg-primary px-7 py-3 font-bold text-white">
               مشاهده محصولات
@@ -115,26 +185,26 @@ function BlogPostPage() {
             </a>
           </div>
         </section>
-        {related.length > 0 && (
-          <section>
-            <h2 className="mb-5 text-2xl font-bold text-accent-foreground">مقالات مرتبط</h2>
-            <div className="grid gap-5 md:grid-cols-2">
-              {related.map((p) => (
-                <Link
-                  key={p.slug}
-                  to="/blog/$slug"
-                  params={{ slug: p.slug }}
-                  className="rounded-2xl border bg-accent p-5 no-underline"
-                >
-                  <div className="mb-2 text-2xl">{p.emoji}</div>
-                  <h3 className="mb-2 font-bold text-accent-foreground">{p.title}</h3>
-                  <p className="text-sm leading-7 text-muted-foreground">{p.excerpt}</p>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+
+        <div className="space-y-10">
+          <BlogRelatedProducts products={relatedProducts.slice(0, 3)} />
+          {related.length > 0 ? (
+            <section aria-labelledby="related-articles-heading" className="space-y-5">
+              <h2
+                id="related-articles-heading"
+                className="text-2xl font-bold text-accent-foreground"
+              >
+                مقالات مرتبط
+              </h2>
+              <div className="grid gap-5 md:grid-cols-2">
+                {related.map((relatedPost) => (
+                  <BlogArticleCard key={relatedPost.id} post={relatedPost} />
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </div>
       </article>
-    </main>
+    </div>
   );
 }

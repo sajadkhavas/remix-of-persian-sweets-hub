@@ -3,7 +3,7 @@ import { PRODUCTS } from "@/data/products";
 import { getPublicProductCategories } from "@/data/categories";
 import { CITIES } from "@/data/cities";
 import { OCCASIONS } from "@/data/occasions";
-import { POSTS } from "@/data/blog";
+import { BLOG_CATEGORIES, getPublishedPosts } from "@/data/blog";
 import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/sitemap.xml")({
@@ -34,7 +34,10 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...PRODUCTS.map((p) => url(`/product/${p.slug}`, "0.9", "weekly")),
           ...CITIES.map((c) => url(`/shipping-to/${c.slug}`, "0.7", "monthly")),
           ...OCCASIONS.map((o) => url(`/occasion/${o.slug}`, "0.8", "monthly")),
-          ...POSTS.map((p) => url(`/blog/${p.slug}`, "0.7", "weekly")),
+          ...BLOG_CATEGORIES.map((category) =>
+            url(`/blog/category/${category.slug}`, "0.7", "weekly"),
+          ),
+          ...getPublishedPosts().map((p) => url(`/blog/${p.slug}`, "0.7", "weekly")),
         ];
         return new Response(
           `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`,
