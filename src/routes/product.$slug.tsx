@@ -19,7 +19,7 @@ import type { FaqItem } from "@/components/jsonld/FAQJsonLd";
 const BADGE_LABELS: Record<ProductBadge, string> = {
   bestseller: "⭐ پرفروش",
   diet: "🌿 رژیمی",
-  diabetic: "💚 مناسب دیابتی‌ها",
+  diabetic: "💚 بدون قند افزوده",
   special: "✨ ویژه",
   new: "🆕 جدید",
 };

@@ -56,7 +56,7 @@ function CategoryLandingPage() {
   return (
     <div className="space-y-10">
       <BreadcrumbJsonLd items={crumbs} />
-      <ItemListJsonLd products={products} />
+      {products.length > 0 && <ItemListJsonLd products={products} />}
       <Breadcrumbs items={crumbs} />
 
       <CategoryHero category={category} />

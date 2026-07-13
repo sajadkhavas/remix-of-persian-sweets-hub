@@ -52,7 +52,7 @@ export function Footer() {
             </li>
             <li>
               <Link to="/products/$categorySlug" params={{ categorySlug: "diet" }}>
-                رژیمی و دیابتی
+                رژیمی و بدون قند افزوده
               </Link>
             </li>
             <li>

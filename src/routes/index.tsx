@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
     buildSeo({
       title: "کیک و کوکی دست‌پخت، ارسال به سراسر ایران",
       description:
-        "کوکی و شیرینی دست‌پخت با مواد اولیه تازه، بدون نگهدارنده، با گزینه‌های رژیمی و دیابتی. ارسال با بسته‌بندی محافظ به سراسر ایران.",
+        "کوکی و شیرینی دست‌پخت با مواد اولیه تازه، بدون نگهدارنده، با گزینه‌های رژیمی و بدون قند افزوده. ارسال با بسته‌بندی محافظ به سراسر ایران.",
       path: "/",
     }),
   component: HomePage,
@@ -34,14 +34,14 @@ const MARQUEE_ITEMS = [
   "🌿 بدون نگهدارنده مصنوعی",
   "📦 بسته‌بندی محافظ ویژه پست",
   "🚚 ارسال به سراسر ایران",
-  "💚 گزینه رژیمی و دیابتی",
+  "💚 گزینه رژیمی و بدون قند افزوده",
   "🏠 دست‌پخت خانگی",
 ];
 const CATEGORY_TABS = [
   { key: "all", label: "همه" },
   { key: "cookies", label: "کوکی‌ها" },
   { key: "cakes", label: "کیک و دسر" },
-  { key: "diet", label: "رژیمی و دیابتی" },
+  { key: "diet", label: "رژیمی" },
 ] as const;
 type TabKey = (typeof CATEGORY_TABS)[number]["key"];
 
@@ -312,7 +312,7 @@ function DietHighlightSection() {
         <div className="mb-8 grid gap-4 sm:grid-cols-2">
           {[
             { icon: "🍃", title: "کوکی رژیمی", sub: "بدون قند افزوده، کم‌کالری" },
-            { icon: "💚", title: "کوکی دیابتی", sub: "مخصوص دیابتی‌ها" },
+            { icon: "💚", title: "کوکی بدون قند افزوده", sub: "با اطلاعات شفاف مواد اولیه" },
           ].map((card) => (
             <motion.div
               key={card.title}
