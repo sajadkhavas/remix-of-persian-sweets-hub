@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "sonner";
 import {
   Outlet,
   Link,
@@ -147,6 +148,17 @@ function RootComponent() {
       </main>
       <Footer />
       <BottomNav />
+      <Toaster
+        dir="rtl"
+        position="top-center"
+        toastOptions={{
+          classNames: {
+            toast: "text-right font-sans",
+            title: "text-right",
+            description: "text-right",
+          },
+        }}
+      />
     </QueryClientProvider>
   );
 }

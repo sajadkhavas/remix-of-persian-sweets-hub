@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 import type { Product, ProductBadge } from "@/data/types";
 import { formatToman } from "@/lib/format";
 import { useCartStore } from "@/lib/cart";
@@ -69,15 +70,16 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="mt-auto px-4 pb-4">
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
             addItem({
               id: product.id,
               slug: product.slug,
               name: product.name,
               priceToman: product.priceToman,
               emoji: product.emoji ?? "🍪",
-            })
-          }
+            });
+            toast.success(`${product.name} به سبد خرید اضافه شد.`);
+          }}
           aria-label={addButtonAriaLabel}
           className="block w-full rounded-lg py-2 text-center text-sm font-semibold transition-all hover:brightness-95"
           style={{
