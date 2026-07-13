@@ -14,10 +14,11 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   head: ({ loaderData }) =>
     buildSeo({
-      title: loaderData.post.title,
-      description: loaderData.post.excerpt,
-      path: `/blog/${loaderData.post.slug}`,
+      title: loaderData?.post.title ?? "مقاله پیدا نشد",
+      description: loaderData?.post.excerpt ?? "",
+      path: loaderData ? `/blog/${loaderData.post.slug}` : "/blog",
       type: "article",
+      noindex: !loaderData,
     }),
   component: BlogPostPage,
 });
