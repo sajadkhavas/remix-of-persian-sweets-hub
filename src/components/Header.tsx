@@ -43,7 +43,10 @@ function Logo() {
 }
 
 function CartButton({ className = "" }: { className?: string }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const totalItems = useCartStore((s) => s.totalItems());
+  const show = mounted && totalItems > 0;
   return (
     <Link
       to="/cart"
@@ -51,7 +54,7 @@ function CartButton({ className = "" }: { className?: string }) {
       className={`relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border hover:bg-[var(--primary-light)] transition-colors ${className}`}
     >
       <ShoppingCart className="h-5 w-5" style={{ color: "var(--accent-brown)" }} />
-      {totalItems > 0 ? (
+      {show ? (
         <span
           className="absolute -end-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white"
           style={{ background: "var(--primary-dark)" }}
