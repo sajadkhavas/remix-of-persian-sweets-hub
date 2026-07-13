@@ -23,9 +23,12 @@ import { ProductFilters } from "@/components/products/ProductFilters";
 import { SortSelect } from "@/components/products/SortSelect";
 import {
   filterProducts,
+  getActiveProductFilterCount,
   getProductFacets,
   hasActiveProductFilters,
   parseProductSearch,
+  removeProductFilterArrayValue,
+  toggleProductFilterArrayValue,
   type ProductFilterSearch,
   type ProductSort,
 } from "@/lib/product-filters";
@@ -62,28 +65,6 @@ export const Route = createFileRoute("/products_/$categorySlug")({
   component: CategoryLandingPage,
 });
 
-function removeFromArray(values: string[] | undefined, value: string): string[] | undefined {
-  const nextValues = (values ?? []).filter((item) => item !== value);
-  return nextValues.length > 0 ? nextValues : undefined;
-}
-
-function toggleArrayValue(values: string[] | undefined, value: string): string[] | undefined {
-  const current = values ?? [];
-  if (current.includes(value)) return removeFromArray(current, value);
-  return [...current, value];
-}
-
-function activeFilterCount(filters: ProductFilterSearch): number {
-  return (
-    (filters.q ? 1 : 0) +
-    (filters.minPrice !== undefined ? 1 : 0) +
-    (filters.maxPrice !== undefined ? 1 : 0) +
-    (filters.flavor?.length ?? 0) +
-    (filters.tag?.length ?? 0) +
-    (filters.sort ? 1 : 0)
-  );
-}
-
 function CategoryLandingPage() {
   const { category } = Route.useLoaderData();
   const filters = Route.useSearch();
@@ -102,7 +83,7 @@ function CategoryLandingPage() {
   ];
   const isComingSoon = products.length === 0;
   const hasFilters = hasActiveProductFilters(filters);
-  const activeCount = activeFilterCount(filters);
+  const activeCount = getActiveProductFilterCount(filters);
 
   const updateSearch = (patch: Partial<ProductFilterSearch>) => {
     void navigate({
@@ -115,8 +96,10 @@ function CategoryLandingPage() {
   };
 
   const removeFilter = (key: keyof ProductFilterSearch, value?: string) => {
-    if (key === "flavor" && value) updateSearch({ flavor: removeFromArray(filters.flavor, value) });
-    else if (key === "tag" && value) updateSearch({ tag: removeFromArray(filters.tag, value) });
+    if (key === "flavor" && value)
+      updateSearch({ flavor: removeProductFilterArrayValue(filters.flavor, value) });
+    else if (key === "tag" && value)
+      updateSearch({ tag: removeProductFilterArrayValue(filters.tag, value) });
     else updateSearch({ [key]: undefined });
   };
 
@@ -127,8 +110,9 @@ function CategoryLandingPage() {
     onMinPriceChange: (value?: number) => updateSearch({ minPrice: value }),
     onMaxPriceChange: (value?: number) => updateSearch({ maxPrice: value }),
     onFlavorToggle: (value: string) =>
-      updateSearch({ flavor: toggleArrayValue(filters.flavor, value) }),
-    onTagToggle: (value: string) => updateSearch({ tag: toggleArrayValue(filters.tag, value) }),
+      updateSearch({ flavor: toggleProductFilterArrayValue(filters.flavor, value) }),
+    onTagToggle: (value: string) =>
+      updateSearch({ tag: toggleProductFilterArrayValue(filters.tag, value) }),
     onClear: clearFilters,
   };
 
