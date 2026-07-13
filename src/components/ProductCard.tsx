@@ -9,6 +9,7 @@ const BADGE_STYLE: Record<ProductBadge, { bg: string; color: string; label: stri
   diet: { bg: "#E8F5E0", color: "#5C7A4A", label: "🌿 رژیمی" },
   diabetic: { bg: "#FFF3E0", color: "#E65100", label: "💚 دیابتی" },
   special: { bg: "var(--primary-dark)", color: "white", label: "✨ ویژه" },
+  new: { bg: "#E0F2FE", color: "#075985", label: "🆕 جدید" },
 };
 
 export function ProductCard({ product }: { product: Product }) {
@@ -54,7 +55,7 @@ export function ProductCard({ product }: { product: Product }) {
             {product.name}
           </h3>
           <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
-            {product.description}
+            {product.shortDescription}
           </p>
           <p className="mt-3 text-lg font-bold" style={{ color: "var(--primary-dark)" }}>
             {formatToman(product.priceToman)}
