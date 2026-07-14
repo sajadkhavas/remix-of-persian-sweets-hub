@@ -66,7 +66,7 @@ function Products() {
 
   const updateSearch = (patch: Partial<ProductFilterSearch>) => {
     void navigate({
-      search: (previous) => ({ ...previous, ...patch }),
+      search: (previous: ProductFilterSearch) => ({ ...previous, ...patch }),
     });
   };
 

@@ -40,32 +40,32 @@
 }
 
 :root {
-  /* Winimi brand palette */
-  --primary: #8DB87A;
-  --primary-dark: #5C7A4A;
-  --primary-light: #E8F5E0;
-  --primary-foreground: #3D2B1F;
-  --accent-cream: #FAF7F2;
-  --accent-brown: #3D2B1F;
-  --accent-gold: #C8961E;
+  /* Winimi luxury bakery palette — warm cream, coffee, gold */
+  --primary: #C89B5B;
+  --primary-dark: #5B3422;
+  --primary-light: #F1E8DA;
+  --primary-foreground: #FAF5EE;
+  --accent-cream: #FAF5EE;
+  --accent-brown: #25160F;
+  --accent-gold: #C89B5B;
 
-  --background: #FAF7F2;
-  --foreground: #3D2B1F;
+  --background: #FAF5EE;
+  --foreground: #2B211B;
   --card: #FFFFFF;
-  --card-foreground: #3D2B1F;
+  --card-foreground: #2B211B;
   --popover: #FFFFFF;
-  --popover-foreground: #3D2B1F;
-  --secondary: #F5F5F0;
-  --secondary-foreground: #3D2B1F;
-  --muted: #F5F5F0;
-  --muted-foreground: #6B6B6B;
-  --accent: #E8F5E0;
-  --accent-foreground: #5C7A4A;
+  --popover-foreground: #2B211B;
+  --secondary: #F1E8DA;
+  --secondary-foreground: #25160F;
+  --muted: #F1E8DA;
+  --muted-foreground: #7A6B5F;
+  --accent: #F1E8DA;
+  --accent-foreground: #5B3422;
   --destructive: #B3261E;
   --destructive-foreground: #FFFFFF;
-  --border: #E8E4DC;
-  --input: #E8E4DC;
-  --ring: #8DB87A;
+  --border: #E6DBC9;
+  --input: #E6DBC9;
+  --ring: #C89B5B;
 }
 
 @layer base {
@@ -82,8 +82,20 @@
     font-family: var(--font-sans);
     line-height: 1.8;
   }
-  h1, h2, h3, h4 { line-height: 1.4; color: var(--accent-brown); }
-  .font-display { font-family: var(--font-display); }
+  h1, h2, h3, h4 {
+    line-height: 1.35;
+    color: var(--accent-brown);
+    letter-spacing: -0.01em;
+  }
+  .font-display {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .font-serif-latin {
+    font-family: var(--font-display);
+    font-style: italic;
+  }
   button, a, [role="button"] { cursor: pointer; }
   button, a {
     transition: color 0.2s ease, background-color 0.2s ease;

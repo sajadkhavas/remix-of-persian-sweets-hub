@@ -146,7 +146,7 @@ function BlogPostPage() {
           </div>
           {post.tags.length > 0 ? (
             <div className="mt-5 flex flex-wrap gap-2" aria-label="برچسب‌های مقاله">
-              {post.tags.map((tag) => (
+              {post.tags.map((tag: string) => (
                 <span
                   key={tag}
                   className="rounded-full border border-border bg-white px-3 py-1 text-xs font-bold text-muted-foreground"
