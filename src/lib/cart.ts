@@ -1,3 +1,4 @@
+import type { ShippingScope } from "@/data/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -7,7 +8,12 @@ export interface CartItem {
   name: string;
   priceToman: number;
   quantity: number;
-  emoji: string;
+  image?: string;
+  emoji?: string;
+  weightGrams?: number;
+  requiresCooling?: boolean;
+  shippingScope?: ShippingScope;
+  shippingNote?: string;
 }
 
 interface CartStore {
@@ -18,6 +24,19 @@ interface CartStore {
   clearCart: () => void;
   totalItems: () => number;
   totalPrice: () => number;
+}
+
+function normalizeCity(city: string) {
+  return city.trim().replace(/ي/g, "ی").replace(/ك/g, "ک").replace(/\s+/g, " ");
+}
+
+export function isCoolingDeliveryCity(city: string): boolean {
+  const normalized = normalizeCity(city);
+  return normalized === "تهران" || normalized === "کرج";
+}
+
+export function cartHasCoolingItems(items: CartItem[]): boolean {
+  return items.some((item) => item.requiresCooling === true || item.shippingScope === "tehran-karaj");
 }
 
 export const useCartStore = create<CartStore>()(
@@ -31,7 +50,7 @@ export const useCartStore = create<CartStore>()(
         if (existing) {
           set((s) => ({
             items: s.items.map((i) =>
-              i.id === item.id ? { ...i, quantity: i.quantity + normalizedQuantity } : i,
+              i.id === item.id ? { ...i, ...item, quantity: i.quantity + normalizedQuantity } : i,
             ),
           }));
         } else {
