@@ -1,6 +1,7 @@
+import type { ReactNode } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { ArrowLeft, Heart, Instagram, Leaf, Package, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { ArrowLeft, Heart, Instagram, Leaf, Package, ShieldCheck, Sparkles } from "lucide-react";
 import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { StaggerContainer, StaggerItem } from "@/components/animations/StaggerContainer";
 import { Marquee } from "@/components/animations/Marquee";
@@ -217,7 +218,7 @@ function MarqueeSection() {
   );
 }
 
-function SectionEyebrow({ children }: { children: React.ReactNode }) {
+function SectionEyebrow({ children }: { children: ReactNode }) {
   return (
     <p className="mb-4 inline-flex items-center gap-2 text-[11px] font-extrabold tracking-[0.24em] text-[color:var(--primary-dark)]">
       <span className="h-px w-8 bg-[color:var(--primary-dark)]" />
