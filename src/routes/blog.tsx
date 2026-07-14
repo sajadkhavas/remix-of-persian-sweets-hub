@@ -61,7 +61,7 @@ function BlogPage() {
 
   const updateSearch = (patch: Partial<BlogFilterSearch>) => {
     void navigate({
-      search: (previous) => ({ ...previous, ...patch }),
+      search: (previous: BlogFilterSearch) => ({ ...previous, ...patch }),
     });
   };
 

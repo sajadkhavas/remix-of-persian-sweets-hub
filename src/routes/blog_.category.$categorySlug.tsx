@@ -55,7 +55,7 @@ function BlogCategoryPage() {
         name={category.title}
         description={category.seoDescription}
         path={`/blog/category/${category.slug}`}
-        items={posts.map((post) => ({ name: post.title, path: `/blog/${post.slug}` }))}
+        items={posts.map((post: { title: string; slug: string }) => ({ name: post.title, path: `/blog/${post.slug}` }))}
       />
       <Breadcrumbs items={crumbs} />
 
@@ -88,7 +88,7 @@ function BlogCategoryPage() {
         </div>
         {posts.length > 0 ? (
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => (
+            {posts.map((post: import("@/data/blog").BlogPost) => (
               <BlogArticleCard key={post.id} post={post} />
             ))}
           </div>

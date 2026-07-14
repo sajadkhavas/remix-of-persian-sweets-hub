@@ -154,7 +154,7 @@ function ProductPage() {
           </div>
           {p.images.length > 1 && (
             <div className="grid grid-cols-4 gap-3 sm:grid-cols-5">
-              {p.images.map((image, index) => (
+              {p.images.map((image: import("@/data/types").ProductImage, index: number) => (
                 <button
                   key={image.url}
                   type="button"
@@ -179,7 +179,7 @@ function ProductPage() {
           <div className="mb-4 flex flex-wrap items-center gap-2">
             {p.badge && (
               <span className="rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
-                {BADGE_LABELS[p.badge]}
+                {BADGE_LABELS[p.badge as ProductBadge]}
               </span>
             )}
             {validComparePrice && (
