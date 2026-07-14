@@ -19,7 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
   const badgeLabel = product.badge ? BADGE_LABEL[product.badge] : null;
   const addItem = useCartStore((s) => s.addItem);
   const inCart = useCartStore((s) => s.items.some((i) => i.id === product.id));
-  const image = getProductImage(product.slug, product.category);
+  const image = getProductImage(product);
 
   return (
     <motion.article
@@ -53,7 +53,11 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h3 className="font-display truncate text-lg font-semibold tracking-tight text-[color:var(--accent-brown)]">
-              <Link to="/product/$slug" params={{ slug: product.slug }} className="hover:text-[color:var(--accent-gold)]">
+              <Link
+                to="/product/$slug"
+                params={{ slug: product.slug }}
+                className="hover:text-[color:var(--accent-gold)]"
+              >
                 {product.name}
               </Link>
             </h3>

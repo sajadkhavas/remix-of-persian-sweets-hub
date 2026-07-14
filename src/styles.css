@@ -40,36 +40,38 @@
 }
 
 :root {
-  /* Winimi luxury bakery palette — warm cream, coffee, gold */
-  --primary: #C89B5B;
-  --primary-dark: #5B3422;
-  --primary-light: #F1E8DA;
-  --primary-foreground: #FAF5EE;
-  --accent-cream: #FAF5EE;
-  --accent-brown: #25160F;
-  --accent-gold: #C89B5B;
+  /* Winimi brand palette */
+  --primary: #8db87a;
+  --primary-dark: #5c7a4a;
+  --primary-light: #e8f5e0;
+  --primary-foreground: #3d2b1f;
+  --accent-cream: #faf7f2;
+  --accent-brown: #3d2b1f;
+  --accent-gold: #c8961e;
 
-  --background: #FAF5EE;
-  --foreground: #2B211B;
-  --card: #FFFFFF;
-  --card-foreground: #2B211B;
-  --popover: #FFFFFF;
-  --popover-foreground: #2B211B;
-  --secondary: #F1E8DA;
-  --secondary-foreground: #25160F;
-  --muted: #F1E8DA;
-  --muted-foreground: #7A6B5F;
-  --accent: #F1E8DA;
-  --accent-foreground: #5B3422;
-  --destructive: #B3261E;
-  --destructive-foreground: #FFFFFF;
-  --border: #E6DBC9;
-  --input: #E6DBC9;
-  --ring: #C89B5B;
+  --background: #faf7f2;
+  --foreground: #3d2b1f;
+  --card: #ffffff;
+  --card-foreground: #3d2b1f;
+  --popover: #ffffff;
+  --popover-foreground: #3d2b1f;
+  --secondary: #f5f5f0;
+  --secondary-foreground: #3d2b1f;
+  --muted: #f5f5f0;
+  --muted-foreground: #6b6b6b;
+  --accent: #e8f5e0;
+  --accent-foreground: #5c7a4a;
+  --destructive: #b3261e;
+  --destructive-foreground: #ffffff;
+  --border: #e8e4dc;
+  --input: #e8e4dc;
+  --ring: #8db87a;
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * {
+    border-color: var(--color-border);
+  }
   html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
@@ -82,30 +84,39 @@
     font-family: var(--font-sans);
     line-height: 1.8;
   }
-  h1, h2, h3, h4 {
-    line-height: 1.35;
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.4;
     color: var(--accent-brown);
-    letter-spacing: -0.01em;
   }
   .font-display {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-family: var(--font-display);
   }
   .font-serif-latin {
     font-family: var(--font-display);
     font-style: italic;
   }
-  button, a, [role="button"] { cursor: pointer; }
-  button, a {
-    transition: color 0.2s ease, background-color 0.2s ease;
+  button,
+  a,
+  [role="button"] {
+    cursor: pointer;
+  }
+  button,
+  a {
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
   }
   ::selection {
-    background: #8DB87A;
-    color: #3D2B1F;
+    background: #8db87a;
+    color: #3d2b1f;
   }
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
@@ -115,7 +126,10 @@
 }
 
 /* ─── Legal content prose styles ─────────────────────────── */
-.legal-content { line-height: 1.9; color: var(--foreground); }
+.legal-content {
+  line-height: 1.9;
+  color: var(--foreground);
+}
 .legal-content h2 {
   font-size: 1.2rem;
   font-weight: 700;
@@ -125,17 +139,21 @@
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--primary-light);
 }
-.legal-content p { color: var(--muted-foreground); margin-bottom: 0.75rem; }
+.legal-content p {
+  color: var(--muted-foreground);
+  margin-bottom: 0.75rem;
+}
 .legal-content ul {
   list-style: disc;
   padding-right: 1.5rem;
   color: var(--muted-foreground);
   margin-bottom: 0.75rem;
 }
-.legal-content li { margin-bottom: 0.4rem; }
+.legal-content li {
+  margin-bottom: 0.4rem;
+}
 .legal-content a {
   color: var(--primary-dark);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-

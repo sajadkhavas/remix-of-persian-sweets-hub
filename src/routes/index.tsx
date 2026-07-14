@@ -13,15 +13,14 @@ import type { BlogPost } from "@/data/blog";
 import { SITE } from "@/lib/site";
 import { buildSeo } from "@/lib/seo";
 import { toPersianDigits } from "@/lib/format";
-import heroBakery from "@/assets/hero-bakery.jpg";
-import brandStory from "@/assets/brand-story.jpg";
+import { brandStoryImage, heroBakery } from "@/lib/product-images";
 
 export const Route = createFileRoute("/")({
   head: () =>
     buildSeo({
-      title: "وینیمی | شیرینی‌های دست‌ساز که خاطره می‌شوند",
+      title: "کیک و کوکی دست‌پخت، ارسال به سراسر ایران",
       description:
-        "بوتیک شیرینی وینیمی — کیک، کوکی و شیرینی دست‌ساز با مواد اولیه ممتاز، پخت تازه و بسته‌بندی نفیس. ارسال با دقت به سراسر ایران.",
+        "کوکی و شیرینی دست‌پخت با مواد اولیه تازه، بدون نگهدارنده، با گزینه‌های رژیمی و بدون قند افزوده. ارسال با بسته‌بندی محافظ به سراسر ایران.",
       path: "/",
     }),
   component: HomePage,
@@ -29,33 +28,33 @@ export const Route = createFileRoute("/")({
 
 const MARQUEE_ITEMS = [
   "پخت تازه روزانه",
-  "مواد اولیه ممتاز",
-  "بسته‌بندی نفیس",
+  "مواد اولیه تازه",
+  "بسته‌بندی محافظ",
   "ارسال به سراسر ایران",
-  "دست‌ساز با وسواس",
+  "دست‌پخت خانگی",
   "بدون نگهدارنده",
 ];
 
 const TRUST_PILLARS = [
   {
     icon: Leaf,
-    title: "مواد اولیه ممتاز",
-    body: "کره تازه، شکلات درجه یک و آرد اروپایی — هر ماده اولیه با دقت انتخاب می‌شود.",
+    title: "مواد اولیه تازه",
+    body: "محصولات با مواد اولیه تازه و مناسب سفارش‌های روزمره و هدیه آماده می‌شوند.",
   },
   {
     icon: Sparkles,
-    title: "دست‌ساز، پخت روزانه",
-    body: "هیچ شیرینی بیش از یک روز روی قفسه نمی‌ماند. هر سفارش تازه پخت می‌شود.",
+    title: "دست‌پخت و تازه",
+    body: "هر سفارش با فرآیند آماده‌سازی کنترل‌شده و متناسب با ظرفیت تولید روزانه انجام می‌شود.",
   },
   {
     icon: Package,
     title: "بسته‌بندی محافظ",
-    body: "جعبه‌های چندلایه با پد ضربه‌گیر، طراحی‌شده برای سفر بی‌خطر تا دست شما.",
+    body: "بسته‌ها برای جابه‌جایی امن‌تر آماده می‌شوند و جزئیات ارسال در زمان سفارش اعلام می‌شود.",
   },
   {
     icon: ShieldCheck,
-    title: "ضمانت سالم رسیدن",
-    body: "اگر محصول با کوچک‌ترین آسیب رسید، بدون سوال جایگزین می‌کنیم.",
+    title: "پشتیبانی سفارش",
+    body: "تیم وینیمی وضعیت سفارش، بسته‌بندی و ارسال را تا زمان تحویل پیگیری می‌کند.",
   },
 ];
 
@@ -85,13 +84,10 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
 
   return (
     <section className="relative min-h-[92vh] w-full overflow-hidden bg-[color:var(--accent-brown)] text-white">
-      <motion.div
-        style={reduceMotion ? undefined : { y, scale }}
-        className="absolute inset-0"
-      >
+      <motion.div style={reduceMotion ? undefined : { y, scale }} className="absolute inset-0">
         <img
           src={heroBakery}
-          alt="کوکی‌های تازه پخت وینیمی روی تخته چوبی"
+          alt="جایگاه تصویر اصلی وینیمی برای عکس واقعی محصولات"
           width={1600}
           height={1200}
           fetchPriority="high"
@@ -110,7 +106,7 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
         >
           <span className="font-serif-latin normal-case tracking-normal">Winimi</span>
           <span className="opacity-50">—</span>
-          بوتیک شیرینی دست‌ساز
+          شیرینی دست‌پخت
         </motion.p>
 
         <motion.h1
@@ -119,10 +115,10 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
           transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-3xl font-display text-4xl font-bold leading-[1.15] tracking-tight text-white md:text-6xl lg:text-[68px]"
         >
-          طعم لحظه‌های
-          <span className="mx-2 italic text-[color:var(--accent-gold)]">شیرین</span>
+          کیک و کوکی
+          <span className="mx-2 italic text-[color:var(--accent-gold)]">دست‌پخت</span>
           <br />
-          که خاطره می‌شوند.
+          برای لحظه‌های شیرین
         </motion.h1>
 
         <motion.p
@@ -131,9 +127,8 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-6 max-w-xl text-base leading-9 text-white/80 md:text-lg"
         >
-          کیک‌ها، کوکی‌ها و شیرینی‌های وینیمی از عشق به پخت متولد می‌شوند —
-          با مواد اولیه ممتاز، وسواس در جزئیات و بسته‌بندی نفیس، تا هر لحظه‌ی
-          مصرفشان یک تجربه‌ی به‌یادماندنی باشد.
+          ساختار این صفحه برای نمایش عکس‌های واقعی مشتری، دسته‌بندی‌های اصلی و محصولات منتخب آماده
+          شده است؛ متن نهایی می‌تواند از داده‌های برند و API تغذیه شود.
         </motion.p>
 
         <motion.div
@@ -147,7 +142,10 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
             className="group inline-flex items-center gap-3 rounded-full bg-[color:var(--accent-gold)] px-8 py-4 text-sm font-semibold text-[color:var(--accent-brown)] shadow-[0_20px_60px_-15px_rgba(200,155,91,0.6)] transition-all hover:bg-white"
           >
             مشاهده محصولات
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" strokeWidth={2.5} />
+            <ArrowLeft
+              className="h-4 w-4 transition-transform group-hover:-translate-x-1"
+              strokeWidth={2.5}
+            />
           </Link>
           <Link
             to="/about"
@@ -164,9 +162,9 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
           className="mt-16 grid grid-cols-3 gap-8 border-t border-white/10 pt-8 md:max-w-xl"
         >
           {[
-            { label: "طعم منحصر", value: "۱۲+" },
-            { label: "مشتریان راضی", value: "۲.۵ک" },
-            { label: "شهر تحت پوشش", value: "۳۱" },
+            { label: "دسته محصول", value: "۵" },
+            { label: "پخت تازه", value: "روزانه" },
+            { label: "ارسال", value: "ایران" },
           ].map((s) => (
             <div key={s.label}>
               <p className="font-display text-2xl font-bold text-[color:var(--accent-gold)] md:text-3xl">
@@ -214,9 +212,9 @@ function CategoriesSection() {
                 مجموعه‌های وینیمی
               </p>
               <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-                از کوکی کلاسیک تا
+                دسته‌بندی‌های اصلی
                 <br />
-                <span className="italic text-[color:var(--accent-gold)]">جعبه‌های هدیه</span> نفیس
+                <span className="italic text-[color:var(--accent-gold)]">محصولات وینیمی</span>
               </h2>
             </div>
             <Link
@@ -254,14 +252,14 @@ function SignatureProductsSection() {
         <RevealOnScroll className="mb-14 text-center">
           <p className="mb-4 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">
             <span className="h-px w-8 bg-[color:var(--accent-gold)]" />
-            انتخاب سرآشپز
+            محصولات منتخب
             <span className="h-px w-8 bg-[color:var(--accent-gold)]" />
           </p>
           <h2 className="font-display text-3xl font-bold tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-            محصولات <span className="italic text-[color:var(--accent-gold)]">امضایی</span>
+            محصولات <span className="italic text-[color:var(--accent-gold)]">منتخب</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-muted-foreground md:text-base">
-            پرطرفدارترین شیرینی‌های وینیمی، پخت شده با دقت وسواسی و آماده برای لحظه‌های خاص شما.
+            این بخش برای نمایش محصولات منتخب و قابل اتصال به داده‌های واقعی فروشگاه آماده شده است.
           </p>
         </RevealOnScroll>
 
@@ -287,17 +285,19 @@ function BrandStorySection() {
           <div className="relative">
             <div className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-[color:var(--primary-light)]" />
             <img
-              src={brandStory}
-              alt="دستان نانوای وینیمی در حال آماده‌سازی خمیر روی سنگ مرمر"
+              src={brandStoryImage}
+              alt="جایگاه عکس واقعی داستان برند وینیمی"
               width={1200}
               height={1400}
               loading="lazy"
               className="aspect-[5/6] w-full rounded-[2rem] object-cover shadow-2xl"
             />
             <div className="absolute bottom-6 end-6 max-w-[200px] rounded-2xl bg-white/95 p-5 shadow-xl backdrop-blur">
-              <p className="font-display text-3xl font-bold text-[color:var(--accent-gold)]">۱۰+</p>
+              <p className="font-display text-3xl font-bold text-[color:var(--accent-gold)]">
+                وینیمی
+              </p>
               <p className="mt-1 text-xs leading-6 text-[color:var(--accent-brown)]">
-                سال عشق و تجربه در پخت شیرینی‌های خانگی
+                این تصویر با عکس واقعی برند جایگزین می‌شود
               </p>
             </div>
           </div>
@@ -309,22 +309,21 @@ function BrandStorySection() {
             داستان ما
           </p>
           <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-            هر شیرینی، یک
+            داستان برند
             <br />
-            <span className="italic text-[color:var(--accent-gold)]">دست‌سازی</span> است.
+            <span className="italic text-[color:var(--accent-gold)]">وینیمی</span>
           </h2>
           <p className="mt-6 text-base leading-9 text-muted-foreground">
-            وینیمی از بوی کیک تازه‌ای متولد شد که در خانه‌ای گرم می‌پیچید. امروز، همان
-            وسواس و همان عشق را در آشپزخانه‌ی حرفه‌ای‌مان زنده نگه داشته‌ایم — هر خمیر با
-            دست ورز می‌آید، هر شکلات ذوب می‌شود، و هر بسته با نام شما آماده می‌شود.
+            این بخش ساختار داستان برند را نگه می‌دارد، اما متن نهایی باید از محتوای تاییدشده مشتری
+            یا API محتوایی تامین شود.
           </p>
 
           <div className="mt-8 grid grid-cols-2 gap-6 border-t border-[color:var(--border)] pt-8">
             {[
-              { title: "مواد اولیه", body: "کره، شکلات و آرد ممتاز اروپایی" },
-              { title: "پخت", body: "روزانه، در دسته‌های کوچک و کنترل‌شده" },
-              { title: "بسته‌بندی", body: "چندلایه، عایق و طراحی‌شده برای هدیه" },
-              { title: "ارسال", body: "با پست پیشتاز به سراسر ایران" },
+              { title: "مواد اولیه", body: "قابل تکمیل با اطلاعات واقعی تامین مواد" },
+              { title: "پخت", body: "قابل اتصال به ظرفیت و زمان آماده‌سازی" },
+              { title: "بسته‌بندی", body: "قابل تکمیل با عکس و توضیح واقعی" },
+              { title: "ارسال", body: "قابل اتصال به قوانین ارسال محصول" },
             ].map((item) => (
               <div key={item.title}>
                 <p className="font-display text-sm font-semibold uppercase tracking-widest text-[color:var(--accent-gold)]">
@@ -411,7 +410,8 @@ function BlogEditorialSection() {
               مجله وینیمی
             </p>
             <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-              روایت‌هایی از <span className="italic text-[color:var(--accent-gold)]">عالم شیرینی</span>
+              مطالب آموزشی و{" "}
+              <span className="italic text-[color:var(--accent-gold)]">مجله وینیمی</span>
             </h2>
           </div>
           <Link
@@ -498,9 +498,9 @@ function TrustSection() {
             <span className="h-px w-8 bg-[color:var(--accent-gold)]" />
           </p>
           <h2 className="font-display text-3xl font-bold tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-            چهار وعده‌ای که هرگز
+            اعتماد، بسته‌بندی
             <br />
-            <span className="italic text-[color:var(--accent-gold)]">فراموش نمی‌شود</span>
+            <span className="italic text-[color:var(--accent-gold)]">و پشتیبانی سفارش</span>
           </h2>
         </RevealOnScroll>
 
@@ -529,7 +529,7 @@ function TrustSection() {
               ارسال به سراسر ایران — از {toPersianDigits(48)} ساعت آینده
             </h3>
             <p className="mt-2 text-sm leading-7 text-muted-foreground">
-              با بسته‌بندی چندلایه محافظ و پست پیشتاز، شیرینی سالم و تازه به دست شما می‌رسد.
+              جزئیات ارسال بر اساس نوع محصول و شهر مقصد در مرحله سفارش نهایی می‌شود.
             </p>
           </div>
         </RevealOnScroll>
@@ -545,14 +545,14 @@ function InstagramSection() {
     <section className="px-6 py-24 md:px-10 md:py-32">
       <RevealOnScroll className="mx-auto max-w-3xl text-center">
         <p className="mb-4 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">
-          <Instagram className="h-3.5 w-3.5" strokeWidth={2} />
-          @{SITE.instagramHandle}
+          <Instagram className="h-3.5 w-3.5" strokeWidth={2} />@{SITE.instagramHandle}
         </p>
         <h2 className="font-display text-3xl font-bold tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-          هر روز، یک <span className="italic text-[color:var(--accent-gold)]">لذت جدید</span>
+          وینیمی در <span className="italic text-[color:var(--accent-gold)]">اینستاگرام</span>
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-muted-foreground">
-          پشت‌صحنه‌ی آشپزخانه، محصولات جدید و لحظه‌های خاص وینیمی را در اینستاگرام ما دنبال کنید.
+          برای دیدن عکس‌های واقعی محصولات، اطلاع‌رسانی‌ها و محتوای تاییدشده برند، صفحه اینستاگرام
+          وینیمی را دنبال کنید.
         </p>
         <a
           href={SITE.instagram}
