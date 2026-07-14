@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { ArrowLeft, Instagram, Leaf, Package, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { ArrowLeft, Instagram, Leaf, Package, ShieldCheck, Sparkles } from "lucide-react";
 import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { StaggerContainer, StaggerItem } from "@/components/animations/StaggerContainer";
 import { Marquee } from "@/components/animations/Marquee";
@@ -12,7 +12,6 @@ import { getPublishedPosts } from "@/data/blog";
 import type { BlogPost } from "@/data/blog";
 import { SITE } from "@/lib/site";
 import { buildSeo } from "@/lib/seo";
-import { toPersianDigits } from "@/lib/format";
 import { brandStoryImage, heroBakery } from "@/lib/product-images";
 
 export const Route = createFileRoute("/")({
@@ -158,15 +157,15 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
           className="mt-16 grid grid-cols-3 gap-8 border-t border-white/10 pt-8 md:max-w-xl"
         >
           {[
-            { label: "دسته محصول", value: "۵" },
-            { label: "پخت تازه", value: "روزانه" },
-            { label: "ارسال", value: "ایران" },
-          ].map((s) => (
-            <div key={s.label}>
+            { label: "پخت", value: "تازه" },
+            { label: "بسته‌بندی", value: "محافظ" },
+            { label: "ارسال", value: "شفاف" },
+          ].map((item) => (
+            <div key={item.label}>
               <p className="font-display text-2xl font-bold text-[color:var(--accent-gold)] md:text-3xl">
-                {s.value}
+                {item.value}
               </p>
-              <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/60">{s.label}</p>
+              <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-white/60">{item.label}</p>
             </div>
           ))}
         </motion.div>
@@ -177,7 +176,10 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
 
 function MarqueeSection() {
   return (
-    <section className="border-y border-[color:var(--border)] bg-[color:var(--primary-dark)] py-5 text-white" aria-label="مزیت‌های وینیمی">
+    <section
+      className="border-y border-[color:var(--border)] bg-[color:var(--primary-dark)] py-5 text-white"
+      aria-label="مزیت‌های وینیمی"
+    >
       <Marquee items={MARQUEE_ITEMS.map((text) => `✦  ${text}`)} />
     </section>
   );
@@ -201,12 +203,15 @@ function CategoriesSection() {
                 مجموعه‌های وینیمی
               </p>
               <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-                پنج دسته اصلی
+                دسته‌بندی‌های اصلی
                 <br />
-                <span className="italic text-[color:var(--accent-gold)]">هر دسته یک محصول کامل</span>
+                <span className="italic text-[color:var(--accent-gold)]">برای هر سلیقه شیرین</span>
               </h2>
             </div>
-            <Link to="/products" className="inline-flex items-center gap-2 border-b-2 border-[color:var(--accent-brown)] pb-1 text-sm font-semibold text-[color:var(--accent-brown)] transition-colors hover:border-[color:var(--accent-gold)] hover:text-[color:var(--accent-gold)]">
+            <Link
+              to="/products"
+              className="inline-flex items-center gap-2 border-b-2 border-[color:var(--accent-brown)] pb-1 text-sm font-semibold text-[color:var(--accent-brown)] transition-colors hover:border-[color:var(--accent-gold)] hover:text-[color:var(--accent-gold)]"
+            >
               همه دسته‌ها
               <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
             </Link>
@@ -228,7 +233,10 @@ function CategoriesSection() {
 function SignatureProductsSection() {
   const signature = PRODUCTS.filter((product) => product.featured || product.badge === "bestseller").slice(0, 8);
   return (
-    <section id="products" className="border-y border-[color:var(--border)] bg-[color:var(--primary-light)] px-6 py-24 md:px-10 md:py-32">
+    <section
+      id="products"
+      className="border-y border-[color:var(--border)] bg-[color:var(--primary-light)] px-6 py-24 md:px-10 md:py-32"
+    >
       <div className="mx-auto max-w-6xl">
         <RevealOnScroll className="mb-14 text-center">
           <p className="mb-4 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">
@@ -237,10 +245,10 @@ function SignatureProductsSection() {
             <span className="h-px w-8 bg-[color:var(--accent-gold)]" />
           </p>
           <h2 className="font-display text-3xl font-bold tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-            شروع فروش با <span className="italic text-[color:var(--accent-gold)]">۵ محصول کامل</span>
+            انتخاب‌های <span className="italic text-[color:var(--accent-gold)]">وینیمی</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-muted-foreground md:text-base">
-            برای هر دسته فعلاً یک محصول کامل تعریف شده تا محصول، ارسال، تصویر و اتصال API بعدی بدون شلوغی جلو برود.
+            مجموعه‌ای از کوکی، کیک، شیرینی خشک، محصول بدون قند افزوده و باکس هدیه برای سفارش آنلاین.
           </p>
         </RevealOnScroll>
 
@@ -263,10 +271,19 @@ function BrandStorySection() {
         <RevealOnScroll direction="right">
           <div className="relative">
             <div className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-[color:var(--primary-light)]" />
-            <img src={brandStoryImage} alt="داستان پخت و بسته‌بندی محصولات وینیمی" width={1200} height={1400} loading="lazy" className="aspect-[5/6] w-full rounded-[2rem] object-cover shadow-2xl" />
+            <img
+              src={brandStoryImage}
+              alt="داستان پخت و بسته‌بندی محصولات وینیمی"
+              width={1200}
+              height={1400}
+              loading="lazy"
+              className="aspect-[5/6] w-full rounded-[2rem] object-cover shadow-2xl"
+            />
             <div className="absolute bottom-6 end-6 max-w-[220px] rounded-2xl bg-white/95 p-5 shadow-xl backdrop-blur">
               <p className="font-display text-3xl font-bold text-[color:var(--accent-gold)]">وینیمی</p>
-              <p className="mt-1 text-xs leading-6 text-[color:var(--accent-brown)]">پخت تازه، بسته‌بندی محافظ و ارسال شفاف</p>
+              <p className="mt-1 text-xs leading-6 text-[color:var(--accent-brown)]">
+                پخت تازه، بسته‌بندی محافظ و ارسال شفاف
+              </p>
             </div>
           </div>
         </RevealOnScroll>
@@ -293,13 +310,18 @@ function BrandStorySection() {
               { title: "ارسال", body: "محصولات خشک سراسر ایران و محصولات یخچالی تهران و کرج" },
             ].map((item) => (
               <div key={item.title}>
-                <p className="font-display text-sm font-semibold uppercase tracking-widest text-[color:var(--accent-gold)]">{item.title}</p>
+                <p className="font-display text-sm font-semibold uppercase tracking-widest text-[color:var(--accent-gold)]">
+                  {item.title}
+                </p>
                 <p className="mt-2 text-sm leading-7 text-muted-foreground">{item.body}</p>
               </div>
             ))}
           </div>
 
-          <Link to="/about" className="mt-10 inline-flex items-center gap-3 rounded-full border-2 border-[color:var(--accent-brown)] px-7 py-3.5 text-sm font-semibold text-[color:var(--accent-brown)] transition-all hover:bg-[color:var(--accent-brown)] hover:text-white">
+          <Link
+            to="/about"
+            className="mt-10 inline-flex items-center gap-3 rounded-full border-2 border-[color:var(--accent-brown)] px-7 py-3.5 text-sm font-semibold text-[color:var(--accent-brown)] transition-all hover:bg-[color:var(--accent-brown)] hover:text-white"
+          >
             بیشتر درباره وینیمی
             <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
           </Link>
@@ -324,7 +346,9 @@ function DiscoverySection() {
           <div key={group.title}>
             <RevealOnScroll className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
               <div>
-                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">{group.subtitle}</p>
+                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">
+                  {group.subtitle}
+                </p>
                 <h3 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{group.title}</h3>
               </div>
               <Link to="/products" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-gold)] hover:text-white">
@@ -392,7 +416,7 @@ function BlogEditorialSection() {
 
           <div className="grid gap-5">
             {rest.map((post: BlogPost) => (
-              <RevealOnScroll key={post.id}>
+              <RevealOnScroll key={post.slug}>
                 <Link to="/blog/$slug" params={{ slug: post.slug }} className="group flex gap-5 rounded-2xl border border-[color:var(--border)] bg-white p-5 transition-all hover:border-[color:var(--accent-gold)]">
                   <div className="grid h-24 w-24 shrink-0 place-items-center rounded-xl bg-[color:var(--primary-light)] text-4xl">{post.emoji ?? "📝"}</div>
                   <div className="min-w-0">
@@ -423,37 +447,26 @@ function TrustSection() {
           <h2 className="font-display text-3xl font-bold tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
             اعتماد، بسته‌بندی
             <br />
-            <span className="italic text-[color:var(--accent-gold)]">و پشتیبانی سفارش</span>
+            <span className="italic text-[color:var(--accent-gold)]">و ارسال شفاف</span>
           </h2>
         </RevealOnScroll>
 
-        <StaggerContainer className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {TRUST_PILLARS.map((pillar) => (
-            <StaggerItem key={pillar.title}>
-              <div className="group flex h-full flex-col rounded-2xl border border-[color:var(--border)] bg-white p-8 transition-all hover:-translate-y-1 hover:border-[color:var(--accent-gold)] hover:shadow-xl">
-                <div className="mb-5 grid h-12 w-12 place-items-center rounded-full bg-[color:var(--accent-brown)] text-[color:var(--accent-gold)] transition-colors group-hover:bg-[color:var(--accent-gold)] group-hover:text-white">
-                  <pillar.icon className="h-5 w-5" strokeWidth={1.75} />
-                </div>
-                <h3 className="font-display text-lg font-semibold text-[color:var(--accent-brown)]">{pillar.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-muted-foreground">{pillar.body}</p>
-              </div>
-            </StaggerItem>
-          ))}
+        <StaggerContainer className="grid gap-5 md:grid-cols-4">
+          {TRUST_PILLARS.map((pillar) => {
+            const Icon = pillar.icon;
+            return (
+              <StaggerItem key={pillar.title}>
+                <article className="h-full rounded-2xl border border-[color:var(--border)] bg-white p-6 transition-all hover:-translate-y-1 hover:border-[color:var(--accent-gold)]">
+                  <div className="mb-5 grid h-12 w-12 place-items-center rounded-full bg-[color:var(--primary-light)] text-[color:var(--primary-dark)]">
+                    <Icon className="h-5 w-5" strokeWidth={2.3} />
+                  </div>
+                  <h3 className="font-display text-lg font-bold text-[color:var(--accent-brown)]">{pillar.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">{pillar.body}</p>
+                </article>
+              </StaggerItem>
+            );
+          })}
         </StaggerContainer>
-
-        <RevealOnScroll className="mx-auto mt-16 flex max-w-3xl flex-col items-center gap-6 rounded-3xl border border-[color:var(--border)] bg-white p-8 text-center md:flex-row md:text-start">
-          <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-[color:var(--accent-brown)] text-[color:var(--accent-gold)]">
-            <Truck className="h-6 w-6" strokeWidth={1.75} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="font-display text-lg font-semibold text-[color:var(--accent-brown)]">
-              ارسال محصولات خشک به سراسر ایران — محصولات یخچالی فقط تهران و کرج
-            </h3>
-            <p className="mt-2 text-sm leading-7 text-muted-foreground">
-              جزئیات ارسال بر اساس نوع محصول و شهر مقصد در مرحله سفارش نهایی می‌شود.
-            </p>
-          </div>
-        </RevealOnScroll>
       </div>
     </section>
   );
@@ -461,21 +474,31 @@ function TrustSection() {
 
 function InstagramSection() {
   return (
-    <section className="px-6 py-24 md:px-10 md:py-32">
-      <RevealOnScroll className="mx-auto max-w-3xl text-center">
-        <p className="mb-4 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">
-          <Instagram className="h-3.5 w-3.5" strokeWidth={2} />@{SITE.instagramHandle}
-        </p>
-        <h2 className="font-display text-3xl font-bold tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-          وینیمی در <span className="italic text-[color:var(--accent-gold)]">اینستاگرام</span>
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-muted-foreground">
-          برای دیدن عکس‌های واقعی محصولات، اطلاع‌رسانی‌ها و محتوای تاییدشده برند، صفحه اینستاگرام وینیمی را دنبال کنید.
-        </p>
-        <a href={SITE.instagram} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-3 rounded-full bg-[color:var(--accent-brown)] px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--accent-gold)]">
-          <Instagram className="h-4 w-4" />
-          دنبال کردن در اینستاگرام
-        </a>
+    <section className="px-6 py-20 md:px-10">
+      <RevealOnScroll>
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-[color:var(--accent-brown)] p-8 text-white md:p-12">
+          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center">
+            <div>
+              <p className="mb-3 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">
+                <Instagram className="h-4 w-4" />
+                Instagram
+              </p>
+              <h2 className="font-display text-3xl font-bold md:text-5xl">وینیمی را در اینستاگرام دنبال کنید</h2>
+              <p className="mt-4 max-w-xl text-sm leading-8 text-white/75">
+                عکس‌های محصول، پشت‌صحنه پخت و اعلام موجودی‌های تازه از طریق صفحه اینستاگرام وینیمی منتشر می‌شود.
+              </p>
+            </div>
+            <a
+              href={SITE.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-3 rounded-full border border-white/20 bg-white px-7 py-4 text-sm font-bold text-[color:var(--accent-brown)] transition hover:bg-[color:var(--primary-light)]"
+            >
+              @{SITE.instagramHandle}
+              <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
+            </a>
+          </div>
+        </div>
       </RevealOnScroll>
     </section>
   );
