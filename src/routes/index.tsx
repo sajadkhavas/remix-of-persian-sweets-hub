@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
     buildSeo({
       title: "کیک و کوکی دست‌پخت، ارسال به سراسر ایران",
       description:
-        "کوکی و شیرینی دست‌پخت با مواد اولیه تازه، بدون نگهدارنده، با گزینه‌های رژیمی و بدون قند افزوده. ارسال با بسته‌بندی محافظ به سراسر ایران.",
+        "کوکی، کیک، شیرینی خشک و باکس هدیه وینیمی با پخت تازه، مواد اولیه شفاف و بسته‌بندی محافظ؛ ارسال محصولات خشک به سراسر ایران و محصولات یخچالی فقط تهران و کرج.",
       path: "/",
     }),
   component: HomePage,
@@ -30,31 +30,31 @@ const MARQUEE_ITEMS = [
   "پخت تازه روزانه",
   "مواد اولیه تازه",
   "بسته‌بندی محافظ",
-  "ارسال به سراسر ایران",
-  "دست‌پخت خانگی",
+  "ارسال محصولات خشک به سراسر ایران",
+  "ارسال یخچالی فقط تهران و کرج",
   "بدون نگهدارنده",
 ];
 
 const TRUST_PILLARS = [
   {
     icon: Leaf,
-    title: "مواد اولیه تازه",
-    body: "محصولات با مواد اولیه تازه و مناسب سفارش‌های روزمره و هدیه آماده می‌شوند.",
+    title: "مواد اولیه شفاف",
+    body: "مواد اولیه، آلرژن‌ها و شرایط نگهداری هر محصول قبل از سفارش مشخص است.",
   },
   {
     icon: Sparkles,
-    title: "دست‌پخت و تازه",
-    body: "هر سفارش با فرآیند آماده‌سازی کنترل‌شده و متناسب با ظرفیت تولید روزانه انجام می‌شود.",
+    title: "پخت تازه",
+    body: "محصولات با ظرفیت کنترل‌شده و زمان آماده‌سازی مشخص برای سفارش آماده می‌شوند.",
   },
   {
     icon: Package,
     title: "بسته‌بندی محافظ",
-    body: "بسته‌ها برای جابه‌جایی امن‌تر آماده می‌شوند و جزئیات ارسال در زمان سفارش اعلام می‌شود.",
+    body: "بسته‌بندی محصول برای جابه‌جایی امن‌تر و حفظ ظاهر سفارش در نظر گرفته می‌شود.",
   },
   {
     icon: ShieldCheck,
-    title: "پشتیبانی سفارش",
-    body: "تیم وینیمی وضعیت سفارش، بسته‌بندی و ارسال را تا زمان تحویل پیگیری می‌کند.",
+    title: "قانون ارسال روشن",
+    body: "محصولات خشک سراسر ایران ارسال می‌شوند و محصولات یخچالی فقط تهران و کرج.",
   },
 ];
 
@@ -75,8 +75,6 @@ function HomePage() {
   );
 }
 
-/* ─────────────────────────  HERO  ───────────────────────── */
-
 function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 600], [0, 120]);
@@ -87,7 +85,7 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
       <motion.div style={reduceMotion ? undefined : { y, scale }} className="absolute inset-0">
         <img
           src={heroBakery}
-          alt="جایگاه تصویر اصلی وینیمی برای عکس واقعی محصولات"
+          alt="کیک و کوکی دست‌پخت وینیمی با بسته‌بندی محافظ"
           width={1600}
           height={1200}
           fetchPriority="high"
@@ -127,8 +125,9 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-6 max-w-xl text-base leading-9 text-white/80 md:text-lg"
         >
-          ساختار این صفحه برای نمایش عکس‌های واقعی مشتری، دسته‌بندی‌های اصلی و محصولات منتخب آماده
-          شده است؛ متن نهایی می‌تواند از داده‌های برند و API تغذیه شود.
+          کوکی، کیک، شیرینی خشک و باکس‌های هدیه وینیمی با پخت تازه، مواد اولیه شفاف و
+          بسته‌بندی محافظ آماده می‌شوند؛ محصولات خشک به سراسر ایران ارسال می‌شوند و
+          محصولات یخچالی فقط تهران و کرج.
         </motion.p>
 
         <motion.div
@@ -142,10 +141,7 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
             className="group inline-flex items-center gap-3 rounded-full bg-[color:var(--accent-gold)] px-8 py-4 text-sm font-semibold text-[color:var(--accent-brown)] shadow-[0_20px_60px_-15px_rgba(200,155,91,0.6)] transition-all hover:bg-white"
           >
             مشاهده محصولات
-            <ArrowLeft
-              className="h-4 w-4 transition-transform group-hover:-translate-x-1"
-              strokeWidth={2.5}
-            />
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" strokeWidth={2.5} />
           </Link>
           <Link
             to="/about"
@@ -179,25 +175,18 @@ function HeroSection({ reduceMotion }: { reduceMotion: boolean }) {
   );
 }
 
-/* ─────────────────────────  MARQUEE  ───────────────────────── */
-
 function MarqueeSection() {
   return (
-    <section
-      className="border-y border-[color:var(--border)] bg-[color:var(--primary-dark)] py-5 text-white"
-      aria-label="مزیت‌های وینیمی"
-    >
-      <Marquee items={MARQUEE_ITEMS.map((t) => `✦  ${t}`)} />
+    <section className="border-y border-[color:var(--border)] bg-[color:var(--primary-dark)] py-5 text-white" aria-label="مزیت‌های وینیمی">
+      <Marquee items={MARQUEE_ITEMS.map((text) => `✦  ${text}`)} />
     </section>
   );
 }
 
-/* ─────────────────────────  CATEGORIES  ───────────────────────── */
-
 function CategoriesSection() {
   const categories = getPublicProductCategories();
-  const countByCat = PRODUCTS.reduce<Record<string, number>>((acc, p) => {
-    acc[p.category] = (acc[p.category] ?? 0) + 1;
+  const countByCat = PRODUCTS.reduce<Record<string, number>>((acc, product) => {
+    acc[product.category] = (acc[product.category] ?? 0) + 1;
     return acc;
   }, {});
 
@@ -212,15 +201,12 @@ function CategoriesSection() {
                 مجموعه‌های وینیمی
               </p>
               <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-                دسته‌بندی‌های اصلی
+                پنج دسته اصلی
                 <br />
-                <span className="italic text-[color:var(--accent-gold)]">محصولات وینیمی</span>
+                <span className="italic text-[color:var(--accent-gold)]">هر دسته یک محصول کامل</span>
               </h2>
             </div>
-            <Link
-              to="/products"
-              className="inline-flex items-center gap-2 border-b-2 border-[color:var(--accent-brown)] pb-1 text-sm font-semibold text-[color:var(--accent-brown)] transition-colors hover:text-[color:var(--accent-gold)] hover:border-[color:var(--accent-gold)]"
-            >
+            <Link to="/products" className="inline-flex items-center gap-2 border-b-2 border-[color:var(--accent-brown)] pb-1 text-sm font-semibold text-[color:var(--accent-brown)] transition-colors hover:border-[color:var(--accent-gold)] hover:text-[color:var(--accent-gold)]">
               همه دسته‌ها
               <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
             </Link>
@@ -228,9 +214,9 @@ function CategoriesSection() {
         </RevealOnScroll>
 
         <StaggerContainer className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((cat) => (
-            <StaggerItem key={cat.slug}>
-              <CategoryCard category={cat} productCount={countByCat[cat.slug] ?? 0} />
+          {categories.map((category) => (
+            <StaggerItem key={category.slug}>
+              <CategoryCard category={category} productCount={countByCat[category.slug] ?? 0} />
             </StaggerItem>
           ))}
         </StaggerContainer>
@@ -239,15 +225,10 @@ function CategoriesSection() {
   );
 }
 
-/* ─────────────────────────  SIGNATURE PRODUCTS  ───────────────────────── */
-
 function SignatureProductsSection() {
-  const signature = PRODUCTS.filter((p) => p.featured || p.badge === "bestseller").slice(0, 8);
+  const signature = PRODUCTS.filter((product) => product.featured || product.badge === "bestseller").slice(0, 8);
   return (
-    <section
-      id="products"
-      className="border-y border-[color:var(--border)] bg-[color:var(--primary-light)] px-6 py-24 md:px-10 md:py-32"
-    >
+    <section id="products" className="border-y border-[color:var(--border)] bg-[color:var(--primary-light)] px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-6xl">
         <RevealOnScroll className="mb-14 text-center">
           <p className="mb-4 inline-flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">
@@ -256,14 +237,14 @@ function SignatureProductsSection() {
             <span className="h-px w-8 bg-[color:var(--accent-gold)]" />
           </p>
           <h2 className="font-display text-3xl font-bold tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-            محصولات <span className="italic text-[color:var(--accent-gold)]">منتخب</span>
+            شروع فروش با <span className="italic text-[color:var(--accent-gold)]">۵ محصول کامل</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-muted-foreground md:text-base">
-            این بخش برای نمایش محصولات منتخب و قابل اتصال به داده‌های واقعی فروشگاه آماده شده است.
+            برای هر دسته فعلاً یک محصول کامل تعریف شده تا محصول، ارسال، تصویر و اتصال API بعدی بدون شلوغی جلو برود.
           </p>
         </RevealOnScroll>
 
-        <StaggerContainer className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <StaggerContainer className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {signature.map((product) => (
             <StaggerItem key={product.id}>
               <ProductCard product={product} />
@@ -275,8 +256,6 @@ function SignatureProductsSection() {
   );
 }
 
-/* ─────────────────────────  BRAND STORY  ───────────────────────── */
-
 function BrandStorySection() {
   return (
     <section className="px-6 py-24 md:px-10 md:py-32">
@@ -284,21 +263,10 @@ function BrandStorySection() {
         <RevealOnScroll direction="right">
           <div className="relative">
             <div className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-[color:var(--primary-light)]" />
-            <img
-              src={brandStoryImage}
-              alt="جایگاه عکس واقعی داستان برند وینیمی"
-              width={1200}
-              height={1400}
-              loading="lazy"
-              className="aspect-[5/6] w-full rounded-[2rem] object-cover shadow-2xl"
-            />
-            <div className="absolute bottom-6 end-6 max-w-[200px] rounded-2xl bg-white/95 p-5 shadow-xl backdrop-blur">
-              <p className="font-display text-3xl font-bold text-[color:var(--accent-gold)]">
-                وینیمی
-              </p>
-              <p className="mt-1 text-xs leading-6 text-[color:var(--accent-brown)]">
-                این تصویر با عکس واقعی برند جایگزین می‌شود
-              </p>
+            <img src={brandStoryImage} alt="داستان پخت و بسته‌بندی محصولات وینیمی" width={1200} height={1400} loading="lazy" className="aspect-[5/6] w-full rounded-[2rem] object-cover shadow-2xl" />
+            <div className="absolute bottom-6 end-6 max-w-[220px] rounded-2xl bg-white/95 p-5 shadow-xl backdrop-blur">
+              <p className="font-display text-3xl font-bold text-[color:var(--accent-gold)]">وینیمی</p>
+              <p className="mt-1 text-xs leading-6 text-[color:var(--accent-brown)]">پخت تازه، بسته‌بندی محافظ و ارسال شفاف</p>
             </div>
           </div>
         </RevealOnScroll>
@@ -314,30 +282,24 @@ function BrandStorySection() {
             <span className="italic text-[color:var(--accent-gold)]">وینیمی</span>
           </h2>
           <p className="mt-6 text-base leading-9 text-muted-foreground">
-            این بخش ساختار داستان برند را نگه می‌دارد، اما متن نهایی باید از محتوای تاییدشده مشتری
-            یا API محتوایی تامین شود.
+            وینیمی با تمرکز روی پخت تازه، ترکیبات شفاف و بسته‌بندی محافظ شکل گرفته است؛ هر محصول با توضیح مواد اولیه، آلرژن‌ها، ماندگاری و شرایط ارسال معرفی می‌شود.
           </p>
 
           <div className="mt-8 grid grid-cols-2 gap-6 border-t border-[color:var(--border)] pt-8">
             {[
-              { title: "مواد اولیه", body: "قابل تکمیل با اطلاعات واقعی تامین مواد" },
-              { title: "پخت", body: "قابل اتصال به ظرفیت و زمان آماده‌سازی" },
-              { title: "بسته‌بندی", body: "قابل تکمیل با عکس و توضیح واقعی" },
-              { title: "ارسال", body: "قابل اتصال به قوانین ارسال محصول" },
+              { title: "مواد اولیه", body: "ترکیبات و آلرژن‌ها برای هر محصول شفاف نوشته می‌شود" },
+              { title: "پخت", body: "زمان آماده‌سازی و موجودی هر محصول مشخص است" },
+              { title: "بسته‌بندی", body: "بسته‌بندی محافظ برای ارسال امن‌تر در نظر گرفته می‌شود" },
+              { title: "ارسال", body: "محصولات خشک سراسر ایران و محصولات یخچالی تهران و کرج" },
             ].map((item) => (
               <div key={item.title}>
-                <p className="font-display text-sm font-semibold uppercase tracking-widest text-[color:var(--accent-gold)]">
-                  {item.title}
-                </p>
+                <p className="font-display text-sm font-semibold uppercase tracking-widest text-[color:var(--accent-gold)]">{item.title}</p>
                 <p className="mt-2 text-sm leading-7 text-muted-foreground">{item.body}</p>
               </div>
             ))}
           </div>
 
-          <Link
-            to="/about"
-            className="mt-10 inline-flex items-center gap-3 rounded-full border-2 border-[color:var(--accent-brown)] px-7 py-3.5 text-sm font-semibold text-[color:var(--accent-brown)] transition-all hover:bg-[color:var(--accent-brown)] hover:text-white"
-          >
+          <Link to="/about" className="mt-10 inline-flex items-center gap-3 rounded-full border-2 border-[color:var(--accent-brown)] px-7 py-3.5 text-sm font-semibold text-[color:var(--accent-brown)] transition-all hover:bg-[color:var(--accent-brown)] hover:text-white">
             بیشتر درباره وینیمی
             <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
           </Link>
@@ -347,40 +309,31 @@ function BrandStorySection() {
   );
 }
 
-/* ─────────────────────────  DISCOVERY (Popular / New / Diet)  ───────────────────────── */
-
 function DiscoverySection() {
-  const popular = PRODUCTS.filter((p) => p.badge === "bestseller").slice(0, 4);
-  const diet = PRODUCTS.filter((p) => p.category === "diet").slice(0, 4);
+  const popular = PRODUCTS.filter((product) => product.badge === "bestseller" || product.badge === "special").slice(0, 4);
+  const diet = PRODUCTS.filter((product) => product.category === "diet").slice(0, 4);
   const groups = [
-    { title: "پرفروش‌ها", subtitle: "انتخاب اول مشتریان", items: popular },
-    { title: "برای انتخاب آگاهانه", subtitle: "محصولات رژیمی و بدون قند", items: diet },
-  ].filter((g) => g.items.length > 0);
+    { title: "پرفروش‌ها و ویژه‌ها", subtitle: "انتخاب اول مشتریان", items: popular },
+    { title: "برای انتخاب آگاهانه", subtitle: "محصولات رژیمی و بدون قند افزوده", items: diet },
+  ].filter((group) => group.items.length > 0);
 
   return (
     <section className="border-y border-[color:var(--border)] bg-[color:var(--accent-brown)] px-6 py-24 text-white md:px-10 md:py-32">
       <div className="mx-auto max-w-6xl space-y-24">
-        {groups.map((g) => (
-          <div key={g.title}>
+        {groups.map((group) => (
+          <div key={group.title}>
             <RevealOnScroll className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
               <div>
-                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">
-                  {g.subtitle}
-                </p>
-                <h3 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
-                  {g.title}
-                </h3>
+                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-gold)]">{group.subtitle}</p>
+                <h3 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{group.title}</h3>
               </div>
-              <Link
-                to="/products"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-gold)] hover:text-white"
-              >
+              <Link to="/products" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-gold)] hover:text-white">
                 مشاهده همه
                 <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
               </Link>
             </RevealOnScroll>
             <StaggerContainer className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              {g.items.map((product) => (
+              {group.items.map((product) => (
                 <StaggerItem key={product.id}>
                   <ProductCard product={product} />
                 </StaggerItem>
@@ -392,8 +345,6 @@ function DiscoverySection() {
     </section>
   );
 }
-
-/* ─────────────────────────  BLOG EDITORIAL  ───────────────────────── */
 
 function BlogEditorialSection() {
   const posts = getPublishedPosts().slice(0, 3);
@@ -410,14 +361,10 @@ function BlogEditorialSection() {
               مجله وینیمی
             </p>
             <h2 className="font-display text-3xl font-bold leading-tight tracking-tight text-[color:var(--accent-brown)] md:text-5xl">
-              مطالب آموزشی و{" "}
-              <span className="italic text-[color:var(--accent-gold)]">مجله وینیمی</span>
+              مطالب آموزشی و <span className="italic text-[color:var(--accent-gold)]">مجله وینیمی</span>
             </h2>
           </div>
-          <Link
-            to="/blog"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-brown)] hover:text-[color:var(--accent-gold)]"
-          >
+          <Link to="/blog" className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-brown)] hover:text-[color:var(--accent-gold)]">
             همه مقالات
             <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
           </Link>
@@ -426,24 +373,14 @@ function BlogEditorialSection() {
         <div className="grid gap-8 lg:grid-cols-[7fr_5fr]">
           {lead && (
             <RevealOnScroll>
-              <Link
-                to="/blog/$slug"
-                params={{ slug: lead.slug }}
-                className="group relative block h-full min-h-[420px] overflow-hidden rounded-3xl bg-[color:var(--primary-light)]"
-              >
+              <Link to="/blog/$slug" params={{ slug: lead.slug }} className="group relative block h-full min-h-[420px] overflow-hidden rounded-3xl bg-[color:var(--primary-light)]">
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[color:var(--primary-light)] to-[color:var(--accent-cream)] text-[140px] opacity-40 transition-transform duration-1000 group-hover:scale-110">
                   {lead.emoji ?? "📖"}
                 </div>
                 <div className="relative flex h-full flex-col justify-end p-8 md:p-10">
-                  <span className="mb-4 w-fit rounded-full bg-white/80 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.24em] text-[color:var(--accent-brown)] backdrop-blur">
-                    مقاله ویژه
-                  </span>
-                  <h3 className="font-display text-2xl font-bold leading-tight text-[color:var(--accent-brown)] md:text-3xl">
-                    {lead.title}
-                  </h3>
-                  <p className="mt-4 line-clamp-2 text-sm leading-7 text-muted-foreground md:text-base">
-                    {lead.excerpt}
-                  </p>
+                  <span className="mb-4 w-fit rounded-full bg-white/80 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.24em] text-[color:var(--accent-brown)] backdrop-blur">مقاله ویژه</span>
+                  <h3 className="font-display text-2xl font-bold leading-tight text-[color:var(--accent-brown)] md:text-3xl">{lead.title}</h3>
+                  <p className="mt-4 line-clamp-2 text-sm leading-7 text-muted-foreground md:text-base">{lead.excerpt}</p>
                   <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-brown)] transition-transform group-hover:-translate-x-1">
                     خواندن مقاله
                     <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
@@ -456,24 +393,12 @@ function BlogEditorialSection() {
           <div className="grid gap-5">
             {rest.map((post: BlogPost) => (
               <RevealOnScroll key={post.id}>
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: post.slug }}
-                  className="group flex gap-5 rounded-2xl border border-[color:var(--border)] bg-white p-5 transition-all hover:border-[color:var(--accent-gold)]"
-                >
-                  <div className="grid h-24 w-24 shrink-0 place-items-center rounded-xl bg-[color:var(--primary-light)] text-4xl">
-                    {post.emoji ?? "📝"}
-                  </div>
+                <Link to="/blog/$slug" params={{ slug: post.slug }} className="group flex gap-5 rounded-2xl border border-[color:var(--border)] bg-white p-5 transition-all hover:border-[color:var(--accent-gold)]">
+                  <div className="grid h-24 w-24 shrink-0 place-items-center rounded-xl bg-[color:var(--primary-light)] text-4xl">{post.emoji ?? "📝"}</div>
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent-gold)]">
-                      مجله
-                    </p>
-                    <h4 className="mt-2 line-clamp-2 font-display text-base font-semibold leading-7 text-[color:var(--accent-brown)] group-hover:text-[color:var(--accent-gold)]">
-                      {post.title}
-                    </h4>
-                    <p className="mt-2 line-clamp-1 text-xs text-muted-foreground">
-                      {post.readingTime}
-                    </p>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent-gold)]">مجله</p>
+                    <h4 className="mt-2 line-clamp-2 font-display text-base font-semibold leading-7 text-[color:var(--accent-brown)] group-hover:text-[color:var(--accent-gold)]">{post.title}</h4>
+                    <p className="mt-2 line-clamp-1 text-xs text-muted-foreground">{post.readingTime}</p>
                   </div>
                 </Link>
               </RevealOnScroll>
@@ -484,8 +409,6 @@ function BlogEditorialSection() {
     </section>
   );
 }
-
-/* ─────────────────────────  TRUST  ───────────────────────── */
 
 function TrustSection() {
   return (
@@ -511,9 +434,7 @@ function TrustSection() {
                 <div className="mb-5 grid h-12 w-12 place-items-center rounded-full bg-[color:var(--accent-brown)] text-[color:var(--accent-gold)] transition-colors group-hover:bg-[color:var(--accent-gold)] group-hover:text-white">
                   <pillar.icon className="h-5 w-5" strokeWidth={1.75} />
                 </div>
-                <h3 className="font-display text-lg font-semibold text-[color:var(--accent-brown)]">
-                  {pillar.title}
-                </h3>
+                <h3 className="font-display text-lg font-semibold text-[color:var(--accent-brown)]">{pillar.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">{pillar.body}</p>
               </div>
             </StaggerItem>
@@ -526,7 +447,7 @@ function TrustSection() {
           </div>
           <div className="min-w-0 flex-1">
             <h3 className="font-display text-lg font-semibold text-[color:var(--accent-brown)]">
-              ارسال به سراسر ایران — از {toPersianDigits(48)} ساعت آینده
+              ارسال محصولات خشک به سراسر ایران — محصولات یخچالی فقط تهران و کرج
             </h3>
             <p className="mt-2 text-sm leading-7 text-muted-foreground">
               جزئیات ارسال بر اساس نوع محصول و شهر مقصد در مرحله سفارش نهایی می‌شود.
@@ -537,8 +458,6 @@ function TrustSection() {
     </section>
   );
 }
-
-/* ─────────────────────────  INSTAGRAM  ───────────────────────── */
 
 function InstagramSection() {
   return (
@@ -551,15 +470,9 @@ function InstagramSection() {
           وینیمی در <span className="italic text-[color:var(--accent-gold)]">اینستاگرام</span>
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-muted-foreground">
-          برای دیدن عکس‌های واقعی محصولات، اطلاع‌رسانی‌ها و محتوای تاییدشده برند، صفحه اینستاگرام
-          وینیمی را دنبال کنید.
+          برای دیدن عکس‌های واقعی محصولات، اطلاع‌رسانی‌ها و محتوای تاییدشده برند، صفحه اینستاگرام وینیمی را دنبال کنید.
         </p>
-        <a
-          href={SITE.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-3 rounded-full bg-[color:var(--accent-brown)] px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--accent-gold)]"
-        >
+        <a href={SITE.instagram} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-3 rounded-full bg-[color:var(--accent-brown)] px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--accent-gold)]">
           <Instagram className="h-4 w-4" />
           دنبال کردن در اینستاگرام
         </a>
