@@ -1,15 +1,10 @@
 import { SITE } from "@/lib/site";
+import { isRealProductImageUrl } from "@/lib/product-images";
 import { JsonLd } from "./JsonLd";
 import type { Product } from "@/data/types";
 
-function isRealImageUrl(url: string) {
-  const normalizedUrl = url.trim().toLowerCase();
-
-  return normalizedUrl.length > 0 && !normalizedUrl.includes("placeholder");
-}
-
 export function ProductJsonLd({ product }: { product: Product }) {
-  const imageUrls = product.images.map((image) => image.url).filter(isRealImageUrl);
+  const imageUrls = product.images.map((image) => image.url).filter(isRealProductImageUrl);
   const hasValidWeight = typeof product.weightGrams === "number" && product.weightGrams > 0;
 
   const data: Record<string, unknown> = {
