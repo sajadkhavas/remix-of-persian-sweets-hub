@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { Minus, Plus, X } from "lucide-react";
-import { useCartStore } from "@/lib/cart";
+import { cartHasCoolingItems, useCartStore } from "@/lib/cart";
 import { buildSeo } from "@/lib/seo";
 import { formatToman } from "@/lib/format";
 import { BreadcrumbJsonLd } from "@/components/jsonld/BreadcrumbJsonLd";
@@ -22,6 +22,7 @@ function CartPage() {
   const updateQty = useCartStore((s) => s.updateQty);
   const removeItem = useCartStore((s) => s.removeItem);
   const totalPrice = useCartStore((s) => s.totalPrice);
+  const hasCoolingItems = cartHasCoolingItems(items);
 
   return (
     <div>
@@ -64,18 +65,31 @@ function CartPage() {
                     exit={{ opacity: 0, x: -20 }}
                     className="flex items-center gap-4 rounded-2xl border border-border bg-white p-4"
                   >
-                    <div
-                      className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl text-3xl"
-                      style={{ background: "var(--primary-light)" }}
-                    >
-                      {item.emoji}
+                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[color:var(--primary-light)]">
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          width={96}
+                          height={96}
+                          loading="lazy"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-3xl">
+                          {item.emoji ?? "🍪"}
+                        </div>
+                      )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold truncate" style={{ color: "var(--accent-brown)" }}>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-bold" style={{ color: "var(--accent-brown)" }}>
                         {item.name}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {formatToman(item.priceToman)}
+                      </p>
+                      <p className="mt-1 text-xs font-medium text-[color:var(--primary-dark)]">
+                        {item.requiresCooling ? "❄ ارسال فقط تهران و کرج" : "🚚 ارسال به سراسر ایران"}
                       </p>
                     </div>
                     <div
@@ -101,7 +115,7 @@ function CartPage() {
                       </button>
                     </div>
                     <div
-                      className="hidden sm:block w-28 text-end font-bold"
+                      className="hidden w-28 text-end font-bold sm:block"
                       style={{ color: "var(--primary-dark)" }}
                     >
                       {formatToman(item.priceToman * item.quantity)}
@@ -110,7 +124,7 @@ function CartPage() {
                       type="button"
                       onClick={() => removeItem(item.id)}
                       aria-label="حذف از سبد"
-                      className="text-muted-foreground hover:text-red-500 transition-colors"
+                      className="text-muted-foreground transition-colors hover:text-red-500"
                     >
                       <X className="h-5 w-5" />
                     </button>
@@ -127,10 +141,10 @@ function CartPage() {
             <ul className="space-y-2 text-sm">
               {items.map((item) => (
                 <li key={item.id} className="flex justify-between gap-2">
-                  <span className="text-muted-foreground truncate">
+                  <span className="truncate text-muted-foreground">
                     {item.name} × {item.quantity}
                   </span>
-                  <span className="font-medium shrink-0">
+                  <span className="shrink-0 font-medium">
                     {formatToman(item.priceToman * item.quantity)}
                   </span>
                 </li>
@@ -143,8 +157,10 @@ function CartPage() {
                 {formatToman(totalPrice())}
               </span>
             </div>
-            <p className="mt-3 rounded-lg bg-[var(--accent-cream)] p-3 text-xs text-muted-foreground">
-              🚚 هزینه ارسال در مرحله بعد محاسبه می‌شود
+            <p className="mt-3 rounded-lg bg-[var(--accent-cream)] p-3 text-xs leading-6 text-muted-foreground">
+              {hasCoolingItems
+                ? "❄ این سبد محصول یخچالی دارد؛ ثبت سفارش فقط برای شهر تهران یا کرج ممکن است."
+                : "🚚 هزینه ارسال در مرحله بعد محاسبه می‌شود."}
             </p>
             <Link
               to="/checkout"
@@ -155,7 +171,7 @@ function CartPage() {
             </Link>
             <Link
               to="/products"
-              className="mt-2 block w-full rounded-full py-3 text-center text-sm font-semibold border border-border"
+              className="mt-2 block w-full rounded-full border border-border py-3 text-center text-sm font-semibold"
             >
               ادامه خرید
             </Link>
