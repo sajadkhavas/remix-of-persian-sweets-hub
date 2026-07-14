@@ -16,10 +16,26 @@ export interface HeadEntry {
   links: Array<Record<string, string>>;
 }
 
+function absoluteUrl(pathOrUrl: string): string {
+  if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl;
+  const path = pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`;
+  return new URL(path, SITE.origin).toString();
+}
+
+function canonicalPath(path: string): string {
+  if (path === "/") return "/";
+  return `/${path.replace(/^\/+|\/+$/g, "")}`;
+}
+
+function absoluteImage(image: string): string {
+  if (image.startsWith("data:")) return absoluteUrl(ogDefault);
+  return absoluteUrl(image);
+}
+
 export function buildSeo(input: SeoInput): HeadEntry {
   const fullTitle = `${input.title} | ${SITE.brand}`.slice(0, 70);
-  const url = input.path === "/" ? "/" : input.path.replace(/\/$/, "");
-  const image = input.image ?? ogDefault;
+  const url = absoluteUrl(canonicalPath(input.path));
+  const image = absoluteImage(input.image ?? ogDefault);
   const meta: Array<Record<string, string>> = [
     { title: fullTitle },
     { name: "description", content: input.description },
