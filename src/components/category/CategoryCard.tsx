@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 import type { ProductCategoryDefinition } from "@/data/categories";
 import { toPersianDigits } from "@/lib/format";
+import { CATEGORY_IMAGE } from "@/lib/product-images";
 
 export function CategoryCard({
   category,
@@ -10,35 +12,38 @@ export function CategoryCard({
   productCount: number;
 }) {
   const isComingSoon = productCount === 0;
+  const image = CATEGORY_IMAGE[category.slug];
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-white shadow-sm transition-shadow hover:shadow-lg">
-      <Link
-        to="/products/$categorySlug"
-        params={{ categorySlug: category.slug }}
-        className="flex h-full flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-      >
-        <div
-          className="flex min-h-36 items-center justify-center bg-gradient-to-br from-primary-light to-accent-cream"
-          aria-hidden="true"
-        >
-          <span className="text-6xl transition-transform group-hover:scale-110">
-            {category.visual.placeholder}
-          </span>
-        </div>
-        <div className="flex flex-1 flex-col p-5">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <h3 className="text-xl font-extrabold">{category.name}</h3>
-            <span className="rounded-full bg-accent px-3 py-1 text-xs font-bold text-primary-dark">
-              {isComingSoon ? "به‌زودی" : `${toPersianDigits(productCount)} محصول`}
-            </span>
-          </div>
-          <p className="text-sm leading-7 text-muted-foreground">{category.description}</p>
-          <span className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:brightness-95">
-            {isComingSoon ? "مشاهده برنامه این دسته" : "مشاهده محصولات"}
-          </span>
-        </div>
-      </Link>
-    </article>
+    <Link
+      to="/products/$categorySlug"
+      params={{ categorySlug: category.slug }}
+      className="group relative flex aspect-[3/4] flex-col overflow-hidden rounded-2xl bg-[color:var(--accent-brown)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--accent-gold)]"
+    >
+      <img
+        src={image}
+        alt={category.visual.alt}
+        width={800}
+        height={1000}
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-0 h-full w-full object-cover opacity-90 transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.08]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--accent-brown)]/95 via-[color:var(--accent-brown)]/40 to-transparent" />
+
+      <div className="relative mt-auto flex flex-col gap-3 p-6 text-white">
+        <span className="inline-flex w-fit items-center rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.24em] backdrop-blur">
+          {isComingSoon ? "به‌زودی" : `${toPersianDigits(productCount)} محصول`}
+        </span>
+        <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight">
+          {category.name}
+        </h3>
+        <p className="line-clamp-2 text-sm leading-7 text-white/80">{category.description}</p>
+        <span className="mt-1 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-gold)] transition-transform group-hover:translate-x-[-4px]">
+          {isComingSoon ? "برنامه این دسته" : "کاوش دسته"}
+          <ArrowLeft className="h-4 w-4" strokeWidth={2.5} />
+        </span>
+      </div>
+    </Link>
   );
 }
