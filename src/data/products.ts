@@ -1,36 +1,13 @@
-import type { Product, ProductCategory } from "./types";
+import type { Product } from "./types";
 
 type ProductInput = Omit<Product, "images"> & {
-  imageLabel?: string;
+  images?: Product["images"];
 };
-
-const CATEGORY_IMAGE_TONE: Record<ProductCategory, { bg: string; fg: string }> = {
-  cookies: { bg: "#E8F5E0", fg: "#5C7A4A" },
-  cakes: { bg: "#FAF7F2", fg: "#C8961E" },
-  diet: { bg: "#F5F5F0", fg: "#5C7A4A" },
-  "dry-sweets": { bg: "#FAF7F2", fg: "#3D2B1F" },
-  "gift-boxes": { bg: "#E8F5E0", fg: "#3D2B1F" },
-};
-
-function placeholderImage(label: string, category: ProductCategory): string {
-  const tone = CATEGORY_IMAGE_TONE[category];
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="${label}"><rect width="800" height="1000" fill="${tone.bg}"/><circle cx="400" cy="380" r="178" fill="${tone.fg}" opacity=".12"/><circle cx="400" cy="380" r="98" fill="${tone.fg}" opacity=".16"/><text x="400" y="600" text-anchor="middle" font-family="Arial, sans-serif" font-size="50" font-weight="700" fill="${tone.fg}">${label}</text><text x="400" y="675" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" fill="${tone.fg}" opacity=".7">Winimi photo placeholder</text></svg>`;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-}
 
 function product(input: ProductInput): Product {
-  const imageLabel = input.imageLabel ?? input.name;
   return {
     ...input,
-    images: [
-      {
-        url: placeholderImage(imageLabel, input.category),
-        alt: `تصویر ${input.name}`,
-        width: 800,
-        height: 1000,
-        isPrimary: true,
-      },
-    ],
+    images: input.images ?? [],
   };
 }
 
@@ -165,7 +142,7 @@ export const PRODUCTS: Product[] = [
     name: "باکس هدیه وینیمی",
     shortDescription: "باکس هدیه شامل انتخابی از شیرینی و کوکی مناسب مناسبت‌های کوچک.",
     longDescription:
-      "باکس هدیه وینیمی برای زمانی آماده می‌شود که می‌خواهید چند طعم منتخب را در یک بسته‌بندی مرتب و مناسب هدیه کنار هم داشته باشید. این محصول به‌عنوان گزینه نمایشی اولیه ثبت شده و در آینده با عکس و ترکیب دقیق مشتری تکمیل می‌شود.",
+      "باکس هدیه وینیمی برای زمانی آماده می‌شود که می‌خواهید چند طعم منتخب را در یک بسته‌بندی مرتب و مناسب هدیه کنار هم داشته باشید. ترکیب محصولات، وزن تقریبی و جزئیات آلرژن‌ها در صفحه محصول مشخص است تا پیش از سفارش بتوانید انتخاب مطمئن‌تری داشته باشید.",
     priceToman: 350000,
     category: "gift-boxes",
     tags: ["باکس هدیه", "هدیه خوراکی", "کوکی"],
