@@ -10,7 +10,6 @@ import { PRODUCTS } from "@/data/products";
 import { getPublicProductCategories } from "@/data/categories";
 import { getPublishedPosts } from "@/data/blog";
 import type { BlogPost } from "@/data/blog";
-import type { Product } from "@/data/types";
 import { SITE } from "@/lib/site";
 import { buildSeo } from "@/lib/seo";
 import { toPersianDigits } from "@/lib/format";
