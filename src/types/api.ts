@@ -1,4 +1,5 @@
-import type { Product, ProductCategoryDefinition } from "@/data/types";
+import type { Product } from "@/data/types";
+import type { ProductCategoryDefinition } from "@/data/categories";
 
 export interface ApiCollection<T> {
   data: T[];
