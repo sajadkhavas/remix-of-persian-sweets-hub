@@ -398,7 +398,7 @@ function DiscoverySection() {
 /* ─────────────────────────  BLOG EDITORIAL  ───────────────────────── */
 
 function BlogEditorialSection() {
-  const posts = BLOG_POSTS.filter((p) => p.status === "published").slice(0, 3);
+  const posts = getPublishedPosts().slice(0, 3);
   if (posts.length === 0) return null;
   const [lead, ...rest] = posts;
 
@@ -455,7 +455,7 @@ function BlogEditorialSection() {
           )}
 
           <div className="grid gap-5">
-            {rest.map((post) => (
+            {rest.map((post: BlogPost) => (
               <RevealOnScroll key={post.id}>
                 <Link
                   to="/blog/$slug"
