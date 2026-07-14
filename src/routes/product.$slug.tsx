@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import { toast } from "sonner";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Snowflake, Truck } from "lucide-react";
 import { buildSeo } from "@/lib/seo";
 import { PRODUCTS, findProduct } from "@/data/products";
 import { getProductCategory } from "@/data/categories";
@@ -13,7 +14,8 @@ import { Img } from "@/components/Img";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { useCartStore } from "@/lib/cart";
 import { formatToman, toPersianDigits } from "@/lib/format";
-import type { Product, ProductBadge } from "@/data/types";
+import { getProductImage, getProductImageAlt } from "@/lib/product-images";
+import type { Product, ProductBadge, ProductImage } from "@/data/types";
 import type { FaqItem } from "@/components/jsonld/FAQJsonLd";
 
 const BADGE_LABELS: Record<ProductBadge, string> = {
@@ -74,12 +76,10 @@ function buildProductFaqs(product: Product): FaqItem[] {
     });
   }
 
-  if (product.weightGrams && product.weightGrams > 0) {
-    faqs.push({
-      question: `وزن ${product.name} چقدر است؟`,
-      answer: `وزن این محصول ${toPersianDigits(product.weightGrams)} گرم است.`,
-    });
-  }
+  faqs.push({
+    question: `${product.name} به کجا ارسال می‌شود؟`,
+    answer: product.shippingNote,
+  });
 
   return faqs;
 }
@@ -92,6 +92,23 @@ function ProductPage() {
   const faqs = buildProductFaqs(p);
   const category = getProductCategory(p.category);
   const categoryName = category.name;
+  const fallbackImage: ProductImage = {
+    url: getProductImage(p),
+    alt: getProductImageAlt(p),
+    width: 800,
+    height: 1000,
+    isPrimary: true,
+  };
+  const displayImages = p.images.length > 0 ? p.images : [fallbackImage];
+  const selectedImage = displayImages[Math.min(selectedImageIndex, displayImages.length - 1)];
+  const shippingLabel = p.requiresCooling ? "ارسال فقط تهران و کرج" : "ارسال به سراسر ایران";
+  const ShippingIcon = p.requiresCooling ? Snowflake : Truck;
+  const showDietAdvisory = p.category === "diet" || p.badge === "diet" || p.badge === "diabetic";
+  const validComparePrice = Boolean(p.compareAtPriceToman && p.compareAtPriceToman > p.priceToman);
+  const discountPercent = validComparePrice
+    ? Math.round(((p.compareAtPriceToman! - p.priceToman) / p.compareAtPriceToman!) * 100)
+    : 0;
+  const stockStatus = p.stock > 0 ? `${toPersianDigits(p.stock)} عدد موجود` : "ناموجود";
   const crumbs = [
     { name: "خانه", path: "/" },
     { name: "محصولات", path: "/products" },
@@ -101,13 +118,6 @@ function ProductPage() {
     },
     { name: p.name, path: `/product/${p.slug}` },
   ];
-  const validComparePrice = Boolean(p.compareAtPriceToman && p.compareAtPriceToman > p.priceToman);
-  const discountPercent = validComparePrice
-    ? Math.round(((p.compareAtPriceToman! - p.priceToman) / p.compareAtPriceToman!) * 100)
-    : 0;
-  const stockStatus = p.stock > 0 ? `${toPersianDigits(p.stock)} عدد موجود` : "ناموجود";
-  const selectedImage = p.images[selectedImageIndex];
-  const showDietAdvisory = p.category === "diet" || p.badge === "diet" || p.badge === "diabetic";
 
   const specifications = useMemo(
     () =>
@@ -117,10 +127,11 @@ function ProductPage() {
         p.shelfLifeDays
           ? ["ماندگاری", `${toPersianDigits(p.shelfLifeDays)} روز از زمان تولید`]
           : null,
+        ["شرایط ارسال", shippingLabel],
         ["دسته‌بندی", categoryName],
         ["شناسه کالا", p.sku],
       ].filter(Boolean) as string[][],
-    [categoryName, p],
+    [categoryName, p, shippingLabel],
   );
 
   return (
@@ -132,29 +143,18 @@ function ProductPage() {
       <article className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
         <section aria-label="گالری تصاویر محصول" className="space-y-4">
           <div className="overflow-hidden rounded-3xl border border-border bg-white shadow-sm">
-            {selectedImage ? (
-              <Img
-                src={selectedImage.url}
-                alt={selectedImage.alt || `تصویر ${p.name}`}
-                width={selectedImage.width ?? 900}
-                height={selectedImage.height ?? 900}
-                priority
-                className="aspect-square w-full object-cover"
-              />
-            ) : (
-              <div className="flex aspect-square flex-col items-center justify-center gap-4 bg-gradient-to-br from-[#FFF7E8] to-[#F7DFC3] text-center">
-                <span className="text-8xl" aria-hidden="true">
-                  {p.emoji ?? "🍰"}
-                </span>
-                <p className="px-6 text-lg font-bold" style={{ color: "var(--accent-brown)" }}>
-                  تصویر محصول به‌زودی اضافه می‌شود
-                </p>
-              </div>
-            )}
+            <Img
+              src={selectedImage.url}
+              alt={selectedImage.alt || `تصویر ${p.name}`}
+              width={selectedImage.width ?? 900}
+              height={selectedImage.height ?? 900}
+              priority
+              className="aspect-square w-full object-cover"
+            />
           </div>
-          {p.images.length > 1 && (
+          {displayImages.length > 1 && (
             <div className="grid grid-cols-4 gap-3 sm:grid-cols-5">
-              {p.images.map((image: import("@/data/types").ProductImage, index: number) => (
+              {displayImages.map((image, index) => (
                 <button
                   key={image.url}
                   type="button"
@@ -182,6 +182,10 @@ function ProductPage() {
                 {BADGE_LABELS[p.badge as ProductBadge]}
               </span>
             )}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--primary-light)] px-3 py-1 text-xs font-bold text-[color:var(--primary-dark)]">
+              <ShippingIcon className="h-3.5 w-3.5" strokeWidth={2.4} />
+              {shippingLabel}
+            </span>
             {validComparePrice && (
               <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-bold text-red-700">
                 ٪{toPersianDigits(discountPercent)} تخفیف
@@ -196,6 +200,9 @@ function ProductPage() {
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">SKU: {p.sku}</p>
           <p className="mt-4 text-lg leading-8 text-muted-foreground">{p.shortDescription}</p>
+          <p className="mt-4 rounded-2xl bg-[color:var(--accent-cream)] p-4 text-sm leading-7 text-[color:var(--accent-brown)]">
+            {p.shippingNote}
+          </p>
           <div className="mt-6 flex flex-wrap items-end gap-3">
             <p className="text-2xl font-extrabold" style={{ color: "var(--primary-dark)" }}>
               {formatToman(p.priceToman)}
@@ -242,7 +249,12 @@ function ProductPage() {
                     slug: p.slug,
                     name: p.name,
                     priceToman: p.priceToman,
+                    image: selectedImage.url,
                     emoji: p.emoji ?? "🍪",
+                    weightGrams: p.weightGrams,
+                    requiresCooling: p.requiresCooling,
+                    shippingScope: p.shippingScope,
+                    shippingNote: p.shippingNote,
                   },
                   quantity,
                 );
@@ -266,7 +278,7 @@ function ProductPage() {
       <section className="grid gap-3 rounded-3xl border border-border bg-white p-4 text-center text-sm font-bold shadow-sm sm:grid-cols-3">
         <div>🔥 پخت تازه بر اساس سفارش</div>
         <div>📦 بسته‌بندی محافظ برای مسیر ارسال</div>
-        <div>🚚 ارسال به سراسر ایران</div>
+        <div>{p.requiresCooling ? "❄ ارسال یخچالی فقط تهران و کرج" : "🚚 ارسال به سراسر ایران"}</div>
       </section>
 
       {showDietAdvisory && (
@@ -301,9 +313,9 @@ function ProductPage() {
         </DetailCard>
         <DetailCard title="ارسال و زمان آماده‌سازی">
           <p>
-            زمان آماده‌سازی معمولاً {toPersianDigits(p.preparationTimeDays ?? 1)} روز کاری است و
-            امکان ارسال به سراسر ایران فراهم است.
+            زمان آماده‌سازی معمولاً {toPersianDigits(p.preparationTimeDays ?? 1)} روز کاری است.
           </p>
+          <p className="mt-3 font-medium">{p.shippingNote}</p>
         </DetailCard>
       </section>
 
@@ -314,7 +326,7 @@ function ProductPage() {
   );
 }
 
-function DetailCard({ title, children }: { title: string; children: React.ReactNode }) {
+function DetailCard({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="rounded-2xl border border-border bg-white p-5 leading-8 shadow-sm">
       <h2 className="mb-3 text-xl font-bold" style={{ color: "var(--accent-brown)" }}>
