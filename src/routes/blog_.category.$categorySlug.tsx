@@ -55,7 +55,10 @@ function BlogCategoryPage() {
         name={category.title}
         description={category.seoDescription}
         path={`/blog/category/${category.slug}`}
-        items={posts.map((post: { title: string; slug: string }) => ({ name: post.title, path: `/blog/${post.slug}` }))}
+        items={posts.map((post: { title: string; slug: string }) => ({
+          name: post.title,
+          path: `/blog/${post.slug}`,
+        }))}
       />
       <Breadcrumbs items={crumbs} />
 
