@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { z } from "zod";
-import { useCartStore } from "@/lib/cart";
+import { cartHasCoolingItems, isCoolingDeliveryCity, useCartStore } from "@/lib/cart";
 import { buildSeo } from "@/lib/seo";
 import { formatToman } from "@/lib/format";
 import { BreadcrumbJsonLd } from "@/components/jsonld/BreadcrumbJsonLd";
@@ -11,7 +11,7 @@ import { SITE } from "@/lib/site";
 export const Route = createFileRoute("/checkout")({
   head: () =>
     buildSeo({
-      title: "تسویه حساب",
+      title: "ثبت سفارش",
       description: "ثبت سفارش وینیمی بیکری",
       path: "/checkout",
       noindex: true,
@@ -83,6 +83,7 @@ function CheckoutPage() {
   const items = useCartStore((s) => s.items);
   const totalPrice = useCartStore((s) => s.totalPrice);
   const clearCart = useCartStore((s) => s.clearCart);
+  const hasCoolingItems = cartHasCoolingItems(items);
 
   const [form, setForm] = useState<CheckoutForm>(EMPTY);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -108,9 +109,16 @@ function CheckoutPage() {
       setErrors(fe);
       return;
     }
+
+    if (hasCoolingItems && !isCoolingDeliveryCity(result.data.city)) {
+      setErrors({
+        city: "محصول یخچالی فقط در تهران یا کرج قابل ثبت سفارش است.",
+      });
+      return;
+    }
+
     setSubmitting(true);
     try {
-      await new Promise((r) => setTimeout(r, 800));
       clearCart();
       setSuccess(true);
     } finally {
@@ -124,13 +132,20 @@ function CheckoutPage() {
         items={[
           { name: "خانه", path: "/" },
           { name: "سبد خرید", path: "/cart" },
-          { name: "تسویه حساب", path: "/checkout" },
+          { name: "ثبت سفارش", path: "/checkout" },
         ]}
       />
 
       <h1 className="mb-6 text-2xl font-bold" style={{ color: "var(--accent-brown)" }}>
-        تسویه حساب
+        ثبت سفارش
       </h1>
+
+      {hasCoolingItems ? (
+        <div className="mb-6 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm leading-7 text-sky-900">
+          این سبد محصول یخچالی دارد. برای حفظ کیفیت، ثبت سفارش این محصولات فقط برای شهر تهران یا
+          کرج فعال است.
+        </div>
+      ) : null}
 
       <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -215,7 +230,7 @@ function CheckoutPage() {
             className="w-full rounded-full py-4 text-lg font-bold disabled:opacity-50"
             style={{ background: "var(--primary)", color: "var(--primary-dark)" }}
           >
-            {isSubmitting ? "در حال ثبت..." : "ثبت سفارش و پرداخت"}
+            {isSubmitting ? "در حال ثبت..." : "ثبت سفارش"}
           </motion.button>
         </form>
 
@@ -226,10 +241,10 @@ function CheckoutPage() {
           <ul className="space-y-2 text-sm">
             {items.map((item) => (
               <li key={item.id} className="flex justify-between gap-2">
-                <span className="text-muted-foreground truncate">
+                <span className="truncate text-muted-foreground">
                   {item.name} × {item.quantity}
                 </span>
-                <span className="font-medium shrink-0">
+                <span className="shrink-0 font-medium">
                   {formatToman(item.priceToman * item.quantity)}
                 </span>
               </li>
@@ -242,6 +257,9 @@ function CheckoutPage() {
               {formatToman(totalPrice())}
             </span>
           </div>
+          <p className="mt-3 rounded-xl bg-[color:var(--accent-cream)] p-3 text-xs leading-6 text-muted-foreground">
+            پرداخت آنلاین در فاز درگاه فعال می‌شود. فعلاً سفارش ثبت و برای هماهنگی نهایی پیگیری می‌شود.
+          </p>
         </aside>
       </div>
 
@@ -268,13 +286,13 @@ function CheckoutPage() {
                 ✅
               </motion.span>
               <h2 className="mb-3 text-xl font-bold" style={{ color: "var(--accent-brown)" }}>
-                سفارش شما با موفقیت ثبت شد!
+                سفارش شما ثبت شد
               </h2>
               <p className="mb-8 text-muted-foreground">
-                کارشناس ما در اسرع وقت با شما تماس می‌گیرد و لینک پرداخت ارسال می‌کند.
+                تیم وینیمی برای نهایی‌سازی سفارش و هماهنگی ارسال با شما تماس می‌گیرد.
               </p>
               <a
-                href={`${SITE.whatsapp}?text=${encodeURIComponent("سلام، سفارش ثبت کردم")}`}
+                href={`${SITE.whatsapp}?text=${encodeURIComponent("سلام، سفارش وینیمی ثبت کردم")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mb-3 block w-full rounded-full py-3 font-bold text-white"
