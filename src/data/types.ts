@@ -1,6 +1,7 @@
 export type ProductCategory = "cookies" | "cakes" | "diet" | "dry-sweets" | "gift-boxes";
 export type Category = ProductCategory;
 export type ProductBadge = "bestseller" | "diet" | "diabetic" | "special" | "new";
+export type ShippingScope = "nationwide" | "tehran-karaj";
 
 export interface ProductImage {
   url: string;
@@ -23,6 +24,7 @@ export interface Product {
   shortDescription: string;
   longDescription: string;
   priceToman: number;
+  salePriceToman?: number;
   compareAtPriceToman?: number;
   category: ProductCategory;
   tags: string[];
@@ -37,6 +39,9 @@ export interface Product {
   storageInstructions?: string;
   preparationTimeDays?: number;
   stock: number;
+  requiresCooling: boolean;
+  shippingScope: ShippingScope;
+  shippingNote: string;
   featured?: boolean;
   badge?: ProductBadge;
   seo: ProductSeo;
