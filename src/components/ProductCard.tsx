@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Plus, Snowflake, Truck } from "lucide-react";
 import type { Product, ProductBadge } from "@/data/types";
 import { formatToman, toPersianDigits } from "@/lib/format";
 import { useCartStore } from "@/lib/cart";
@@ -14,6 +14,16 @@ const BADGE_LABEL: Record<ProductBadge, string> = {
   special: "ویژه",
   new: "جدید",
 };
+
+function ShippingBadge({ product }: { product: Product }) {
+  const Icon = product.requiresCooling ? Snowflake : Truck;
+  return (
+    <p className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[color:var(--primary-light)] px-3 py-1 text-[11px] font-bold text-[color:var(--primary-dark)]">
+      <Icon className="h-3.5 w-3.5" strokeWidth={2.4} />
+      {product.requiresCooling ? "ارسال فقط تهران و کرج" : "ارسال به سراسر ایران"}
+    </p>
+  );
+}
 
 export function ProductCard({ product }: { product: Product }) {
   const badgeLabel = product.badge ? BADGE_LABEL[product.badge] : null;
@@ -67,6 +77,8 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
 
+        <ShippingBadge product={product} />
+
         <div className="flex items-end justify-between gap-3 border-t border-dashed border-[color:var(--border)] pt-3">
           <div>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">قیمت</p>
@@ -87,7 +99,12 @@ export function ProductCard({ product }: { product: Product }) {
                 slug: product.slug,
                 name: product.name,
                 priceToman: product.priceToman,
+                image,
                 emoji: product.emoji ?? "🍪",
+                weightGrams: product.weightGrams,
+                requiresCooling: product.requiresCooling,
+                shippingScope: product.shippingScope,
+                shippingNote: product.shippingNote,
               });
               toast.success(`${product.name} به سبد خرید اضافه شد.`);
             }}
